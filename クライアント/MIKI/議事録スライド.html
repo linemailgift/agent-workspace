@@ -8,24 +8,9 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    --purple-deep: #4B0082;
-    --purple-mid: #6B3FA0;
-    --purple-light: #8B6DB5;
-    --purple-pale: #f3eef8;
-    --gold: #c9a96e;
-    --gold-dark: #b8942e;
-    --gold-light: #e8d5a3;
-    --gold-pale: #faf8f3;
-    --red: #c26a5a;
-    --red-dark: #a8524a;
-    --red-light: #e8a090;
-    --red-pale: #fdf3f1;
-  }
-
   body {
     font-family: 'Noto Sans JP', sans-serif;
-    background: #f5f4f7;
+    background: #f5f5f3;
     color: #333;
     overflow: hidden;
     height: 100vh;
@@ -37,7 +22,6 @@
     height: 100vh;
   }
 
-  /* === Base slide === */
   .slide {
     position: absolute;
     top: 0; left: 0;
@@ -45,7 +29,7 @@
     height: 100%;
     background: #fff;
     border-left: 4px solid;
-    border-image: linear-gradient(to bottom, var(--purple-deep), var(--purple-light)) 1;
+    border-image: linear-gradient(to bottom, #c9a96e, #e8d5a3) 1;
     opacity: 0;
     transform: translateY(-30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
@@ -59,14 +43,6 @@
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
-  }
-
-  /* === Color theme variants === */
-  .slide.theme-gold {
-    border-image: linear-gradient(to bottom, var(--gold), var(--gold-light)) 1;
-  }
-  .slide.theme-red {
-    border-image: linear-gradient(to bottom, var(--red), var(--red-light)) 1;
   }
 
   .slide-header {
@@ -85,28 +61,18 @@
     flex-direction: column;
     align-items: center;
     flex: 1;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(75,0,130,0.15) transparent;
   }
 
-  .slide-body::-webkit-scrollbar { width: 4px; }
-  .slide-body::-webkit-scrollbar-thumb { background: rgba(75,0,130,0.15); border-radius: 2px; }
-
-  /* Title slide */
   .slide.title-slide {
     justify-content: center;
     align-items: center;
-    padding-bottom: 100px;
-    background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 50%, var(--gold-pale) 100%);
-    border-image: none;
-    border-left: none;
+    padding-bottom: 120px;
   }
 
   .slide.title-slide .slide-header {
     padding: 0 100px;
   }
 
-  /* Background number */
   .slide-bg-num {
     position: absolute;
     right: 60px;
@@ -114,58 +80,40 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 16rem;
     font-weight: 700;
-    color: rgba(75,0,130,0.05);
+    color: rgba(201,169,110,0.10);
     line-height: 1;
     pointer-events: none;
     user-select: none;
   }
-  .theme-gold .slide-bg-num { color: rgba(201,169,110,0.07); }
-  .theme-red .slide-bg-num { color: rgba(194,106,90,0.07); }
 
-  /* Section number */
   .section-num {
     font-family: 'Cormorant Garamond', serif;
     font-size: 0.85rem;
-    color: var(--purple-mid);
+    color: #c9a96e;
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 8px;
     font-weight: 600;
   }
-  .theme-gold .section-num { color: var(--gold-dark); }
-  .theme-red .section-num { color: var(--red); }
 
-  /* Slide title */
   .slide-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--purple-deep);
+    color: #333;
     margin-bottom: 8px;
   }
-  .theme-gold .slide-title { color: #8B6B2A; }
-  .theme-red .slide-title { color: var(--red-dark); }
 
-  /* Divider */
   .divider {
     width: 60px;
     height: 2px;
-    background: linear-gradient(to right, var(--purple-deep), var(--purple-light));
+    background: linear-gradient(to right, #c9a96e, #e8d5a3);
     margin: 12px auto 0;
-  }
-  .theme-gold .divider { background: linear-gradient(to right, var(--gold-dark), var(--gold-light)); }
-  .theme-red .divider { background: linear-gradient(to right, var(--red), var(--red-light)); }
-
-  /* Ichijiku icon */
-  .ichijiku-icon {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 16px;
   }
 
   .main-title {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--purple-deep);
+    color: #333;
     margin-bottom: 12px;
     text-align: center;
     line-height: 1.6;
@@ -186,88 +134,84 @@
     margin-top: 16px;
   }
 
-  .meta-item { font-size: 0.82rem; color: #666; }
-  .meta-label { color: var(--gold-dark); font-weight: 500; }
+  .meta-item {
+    font-size: 0.82rem;
+    color: #666;
+  }
 
-  /* === Cards === */
+  .meta-label {
+    color: #b8942e;
+    font-weight: 500;
+  }
+
   .card {
-    background: #fafafc;
-    border: 1px solid #ece8f0;
-    border-top: 3px solid var(--purple-mid);
+    background: #fafaf8;
+    border: 1px solid #eee;
+    border-top: 3px solid #c9a96e;
     border-radius: 6px;
     padding: 20px 24px;
     margin-bottom: 14px;
     width: 100%;
     max-width: 700px;
   }
+
   .card-title {
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--purple-mid);
+    color: #b8942e;
     margin-bottom: 10px;
   }
-  .card p, .card li { font-size: 0.82rem; line-height: 1.8; color: #555; }
+
+  .card p, .card li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
   .card ul { padding-left: 18px; }
   .card ul li { margin-bottom: 4px; }
 
-  /* Gold card */
-  .card.c-gold {
-    background: #fdfcf8;
-    border: 1px solid #ede8dc;
-    border-top: 3px solid var(--gold);
-  }
-  .card.c-gold .card-title { color: var(--gold-dark); }
-
-  /* Red card */
-  .card.c-red {
-    background: var(--red-pale);
-    border: 1px solid #f0ddd9;
-    border-top: 3px solid var(--red);
-  }
-  .card.c-red .card-title { color: var(--red-dark); }
-
-  /* === Highlights === */
   .highlight {
-    background: var(--purple-pale);
-    border-left: 3px solid var(--purple-mid);
+    background: #faf8f3;
+    border-left: 3px solid #c9a96e;
     padding: 14px 20px;
     margin-bottom: 14px;
     width: 100%;
     max-width: 700px;
     border-radius: 0 6px 6px 0;
   }
-  .highlight p { font-size: 0.82rem; line-height: 1.8; color: #555; }
-  .highlight strong { color: var(--purple-deep); }
 
-  .highlight.hl-gold {
-    background: var(--gold-pale);
-    border-left-color: var(--gold);
+  .highlight p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
   }
-  .highlight.hl-gold strong { color: var(--gold-dark); }
 
-  .highlight.hl-red {
-    background: var(--red-pale);
-    border-left-color: var(--red);
-  }
-  .highlight.hl-red strong { color: var(--red-dark); }
+  .highlight strong { color: #b8942e; }
 
-  /* === Table === */
   .table-wrap {
     width: 100%;
     max-width: 700px;
     overflow-x: auto;
     margin-bottom: 14px;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
   th {
-    background: var(--gold-pale);
-    color: var(--gold-dark);
+    background: #faf8f3;
+    color: #b8942e;
     font-weight: 600;
     padding: 10px 14px;
-    border-bottom: 2px solid var(--gold);
+    border-bottom: 2px solid #c9a96e;
     text-align: left;
     white-space: nowrap;
   }
+
   td {
     padding: 10px 14px;
     border-bottom: 1px solid #eee;
@@ -275,26 +219,40 @@
     line-height: 1.6;
   }
 
-  /* === Tags === */
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
   .tag {
     font-size: 0.72rem;
     padding: 4px 12px;
+    border: 1px solid #ddd;
     border-radius: 20px;
-  }
-  .tag.purple {
-    border: 1px solid var(--purple-light);
-    color: var(--purple-mid);
-    background: var(--purple-pale);
-  }
-  .tag.gold {
-    border: 1px solid var(--gold);
-    color: var(--gold-dark);
-    background: var(--gold-pale);
+    color: #666;
+    background: transparent;
   }
 
-  /* === Checklist === */
-  .checklist { list-style: none; padding: 0; }
+  .tag.gold {
+    border-color: #c9a96e;
+    color: #b8942e;
+    background: #faf8f3;
+  }
+
+  .card.urgent {
+    border-top: 3px solid;
+    border-image: linear-gradient(to right, #c26a5a, #e8a090) 1;
+  }
+
+  .card.urgent .card-title { color: #c26a5a; }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
   .checklist li {
     font-size: 0.82rem;
     line-height: 1.8;
@@ -303,14 +261,14 @@
     position: relative;
     margin-bottom: 6px;
   }
+
   .checklist li::before {
     content: '☐';
     position: absolute;
     left: 0;
-    color: var(--purple-mid);
+    color: #c9a96e;
   }
 
-  /* === Nav === */
   .nav {
     position: fixed;
     bottom: 24px;
@@ -319,8 +277,10 @@
     gap: 8px;
     z-index: 100;
   }
+
   .nav button {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border: 1px solid #ddd;
     background: #fff;
     border-radius: 50%;
@@ -332,10 +292,10 @@
     justify-content: center;
     transition: all 0.2s;
   }
+
   .nav button:hover {
-    border-color: var(--purple-mid);
-    color: var(--purple-mid);
-    background: var(--purple-pale);
+    border-color: #c9a96e;
+    color: #c9a96e;
   }
 
   .page-indicator {
@@ -354,13 +314,9 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.65rem;
-    color: var(--purple-light);
+    color: #ccc;
     z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
-  .footer img { width: 16px; height: 16px; }
 
   .flow-step {
     display: flex;
@@ -371,17 +327,20 @@
     margin-bottom: 4px;
     flex-wrap: wrap;
   }
-  .flow-arrow { color: var(--gold); font-weight: 700; }
+
+  .flow-arrow {
+    color: #c9a96e;
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
 
 <div class="slide-container">
 
-  <!-- ========== 紫：タイトル ========== -->
+  <!-- Slide 1: タイトル -->
   <div class="slide title-slide active" data-slide="0">
     <div class="slide-header">
-      <img src="ichijiku-icon.png" class="ichijiku-icon" alt="いちじく">
       <div class="section-num">Meeting Minutes</div>
       <div class="divider" style="margin-bottom: 24px;"></div>
       <div class="main-title">MIKIさん × ちいくじ<br>UTAGE構築 作戦会議</div>
@@ -391,17 +350,17 @@
         <span class="meta-item"><span class="meta-label">形式</span>　Zoom</span>
       </div>
       <div class="tags" style="margin-top: 20px;">
-        <span class="tag purple">UTAGE構築</span>
-        <span class="tag purple">ファネル改善</span>
-        <span class="tag purple">LINE配信</span>
-        <span class="tag purple">LP制作</span>
+        <span class="tag gold">UTAGE構築</span>
+        <span class="tag gold">ファネル改善</span>
+        <span class="tag">LINE配信</span>
+        <span class="tag">LP制作</span>
       </div>
     </div>
+    <div class="slide-bg-num">01</div>
   </div>
 
-  <!-- ========== 紫：打ち合わせの目的 ========== -->
+  <!-- Slide 2: 打ち合わせの目的 -->
   <div class="slide" data-slide="1">
-    <div class="slide-bg-num">01</div>
     <div class="slide-header">
       <div class="section-num">Section 01</div>
       <div class="slide-title">打ち合わせの目的</div>
@@ -427,11 +386,11 @@
         </ul>
       </div>
     </div>
+    <div class="slide-bg-num">01</div>
   </div>
 
-  <!-- ========== 紫：クライアントの現状 ========== -->
+  <!-- Slide 3: クライアントの現状 -->
   <div class="slide" data-slide="2">
-    <div class="slide-bg-num">02</div>
     <div class="slide-header">
       <div class="section-num">Section 02</div>
       <div class="slide-title">クライアント（伊達さん）の現状</div>
@@ -469,18 +428,18 @@
         </ul>
       </div>
     </div>
+    <div class="slide-bg-num">02</div>
   </div>
 
-  <!-- ========== 赤：課題・ニーズ (1) ========== -->
-  <div class="slide theme-red" data-slide="3">
-    <div class="slide-bg-num">03</div>
+  <!-- Slide 4: 課題・ニーズ① -->
+  <div class="slide" data-slide="3">
     <div class="slide-header">
       <div class="section-num">Section 03</div>
       <div class="slide-title">課題・ニーズ (1)</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card c-red">
+      <div class="card urgent">
         <div class="card-title">UTAGEファネルの問題</div>
         <ul>
           <li>ファネル構築がぐちゃぐちゃ（以前50,000円で外注したが整理されていない）</li>
@@ -491,7 +450,7 @@
           <li>YouTubeのリンクがUTAGEの正しい入口に繋がっていない</li>
         </ul>
       </div>
-      <div class="card c-red">
+      <div class="card urgent">
         <div class="card-title">診断の問題</div>
         <ul>
           <li>診断が1パターンしかなく、何を答えても同じ結果が返る</li>
@@ -500,18 +459,18 @@
         </ul>
       </div>
     </div>
+    <div class="slide-bg-num">03</div>
   </div>
 
-  <!-- ========== 赤：課題・ニーズ (2) ========== -->
-  <div class="slide theme-red" data-slide="4">
-    <div class="slide-bg-num">04</div>
+  <!-- Slide 5: 課題・ニーズ② -->
+  <div class="slide" data-slide="4">
     <div class="slide-header">
       <div class="section-num">Section 03</div>
       <div class="slide-title">課題・ニーズ (2)</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card c-red">
+      <div class="card">
         <div class="card-title">LP（ランディングページ）の問題</div>
         <ul>
           <li>伊達さん本人は既存LPを気に入っている</li>
@@ -520,7 +479,7 @@
           <li>LPは個別相談誘導時に活用すべき</li>
         </ul>
       </div>
-      <div class="card c-red">
+      <div class="card">
         <div class="card-title">ライティングの問題</div>
         <ul>
           <li>ファネル内の文章がAIっぽく、伊達さんの言葉遣いと合わない</li>
@@ -529,7 +488,7 @@
           <li>教育コンテンツが不足（特典なし、登録直後のメリットなし）</li>
         </ul>
       </div>
-      <div class="card c-red">
+      <div class="card">
         <div class="card-title">スクリーニングの要望</div>
         <ul>
           <li>ターゲット：40〜50代の学びたい層</li>
@@ -538,11 +497,11 @@
         </ul>
       </div>
     </div>
+    <div class="slide-bg-num">03</div>
   </div>
 
-  <!-- ========== 金：提案プラン ========== -->
-  <div class="slide theme-gold" data-slide="5">
-    <div class="slide-bg-num">05</div>
+  <!-- Slide 6: 提案プラン -->
+  <div class="slide" data-slide="5">
     <div class="slide-header">
       <div class="section-num">Section 04</div>
       <div class="slide-title">ちいくじの提案プラン</div>
@@ -562,70 +521,70 @@
             <tr>
               <td><span class="tag gold">1. ファネル構築</span></td>
               <td>既存ファネル読み解き + 動線再構築<br>（診断→ステップ配信→個別相談）</td>
-              <td><strong>300,000円</strong></td>
+              <td>300,000円</td>
             </tr>
             <tr>
               <td><span class="tag gold">2. LP制作</span></td>
               <td>オプトインLP + 個別相談LP<br>（デザイン + ライティング込み・2ページ）</td>
-              <td><strong>150,000円</strong></td>
+              <td>150,000円</td>
             </tr>
             <tr>
               <td><span class="tag gold">3. ライティング</span></td>
               <td>LINEステップ配信メッセージ + 画像<br>+ 動物占い簡易診断アプリ制作</td>
-              <td><strong>100,000円</strong></td>
+              <td>100,000円</td>
             </tr>
             <tr>
               <td><span class="tag gold">4. 特典サイト</span></td>
               <td>会員サイトに特典コーナー追加<br>（LINE登録者向け特典の設置）</td>
-              <td><strong>100,000円</strong></td>
+              <td>100,000円</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="highlight hl-gold">
+      <div class="highlight">
         <p><strong>ポイント：</strong>クライアントに松竹梅方式で提案。必要なものを選んでもらう形式。1は最低限、2・3・4はオプション。</p>
       </div>
     </div>
+    <div class="slide-bg-num">04</div>
   </div>
 
-  <!-- ========== 金：提案のポイント ========== -->
-  <div class="slide theme-gold" data-slide="6">
-    <div class="slide-bg-num">06</div>
+  <!-- Slide 7: 提案のポイント -->
+  <div class="slide" data-slide="6">
     <div class="slide-header">
       <div class="section-num">Section 04</div>
       <div class="slide-title">提案のポイント</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">LINE登録ページ</div>
         <p>最初のLINE登録はシンプルに「特典あげるよ、おいで」で十分。LPは個別相談誘導の方で力を入れる。</p>
       </div>
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">診断アプリ</div>
         <p>動物占い簡易診断アプリ（誕生日入力→結果表示）をLINEステップ配信内に組み込み。選んだ結果によって答えが変わる本格的な仕組みに。AIを活用して制作コストを抑える。</p>
       </div>
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">特典サイト</div>
         <p>会員サイトに特典を充実させ、YouTube動画の最後で「特典があるからLINEに来て」と誘導。過去動画にも差し込み検討。</p>
       </div>
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">配信設計</div>
         <p>ブロックされないよう温める配信設計に。文章だけでなく画像や診断を挟みながら、セミナー告知時に反応が取れる状態を作る。</p>
       </div>
     </div>
+    <div class="slide-bg-num">04</div>
   </div>
 
-  <!-- ========== 金：合意事項 ========== -->
-  <div class="slide theme-gold" data-slide="7">
-    <div class="slide-bg-num">07</div>
+  <!-- Slide 8: 合意事項 -->
+  <div class="slide" data-slide="7">
     <div class="slide-header">
       <div class="section-num">Section 05</div>
       <div class="slide-title">合意事項</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">費用・体制</div>
         <ul>
           <li>MIKIさんの会社がクライアントから受注 → いちじくチームに分配</li>
@@ -633,11 +592,11 @@
           <li>ウラカタマッチングサロンへの納付：1割（ちいくじ側で負担）</li>
         </ul>
       </div>
-      <div class="highlight hl-gold">
+      <div class="highlight">
         <p><strong>例）ファネル構築 300,000円の場合</strong><br>
         MIKIさん側：100,000円 / いちじく側：200,000円（うち20,000円をウラカタマッチングサロン納付 → 実質180,000円で運用）</p>
       </div>
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">納期</div>
         <ul>
           <li>クライアントは <strong>3月末</strong> にファネルを走らせたい（YouTube配信再開も）</li>
@@ -645,7 +604,7 @@
           <li>下書きを作成し一気に切替える方式で進行</li>
         </ul>
       </div>
-      <div class="card c-gold">
+      <div class="card">
         <div class="card-title">契約形態</div>
         <ul>
           <li>MIKIさんの会社（法人）とクライアントで契約</li>
@@ -653,11 +612,11 @@
         </ul>
       </div>
     </div>
+    <div class="slide-bg-num">05</div>
   </div>
 
-  <!-- ========== 紫：ネクストアクション ========== -->
+  <!-- Slide 9: ネクストアクション -->
   <div class="slide" data-slide="8">
-    <div class="slide-bg-num">08</div>
     <div class="slide-header">
       <div class="section-num">Section 06</div>
       <div class="slide-title">ネクストアクション</div>
@@ -685,6 +644,7 @@
         <p><strong>次回打ち合わせ：</strong>3月14〜16日（21時以降）を目標にクライアントとの3者ミーティングを調整中。ちいくじが事前に提案書を準備。</p>
       </div>
     </div>
+    <div class="slide-bg-num">06</div>
   </div>
 
 </div>
@@ -695,10 +655,7 @@
   <button onclick="changeSlide(1)">&#9654;</button>
 </div>
 <div class="page-indicator" id="pageIndicator">1 / 9</div>
-<div class="footer">
-  <img src="ichijiku-icon.png" alt="いちじく">
-  produced by いちじく
-</div>
+<div class="footer">produced by いちじく</div>
 
 <script>
   let currentSlide = 0;
@@ -706,7 +663,9 @@
   const totalSlides = slides.length;
 
   function showSlide(index) {
-    slides.forEach((s, i) => { s.classList.toggle('active', i === index); });
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
     document.getElementById('pageIndicator').textContent = (index + 1) + ' / ' + totalSlides;
   }
 
@@ -716,15 +675,24 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      changeSlide(1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      changeSlide(-1);
+    }
   });
 
   let touchStartX = 0;
-  document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  });
   document.addEventListener('touchend', function(e) {
     const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+    if (Math.abs(diff) > 50) {
+      changeSlide(diff > 0 ? 1 : -1);
+    }
   });
 </script>
 
