@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録：MIKIさん × ちいくじ UTAGE構築 作戦会議②</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f5f3;
+    color: #333;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .slide-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-left: 4px solid;
+    border-image: linear-gradient(to bottom, #c9a96e, #e8d5a3) 1;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide-header {
+    padding: 48px 100px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .slide-body {
+    padding: 20px 100px 60px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 120px;
+  }
+
+  .slide.title-slide .slide-header {
+    padding: 0 100px;
+  }
+
+  .slide-bg-num {
+    position: absolute;
+    right: 60px;
+    bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: rgba(201,169,110,0.10);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: #c9a96e;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .slide-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, #c9a96e, #e8d5a3);
+    margin: 12px auto 0;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .main-subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .meta-info {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-item {
+    font-size: 0.82rem;
+    color: #666;
+  }
+
+  .meta-label {
+    color: #b8942e;
+    font-weight: 500;
+  }
+
+  .card {
+    background: #fafaf8;
+    border: 1px solid #eee;
+    border-top: 3px solid #c9a96e;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b8942e;
+    margin-bottom: 10px;
+  }
+
+  .card p, .card li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .card ul { padding-left: 18px; }
+  .card ul li { margin-bottom: 4px; }
+
+  .highlight {
+    background: #faf8f3;
+    border-left: 3px solid #c9a96e;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .highlight p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .highlight strong { color: #b8942e; }
+
+  .table-wrap {
+    width: 100%;
+    max-width: 700px;
+    overflow-x: auto;
+    margin-bottom: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  th {
+    background: #faf8f3;
+    color: #b8942e;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 2px solid #c9a96e;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    color: #666;
+    background: transparent;
+  }
+
+  .tag.gold {
+    border-color: #c9a96e;
+    color: #b8942e;
+    background: #faf8f3;
+  }
+
+  .card.urgent {
+    border-top: 3px solid;
+    border-image: linear-gradient(to right, #c26a5a, #e8a090) 1;
+  }
+
+  .card.urgent .card-title { color: #c26a5a; }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .checklist li::before {
+    content: '\2610';
+    position: absolute;
+    left: 0;
+    color: #c9a96e;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .nav button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover {
+    border-color: #c9a96e;
+    color: #c9a96e;
+  }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 28px;
+    left: 24px;
+    font-size: 0.7rem;
+    color: #ccc;
+    font-family: 'Cormorant Garamond', serif;
+    z-index: 100;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: #ccc;
+    z-index: 100;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #555;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .flow-arrow {
+    color: #c9a96e;
+    font-weight: 700;
+  }
+
+  .total-row td {
+    font-weight: 700;
+    color: #b8942e;
+    border-top: 2px solid #c9a96e;
+    background: #faf8f3;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- Slide 1: タイトル -->
+  <div class="slide title-slide active" data-slide="0">
+    <div class="slide-header">
+      <div class="section-num">Meeting Minutes</div>
+      <div class="divider" style="margin-bottom: 24px;"></div>
+      <div class="main-title">MIKIさん × ちいくじ<br>UTAGE構築 作戦会議②</div>
+      <div class="main-subtitle">UTAGE環境の問題点確認と提案・見積もり・スケジュール策定</div>
+      <div class="meta-info">
+        <span class="meta-item"><span class="meta-label">日時</span>　2026.03.12 Thu 18:00-19:00</span>
+        <span class="meta-item"><span class="meta-label">形式</span>　Zoom</span>
+      </div>
+      <div class="tags" style="margin-top: 20px;">
+        <span class="tag gold">UTAGE構築</span>
+        <span class="tag gold">見積もり確定</span>
+        <span class="tag">パネル再構築</span>
+        <span class="tag">費用分配</span>
+      </div>
+    </div>
+    <div class="slide-bg-num">01</div>
+  </div>
+
+  <!-- Slide 2: 打ち合わせの目的 -->
+  <div class="slide" data-slide="1">
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">打ち合わせの目的</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>前回（3/10）の作戦会議を踏まえ、MIKIさんが伊達さん（クライアント）と<strong>昨日商談を実施</strong>。UTAGE環境を実際に画面共有しながら現状の問題点を具体的に確認し、<strong>提案内容・見積もり・体制・スケジュール</strong>を詰める。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">参加者</div>
+        <ul>
+          <li><strong>MIKIさん</strong> — クライアント側ディレクター（総務・労務・経理のバックオフィス、会社として受注）</li>
+          <li><strong>ちいくじ</strong> — いちじくチーム（UTAGE構築・裏方サポート）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">前回からの進展</div>
+        <ul>
+          <li>MIKIさんが伊達さんと商談済み → <strong>300,000円のパネル構築は先方も前向き</strong></li>
+          <li>UTAGE画面を実際に見ながら問題点を具体的に洗い出し</li>
+          <li>費用分配の具体的な数字を合意</li>
+          <li>3者打ち合わせの日程候補を設定</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">01</div>
+  </div>
+
+  <!-- Slide 3: UTAGE環境の問題点① パネル・シナリオ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">UTAGE環境の問題点 (1)</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card urgent">
+        <div class="card-title">パネル・シナリオの混乱</div>
+        <ul>
+          <li>シナリオが大量にあるが、<strong>ゼロ件のまま放置</strong>されているものが多い</li>
+          <li>メールマガジン用シナリオ（589名登録）はメルマガ一斉配信のみでステップ配信なし</li>
+          <li><strong>パネルが繋がっていない</strong>：LINE登録してもステップ配信が途中で切れる</li>
+          <li>MIKIさんがテスト登録 → <strong>1通来て終了</strong>（2通目以降が来ない）</li>
+          <li>ちいくじもテスト登録 → 診断後52分で配信予定は確認できた</li>
+        </ul>
+      </div>
+      <div class="card urgent">
+        <div class="card-title">LINE配信の問題</div>
+        <ul>
+          <li><strong>1日目に3通も来る</strong> → 多すぎて煩わしい</li>
+          <li>最初の1通が長すぎて上部が見えず、下だけ表示される</li>
+          <li><strong>文章だけで画像がない</strong></li>
+          <li>登録しても<strong>特典がもらえない</strong>（特典配布の仕組みがない）</li>
+          <li><strong>アンケート未回答者へのリマインドなし</strong> → ステータスが勝手に「解除」になる</li>
+          <li><strong>登録経路タグが未設定</strong> → どこから来たか追跡不能</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">02</div>
+  </div>
+
+  <!-- Slide 4: UTAGE環境の問題点② 診断・LP・ライティング -->
+  <div class="slide" data-slide="3">
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">UTAGE環境の問題点 (2)</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card urgent">
+        <div class="card-title">診断の問題</div>
+        <ul>
+          <li>診断が1パターンのみ → <strong>何を答えても「あなたは的確です」と同じ結果</strong></li>
+          <li>せっかく答えたのに信頼を失う仕組みになっている</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">LP（ランディングページ）</div>
+        <ul>
+          <li>伊達さん本人は気に入っている（デザイン・文章の知見がないため）</li>
+          <li>ただし<strong>体が浮いている画像</strong>、<strong>文字切れ</strong>がある</li>
+          <li>沖縄の方で相場感が本州より低め → 高額提案には工夫が必要</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">ライティング</div>
+        <ul>
+          <li>AI生成っぽい文章 → 伊達さんが「僕こういうこと言わない」と気にしている</li>
+          <li>YouTubeのキャラクターと乖離した言葉遣い</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">会員サイト・その他</div>
+        <ul>
+          <li>会員サイトが非常にシンプル（見づらい）、バンドルコース未活用</li>
+          <li>オートウェビナー動画あり（45分）だが、どこに繋がっているか本人も不明</li>
+          <li>UTAGEとの導線が繋がっていないことに気づき<strong>配信をストップ中</strong></li>
+          <li>動物占い60種類の動画を制作中、残り約20種類のストックあり</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">02</div>
+  </div>
+
+  <!-- Slide 5: 提案プラン・見積もり -->
+  <div class="slide" data-slide="4">
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">提案プラン・見積もり（松竹梅方式）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>項目</th>
+              <th>内容</th>
+              <th>金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>①</td>
+              <td><span class="tag gold">UTAGEパネル構築</span></td>
+              <td>既存パネルの読み解き＋動線の再構築<br>（診断→ステップ配信→個別相談の流れ整備）</td>
+              <td><strong>300,000円</strong></td>
+            </tr>
+            <tr>
+              <td>②</td>
+              <td><span class="tag gold">LP制作（2ページ）</span></td>
+              <td>オプトインLP（LINE登録用）＋個別相談LP<br>（デザイン＋ライティング込み）</td>
+              <td><strong>150,000円</strong></td>
+            </tr>
+            <tr>
+              <td>③</td>
+              <td><span class="tag gold">LINEステップ配信ライティング</span></td>
+              <td>メッセージ文章＋画像＋診断アプリ制作<br>（動物占い簡易診断：誕生日入力で結果表示）</td>
+              <td><strong>100,000円</strong></td>
+            </tr>
+            <tr>
+              <td>④</td>
+              <td><span class="tag gold">特典サイト制作</span></td>
+              <td>会員サイトに特典コーナーを追加<br>（LINE登録者向け特典の設置）</td>
+              <td><strong>100,000円</strong></td>
+            </tr>
+            <tr class="total-row">
+              <td></td>
+              <td colspan="2"><strong>合計（全部やった場合）</strong></td>
+              <td><strong>650,000円</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight">
+        <p><strong>補足：</strong>①のパネル構築300,000円は先方に既に伝達済みで前向き。LPはオプトイン（シンプルに「特典あげるよ、おいで」で十分）＋個別相談用の2ページ。ライティングには<strong>動物占い簡易診断アプリ</strong>を含む（AIで作成可能）。</p>
+      </div>
+    </div>
+    <div class="slide-bg-num">03</div>
+  </div>
+
+  <!-- Slide 6: 費用分配 -->
+  <div class="slide" data-slide="5">
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">費用分配の合意</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">体制</div>
+        <ul>
+          <li>MIKIさんの会社がクライアントから受注</li>
+          <li>いちじくチームは<strong>裏方</strong>として稼働（クライアントに直接繋がらないようにする）</li>
+        </ul>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>配分</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MIKIさん側（会社利益）</td>
+              <td>受注額の <strong>2〜3割</strong></td>
+            </tr>
+            <tr>
+              <td>いちじくチーム</td>
+              <td>残り（<strong>7〜8割</strong>）</td>
+            </tr>
+            <tr>
+              <td>裏方マッチングサロン納付</td>
+              <td>いちじく側から <strong>1割</strong>（ちいくじが負担）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight">
+        <p><strong>具体例（300,000円受注の場合）</strong><br>
+        MIKIさん側：100,000円（3割）<br>
+        いちじくチーム：200,000円<br>
+        　うちサロン納付：20,000円 / 実働分：180,000円</p>
+      </div>
+      <div class="card">
+        <div class="card-title">注意事項</div>
+        <ul>
+          <li>おさる講座メンバーがクライアントと直接繋がるリスクを防ぐ</li>
+          <li>MIKIさんが窓口・クライアントとの関係を維持することが最優先</li>
+          <li>赤字にならない・能力に合わない仕事を押し付けない、双方が大事にする方針</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">04</div>
+  </div>
+
+  <!-- Slide 7: スケジュール -->
+  <div class="slide" data-slide="6">
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title">スケジュール</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日程</th>
+              <th>内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>3/14（土）まで</strong></td>
+              <td>ちいくじが確定申告を完了</td>
+            </tr>
+            <tr>
+              <td><strong>3/14〜16（21時以降）</strong></td>
+              <td>クライアント（伊達さん）との<strong>3者打ち合わせ</strong><br>（MIKIさんが日程調整中）</td>
+            </tr>
+            <tr>
+              <td><strong>3月末</strong></td>
+              <td>パネル稼働開始目標（YouTube配信も再開）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">納期に対するちいくじの見解</div>
+        <ul>
+          <li><strong>3月末なら十分対応可能</strong></li>
+          <li>既存LPはそのまま一旦復活させ、新しいものができたら差し替える方式</li>
+          <li>LINEステップ配信も下書きで準備 → 切替日に一気にスイッチ</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">3者打ち合わせについて</div>
+        <ul>
+          <li>伊達さんは沖縄在住、朝型（4時〜9時）or 夜型</li>
+          <li>ちいくじは夜型 → <strong>21時以降</strong>が望ましい</li>
+          <li>MIKIさんが先方に日程確認</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">05</div>
+  </div>
+
+  <!-- Slide 8: ネクストアクション -->
+  <div class="slide" data-slide="7">
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title">ネクストアクション</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">ちいくじ</div>
+        <ul class="checklist">
+          <li>提案書（松竹梅プラン＋見積もり）を作成 → 3者打ち合わせまでに</li>
+          <li>3/14〜16の21時以降をスケジュール確保</li>
+          <li>確定申告を3/14に完了</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">MIKIさん</div>
+        <ul class="checklist">
+          <li>伊達さんに3/14〜16の21時以降で日程調整</li>
+          <li>提案書を確認し、クライアントへの提示方法を検討</li>
+          <li>「パネル」等の業界用語を伊達さんに分かりやすく伝える工夫</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <p><strong>次回打ち合わせ：</strong>3月14〜16日（21時以降）を目標にクライアントとの3者ミーティングを調整中。ちいくじが事前に提案書を準備。</p>
+      </div>
+    </div>
+    <div class="slide-bg-num">06</div>
+  </div>
+
+  <!-- Slide 9: 前回との差分・進展 -->
+  <div class="slide" data-slide="8">
+    <div class="slide-header">
+      <div class="section-num">Section 07</div>
+      <div class="slide-title">前回（3/10）との差分・進展</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">進展サマリー</div>
+        <ul>
+          <li>MIKIさんが伊達さんと商談済み → <strong>300,000円のパネル構築は先方も前向き</strong></li>
+          <li>UTAGE画面を実際に見ながら問題点を具体的に洗い出し</li>
+          <li>費用分配の具体的な数字を合意（MIKIさん側2〜3割）</li>
+          <li>3者打ち合わせの日程候補を設定（3/14〜16、21時以降）</li>
+          <li>診断アプリ（動物占い簡易診断）を提案に含めることを決定</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <p><strong>全体の方向性：</strong>クライアントの既存UTAGE環境は問題が多いが、伊達さんのYouTubeコンテンツ力は高い。導線を整備することで成果が出やすい案件。3月末のパネル稼働開始に向けて、まず3者打ち合わせで合意形成を目指す。</p>
+      </div>
+    </div>
+    <div class="slide-bg-num">07</div>
+  </div>
+
+</div>
+
+<!-- ナビゲーション -->
+<div class="nav">
+  <button onclick="changeSlide(-1)">&#9664;</button>
+  <button onclick="changeSlide(1)">&#9654;</button>
+</div>
+<div class="page-indicator" id="pageIndicator">1 / 9</div>
+<div class="footer">produced by いちじく</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+    document.getElementById('pageIndicator').textContent = (index + 1) + ' / ' + totalSlides;
+  }
+
+  function changeSlide(dir) {
+    currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + dir));
+    showSlide(currentSlide);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      changeSlide(1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      changeSlide(-1);
+    }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+  document.addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      changeSlide(diff > 0 ? 1 : -1);
+    }
+  });
+</script>
+
+</body>
+</html>
