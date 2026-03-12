@@ -13,7 +13,6 @@
     --purple-mid: #6B3FA0;
     --purple-light: #8B6DB5;
     --purple-pale: #f3eef8;
-    --purple-bg: #f9f7fc;
     --gold: #c9a96e;
     --gold-dark: #b8942e;
     --gold-light: #e8d5a3;
@@ -41,7 +40,7 @@
     height: 100%;
     background: #fff;
     border-left: 4px solid;
-    border-image: linear-gradient(to bottom, var(--purple-deep), var(--gold), var(--purple-mid)) 1;
+    border-image: linear-gradient(to bottom, var(--purple-deep), var(--gold)) 1;
     opacity: 0;
     transform: translateY(-30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
@@ -55,6 +54,11 @@
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+  }
+
+  /* Gold accent slides */
+  .slide.gold-accent {
+    border-image: linear-gradient(to bottom, var(--gold), var(--purple-mid)) 1;
   }
 
   .slide-header {
@@ -74,17 +78,19 @@
     align-items: center;
     flex: 1;
     scrollbar-width: thin;
-    scrollbar-color: rgba(75,0,130,0.2) transparent;
+    scrollbar-color: rgba(75,0,130,0.15) transparent;
   }
 
   .slide-body::-webkit-scrollbar { width: 4px; }
-  .slide-body::-webkit-scrollbar-thumb { background: rgba(75,0,130,0.2); border-radius: 2px; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(75,0,130,0.15); border-radius: 2px; }
 
   .slide.title-slide {
     justify-content: center;
     align-items: center;
     padding-bottom: 100px;
     background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 50%, var(--gold-pale) 100%);
+    border-image: none;
+    border-left: none;
   }
 
   .slide.title-slide .slide-header {
@@ -98,10 +104,14 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 16rem;
     font-weight: 700;
-    color: rgba(75,0,130,0.06);
+    color: rgba(75,0,130,0.05);
     line-height: 1;
     pointer-events: none;
     user-select: none;
+  }
+
+  .gold-accent .slide-bg-num {
+    color: rgba(201,169,110,0.08);
   }
 
   .section-num {
@@ -114,6 +124,10 @@
     font-weight: 600;
   }
 
+  .gold-accent .section-num {
+    color: var(--gold-dark);
+  }
+
   .slide-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -121,11 +135,19 @@
     margin-bottom: 8px;
   }
 
+  .gold-accent .slide-title {
+    color: #8B6B2A;
+  }
+
   .divider {
     width: 60px;
     height: 2px;
     background: linear-gradient(to right, var(--purple-deep), var(--gold));
     margin: 12px auto 0;
+  }
+
+  .gold-accent .divider {
+    background: linear-gradient(to right, var(--gold), var(--purple-mid));
   }
 
   .ichijiku-icon {
@@ -168,11 +190,11 @@
     font-weight: 500;
   }
 
+  /* Default card: purple top */
   .card {
     background: #fafafc;
     border: 1px solid #ece8f0;
-    border-top: 3px solid;
-    border-image: linear-gradient(to right, var(--purple-mid), var(--gold)) 1;
+    border-top: 3px solid var(--purple-mid);
     border-radius: 6px;
     padding: 20px 24px;
     margin-bottom: 14px;
@@ -187,6 +209,17 @@
     margin-bottom: 10px;
   }
 
+  /* Gold card variant */
+  .card.gold-card {
+    background: #fdfcf8;
+    border: 1px solid #ede8dc;
+    border-top: 3px solid var(--gold);
+  }
+
+  .card.gold-card .card-title {
+    color: var(--gold-dark);
+  }
+
   .card p, .card li {
     font-size: 0.82rem;
     line-height: 1.8;
@@ -195,10 +228,10 @@
 
   .card ul { padding-left: 18px; }
   .card ul li { margin-bottom: 4px; }
-  .card ul li::marker { color: var(--gold); }
 
+  /* Default highlight: purple */
   .highlight {
-    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--gold-pale) 100%);
+    background: var(--purple-pale);
     border-left: 3px solid var(--purple-mid);
     padding: 14px 20px;
     margin-bottom: 14px;
@@ -215,6 +248,14 @@
 
   .highlight strong { color: var(--purple-deep); }
 
+  /* Gold highlight variant */
+  .highlight.gold-hl {
+    background: var(--gold-pale);
+    border-left: 3px solid var(--gold);
+  }
+
+  .highlight.gold-hl strong { color: var(--gold-dark); }
+
   .table-wrap {
     width: 100%;
     max-width: 700px;
@@ -229,18 +270,18 @@
   }
 
   th {
-    background: var(--purple-pale);
-    color: var(--purple-deep);
+    background: var(--gold-pale);
+    color: var(--gold-dark);
     font-weight: 600;
     padding: 10px 14px;
-    border-bottom: 2px solid var(--purple-mid);
+    border-bottom: 2px solid var(--gold);
     text-align: left;
     white-space: nowrap;
   }
 
   td {
     padding: 10px 14px;
-    border-bottom: 1px solid #ece8f0;
+    border-bottom: 1px solid #eee;
     color: #555;
     line-height: 1.6;
   }
@@ -274,8 +315,7 @@
   }
 
   .card.urgent {
-    border-top: 3px solid;
-    border-image: linear-gradient(to right, #c26a5a, #e8a090) 1;
+    border-top: 3px solid #c26a5a;
   }
 
   .card.urgent .card-title { color: #c26a5a; }
@@ -298,7 +338,7 @@
     content: '☐';
     position: absolute;
     left: 0;
-    color: var(--purple-mid);
+    color: var(--gold);
   }
 
   .nav {
@@ -379,7 +419,7 @@
 
 <div class="slide-container">
 
-  <!-- Slide 1: タイトル -->
+  <!-- Slide 0: タイトル（番号なし） -->
   <div class="slide title-slide active" data-slide="0">
     <div class="slide-header">
       <img src="ichijiku-icon.png" class="ichijiku-icon" alt="いちじく">
@@ -398,11 +438,11 @@
         <span class="tag gold">LP制作</span>
       </div>
     </div>
-    <div class="slide-bg-num">01</div>
   </div>
 
-  <!-- Slide 2: 打ち合わせの目的 -->
+  <!-- Slide 1: 打ち合わせの目的（紫） -->
   <div class="slide" data-slide="1">
+    <div class="slide-bg-num">01</div>
     <div class="slide-header">
       <div class="section-num">Section 01</div>
       <div class="slide-title">打ち合わせの目的</div>
@@ -428,11 +468,11 @@
         </ul>
       </div>
     </div>
-    <div class="slide-bg-num">01</div>
   </div>
 
-  <!-- Slide 3: クライアントの現状 -->
+  <!-- Slide 2: クライアントの現状（紫） -->
   <div class="slide" data-slide="2">
+    <div class="slide-bg-num">02</div>
     <div class="slide-header">
       <div class="section-num">Section 02</div>
       <div class="slide-title">クライアント（伊達さん）の現状</div>
@@ -470,11 +510,11 @@
         </ul>
       </div>
     </div>
-    <div class="slide-bg-num">02</div>
   </div>
 
-  <!-- Slide 4: 課題・ニーズ① -->
+  <!-- Slide 3: 課題・ニーズ①（紫） -->
   <div class="slide" data-slide="3">
+    <div class="slide-bg-num">03</div>
     <div class="slide-header">
       <div class="section-num">Section 03</div>
       <div class="slide-title">課題・ニーズ (1)</div>
@@ -501,11 +541,11 @@
         </ul>
       </div>
     </div>
-    <div class="slide-bg-num">03</div>
   </div>
 
-  <!-- Slide 5: 課題・ニーズ② -->
+  <!-- Slide 4: 課題・ニーズ②（紫） -->
   <div class="slide" data-slide="4">
+    <div class="slide-bg-num">04</div>
     <div class="slide-header">
       <div class="section-num">Section 03</div>
       <div class="slide-title">課題・ニーズ (2)</div>
@@ -539,11 +579,11 @@
         </ul>
       </div>
     </div>
-    <div class="slide-bg-num">03</div>
   </div>
 
-  <!-- Slide 6: 提案プラン -->
-  <div class="slide" data-slide="5">
+  <!-- Slide 5: 提案プラン（★金アクセント） -->
+  <div class="slide gold-accent" data-slide="5">
+    <div class="slide-bg-num">05</div>
     <div class="slide-header">
       <div class="section-num">Section 04</div>
       <div class="slide-title">ちいくじの提案プラン</div>
@@ -563,35 +603,35 @@
             <tr>
               <td><span class="tag purple">1. ファネル構築</span></td>
               <td>既存ファネル読み解き + 動線再構築<br>（診断→ステップ配信→個別相談）</td>
-              <td>300,000円</td>
+              <td><strong>300,000円</strong></td>
             </tr>
             <tr>
               <td><span class="tag purple">2. LP制作</span></td>
               <td>オプトインLP + 個別相談LP<br>（デザイン + ライティング込み・2ページ）</td>
-              <td>150,000円</td>
+              <td><strong>150,000円</strong></td>
             </tr>
             <tr>
               <td><span class="tag gold">3. ライティング</span></td>
               <td>LINEステップ配信メッセージ + 画像<br>+ 動物占い簡易診断アプリ制作</td>
-              <td>100,000円</td>
+              <td><strong>100,000円</strong></td>
             </tr>
             <tr>
               <td><span class="tag gold">4. 特典サイト</span></td>
               <td>会員サイトに特典コーナー追加<br>（LINE登録者向け特典の設置）</td>
-              <td>100,000円</td>
+              <td><strong>100,000円</strong></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="highlight">
+      <div class="highlight gold-hl">
         <p><strong>ポイント：</strong>クライアントに松竹梅方式で提案。必要なものを選んでもらう形式。1は最低限、2・3・4はオプション。</p>
       </div>
     </div>
-    <div class="slide-bg-num">04</div>
   </div>
 
-  <!-- Slide 7: 提案のポイント -->
+  <!-- Slide 6: 提案のポイント（紫） -->
   <div class="slide" data-slide="6">
+    <div class="slide-bg-num">06</div>
     <div class="slide-header">
       <div class="section-num">Section 04</div>
       <div class="slide-title">提案のポイント</div>
@@ -615,18 +655,18 @@
         <p>ブロックされないよう温める配信設計に。文章だけでなく画像や診断を挟みながら、セミナー告知時に反応が取れる状態を作る。</p>
       </div>
     </div>
-    <div class="slide-bg-num">04</div>
   </div>
 
-  <!-- Slide 8: 合意事項 -->
-  <div class="slide" data-slide="7">
+  <!-- Slide 7: 合意事項（★金アクセント） -->
+  <div class="slide gold-accent" data-slide="7">
+    <div class="slide-bg-num">07</div>
     <div class="slide-header">
       <div class="section-num">Section 05</div>
       <div class="slide-title">合意事項</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card">
+      <div class="card gold-card">
         <div class="card-title">費用・体制</div>
         <ul>
           <li>MIKIさんの会社がクライアントから受注 → いちじくチームに分配</li>
@@ -634,11 +674,11 @@
           <li>ウラカタマッチングサロンへの納付：1割（ちいくじ側で負担）</li>
         </ul>
       </div>
-      <div class="highlight">
+      <div class="highlight gold-hl">
         <p><strong>例）ファネル構築 300,000円の場合</strong><br>
         MIKIさん側：100,000円 / いちじく側：200,000円（うち20,000円をウラカタマッチングサロン納付 → 実質180,000円で運用）</p>
       </div>
-      <div class="card">
+      <div class="card gold-card">
         <div class="card-title">納期</div>
         <ul>
           <li>クライアントは <strong>3月末</strong> にファネルを走らせたい（YouTube配信再開も）</li>
@@ -646,7 +686,7 @@
           <li>下書きを作成し一気に切替える方式で進行</li>
         </ul>
       </div>
-      <div class="card">
+      <div class="card gold-card">
         <div class="card-title">契約形態</div>
         <ul>
           <li>MIKIさんの会社（法人）とクライアントで契約</li>
@@ -654,18 +694,18 @@
         </ul>
       </div>
     </div>
-    <div class="slide-bg-num">05</div>
   </div>
 
-  <!-- Slide 9: ネクストアクション -->
-  <div class="slide" data-slide="8">
+  <!-- Slide 8: ネクストアクション（★金アクセント） -->
+  <div class="slide gold-accent" data-slide="8">
+    <div class="slide-bg-num">08</div>
     <div class="slide-header">
       <div class="section-num">Section 06</div>
       <div class="slide-title">ネクストアクション</div>
       <div class="divider"></div>
     </div>
     <div class="slide-body">
-      <div class="card">
+      <div class="card gold-card">
         <div class="card-title">ちいくじ</div>
         <ul class="checklist">
           <li>提案書（松竹梅プラン + 見積もり）を作成</li>
@@ -674,7 +714,7 @@
           <li>確定申告を3月14日に完了させる</li>
         </ul>
       </div>
-      <div class="card">
+      <div class="card gold-card">
         <div class="card-title">MIKIさん</div>
         <ul class="checklist">
           <li>クライアント（伊達さん）に3月14〜16日の21時以降で日程調整</li>
@@ -682,11 +722,10 @@
           <li>NDA済みのオペレーション情報の共有継続</li>
         </ul>
       </div>
-      <div class="highlight">
+      <div class="highlight gold-hl">
         <p><strong>次回打ち合わせ：</strong>3月14〜16日（21時以降）を目標にクライアントとの3者ミーティングを調整中。ちいくじが事前に提案書を準備。</p>
       </div>
     </div>
-    <div class="slide-bg-num">06</div>
   </div>
 
 </div>
