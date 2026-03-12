@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録 - まいさん × ちいくじ 初回ヒアリング</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;300;400;500;600;700;900&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: #fff; color: #1a1a1a; overflow: hidden; height: 100vh; width: 100vw; }
+  .slide-container { width: 100vw; height: 100vh; position: relative; }
+  .slide { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; opacity: 0; transform: translateY(-30px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); pointer-events: none; background: #fff; overflow: hidden; }
+  .slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .slide::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #c9a96e, #e8d5a8, #c9a96e); z-index: 3; }
+  .slide-bg-num { position: absolute; right: 60px; bottom: 20px; font-family: 'Cormorant Garamond', serif; font-size: 16rem; font-weight: 300; color: rgba(201,169,110,0.10); line-height: 1; pointer-events: none; z-index: 0; user-select: none; }
+  .slide-header { position: relative; z-index: 2; padding: 48px 100px 0; flex-shrink: 0; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .section-num { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 6px; text-transform: uppercase; color: #c9a96e; margin-bottom: 12px; font-weight: 500; }
+  .slide-title { font-size: 2.2rem; font-weight: 700; color: #1a1a1a; line-height: 1.4; letter-spacing: -0.5px; }
+  .slide-title .gold { color: #b8942e; }
+  .divider { width: 48px; height: 1px; background: #c9a96e; margin: 16px 0 0; }
+  .slide-body { position: relative; z-index: 1; flex: 1; overflow-y: auto; padding: 20px 100px 60px; display: flex; flex-direction: column; align-items: center; scrollbar-width: thin; scrollbar-color: rgba(201,169,110,0.3) transparent; }
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-track { background: transparent; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
+  .content { width: 100%; max-width: 1100px; }
+  .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 1100px; }
+  .card { background: #fafaf8; border: 1px solid #eee; border-radius: 4px; padding: 24px 28px; position: relative; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #c9a96e, #e8d5a8); }
+  .card-title { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: #b8942e; margin-bottom: 14px; font-weight: 600; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { padding: 4px 0; font-size: 0.85rem; color: #444; line-height: 1.6; position: relative; padding-left: 16px; font-weight: 400; }
+  .card li::before { content: ''; position: absolute; left: 0; top: 12px; width: 5px; height: 5px; border-radius: 50%; background: #c9a96e; }
+  .highlight-box { background: #faf8f3; border-left: 3px solid #c9a96e; padding: 20px 24px; width: 100%; max-width: 1100px; }
+  .highlight-box h3 { color: #b8942e; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
+  .highlight-box p, .highlight-box li { color: #444; font-size: 0.9rem; line-height: 1.8; }
+  .slide-table { width: 100%; max-width: 1000px; border-collapse: collapse; }
+  .slide-table th { background: #faf8f3; color: #b8942e; padding: 12px 20px; text-align: left; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; border-bottom: 2px solid #c9a96e; }
+  .slide-table td { padding: 12px 20px; font-size: 0.85rem; color: #444; border-bottom: 1px solid #eee; }
+  .slide-table strong { color: #1a1a1a; font-weight: 600; }
+  .tag { display: inline-block; border: 1px solid #ddd; color: #666; padding: 4px 12px; border-radius: 2px; font-size: 0.75rem; margin: 3px 4px; letter-spacing: 0.5px; font-weight: 400; }
+  .tag.gold { border-color: #c9a96e; color: #b8942e; background: #faf8f3; }
+  .nav { position: fixed; bottom: 16px; right: 20px; display: flex; gap: 4px; z-index: 100; }
+  .nav button { width: 28px; height: 28px; border-radius: 0; border: 1px solid #e0e0e0; background: #fff; color: #bbb; font-size: 0.7rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Cormorant Garamond', serif; }
+  .nav button:hover { border-color: #c9a96e; color: #b8942e; }
+  .page-indicator { position: fixed; bottom: 20px; left: 20px; font-family: 'Cormorant Garamond', serif; font-size: 0.7rem; color: #ccc; letter-spacing: 2px; z-index: 100; }
+  .slide.title-slide { justify-content: center; align-items: center; text-align: center; padding: 60px; padding-bottom: 120px; }
+  .slide.title-slide::before { display: none; }
+  .slide.title-slide::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; border: 1px solid rgba(201,169,110,0.1); border-radius: 50%; pointer-events: none; }
+  .slide-footer { position: absolute; bottom: 14px; left: 0; width: 100%; text-align: center; font-size: 0.65rem; color: #ccc; letter-spacing: 2px; font-weight: 300; z-index: 100; }
+  .title-line { width: 80px; height: 1px; background: #c9a96e; margin: 16px auto; }
+  .title-label { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 8px; color: #c9a96e; text-transform: uppercase; }
+  .title-main { font-size: 2.6rem; font-weight: 200; color: #1a1a1a; line-height: 1.5; letter-spacing: 2px; }
+  .title-main strong { font-weight: 700; }
+  .title-meta { font-size: 0.9rem; color: #aaa; font-weight: 300; letter-spacing: 1px; }
+  .card.full-width { grid-column: 1 / -1; }
+  .end-mark { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 8px; color: #ccc; margin-top: 36px; }
+  .flow { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .flow-item { background: #fafaf8; border: 1px solid #eee; padding: 14px 18px; text-align: center; min-width: 110px; position: relative; }
+  .flow-item::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #c9a96e; }
+  .flow-item .icon { font-size: 1.2rem; margin-bottom: 4px; }
+  .flow-item .label { font-size: 0.72rem; color: #666; line-height: 1.4; }
+  .flow-arrow { color: #c9a96e; font-size: 1.1rem; font-weight: 300; }
+  .flow-item.final { border-color: #c9a96e; }
+  .flow-item.final .label { color: #b8942e; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+
+  <!-- Slide 1: Title -->
+  <div class="slide title-slide active">
+    <div class="slide-bg-num" style="color: rgba(201,169,110,0.04); font-size: 22rem; right: 50%; transform: translateX(50%);">M</div>
+    <div class="title-label">Meeting Minutes</div>
+    <div class="title-line"></div>
+    <div class="title-main">
+      <strong>まいさん</strong> × <strong>ちいくじ</strong><br>
+      初回ヒアリング
+    </div>
+    <div class="title-line"></div>
+    <div class="title-meta" style="margin-top: 8px;">2026年3月12日 ／ 約46分</div>
+    <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+      <span class="tag gold">まいさん — Amazon物販（中古DVD・ブルーレイ）</span>
+      <span class="tag gold">ちいくじ — ウラカタチーム</span>
+    </div>
+  </div>
+
+  <!-- Slide 2: 目的 -->
+  <div class="slide">
+    <div class="slide-bg-num">01</div>
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">打ち合わせの<span class="gold">目的</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight-box" style="margin-top: 8px;">
+        <p style="font-size: 1.05rem; line-height: 2;">
+          おさるさんの合宿で知り合い<br>
+          ちいくじのチームに<strong>どこまで依頼できるか</strong>を相談<br>
+          YouTube編集・UTAGE構築・ローンチ周りの<strong>キックオフ</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: 事業概要 -->
+  <div class="slide">
+    <div class="slide-bg-num">02</div>
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">まいさんの<span class="gold">事業概要</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">3つの柱（すべて物販）</div>
+          <ul>
+            <li>自身の物販事業（中古DVD・ブルーレイ）</li>
+            <li>物販を教える講座（10年の実績）</li>
+            <li>物販の代行事業</li>
+            <li>販売先は <strong>100% Amazon FBA</strong></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">現在の集客・ツール</div>
+          <ul>
+            <li>LINE — UTAGEで運用中</li>
+            <li>メルマガ — マイスピーで運用（約15,000名）</li>
+            <li>YouTube — 対談動画のみ（これから本格化）</li>
+            <li>X（Twitter）— 図解投稿で運用中</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: 現在の仕組み -->
+  <div class="slide">
+    <div class="slide-bg-num">03</div>
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">現在の<span class="gold">仕組み</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">会員サイト</div>
+          <ul>
+            <li>WordPressでマニュアルサイト運営中</li>
+            <li>UTAGEの会員サイトに <strong>移行予定</strong></li>
+            <li>マニュアル一新のタイミングで全部変える</li>
+            <li>コンテンツ動画は <strong>Vimeo</strong> に約193本</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">コミュニティ</div>
+          <ul>
+            <li><strong>OpnField</strong> で専用SNSを運営中</li>
+            <li>勉強会担当者がトレンド商品を共有</li>
+            <li>受講生の年齢層が高くDiscord等は不向き</li>
+            <li>UTAGEにSNS機能ができたら移行希望</li>
+          </ul>
+        </div>
+        <div class="card full-width">
+          <div class="card-title">個別面談</div>
+          <ul>
+            <li>UTAGEのLP経由で個別面談を実施中 — <strong>ここは動いている</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: 対応範囲 -->
+  <div class="slide">
+    <div class="slide-bg-num">04</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">ちいくじが<span class="gold">できること</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <table class="slide-table">
+        <tr><th>項目</th><th>対応</th><th>備考</th></tr>
+        <tr><td>UTAGE構築（パッケージ）</td><td><strong>◯</strong></td><td>LP・ステップ配信・セミナー動線まで一式</td></tr>
+        <tr><td>YouTube企画・戦略立案</td><td><strong>◯</strong></td><td>25本の企画案を一緒に考える</td></tr>
+        <tr><td>YouTube動画編集</td><td><strong>◯</strong></td><td>チームに編集者在籍</td></tr>
+        <tr><td>会員サイト移行</td><td><strong>◯</strong></td><td>WP → UTAGEへの載せ替え</td></tr>
+        <tr><td>YouTube台本作成</td><td><strong>△</strong></td><td>萌えぞうさん式の完全委託は対応不可</td></tr>
+        <tr><td>コミュニティ機能</td><td><strong>要確認</strong></td><td>UTAGE側の機能追加待ち</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Slide 6: YouTube戦略 -->
+  <div class="slide">
+    <div class="slide-bg-num">05</div>
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title"><span class="gold">YouTube</span>戦略の提案</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content" style="max-width: 900px;">
+        <div class="highlight-box" style="margin-bottom: 20px;">
+          <h3>25本企画案メソッド</h3>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> カテゴリ分け（例：法律・ツール解説・仕入れ等）× 5本ずつ</li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> <strong>タイトル＋サムネイル案を先に作成</strong>してから台本に着手</li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> まいさんの10年の知見を体系化 → 全体像を可視化</li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> <strong>Keepa</strong>解説動画が検索数も多く伸びやすい</li>
+          </ul>
+        </div>
+        <div class="flow">
+          <div class="flow-item"><div class="icon">📋</div><div class="label">25本<br>企画案</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">🎨</div><div class="label">サムネ<br>作成</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">📝</div><div class="label">台本<br>作成</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">🎬</div><div class="label">撮影<br>編集</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item final"><div class="icon">📺</div><div class="label">YouTube<br>公開</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: 合意事項 -->
+  <div class="slide">
+    <div class="slide-bg-num">06</div>
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title"><span class="gold">合意</span>事項</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content" style="max-width: 900px; display: flex; flex-direction: column; gap: 16px;">
+        <div class="card" style="padding: 28px 32px;">
+          <div class="card-title">進め方</div>
+          <ul>
+            <li>まずは <strong>NDA（秘密保持契約）</strong> を締結</li>
+            <li>NDA後にWP会員サイト・UTAGEの中身をちいくじが確認</li>
+            <li>25本のYouTube企画案をちいくじが作成</li>
+            <li>現時点で金額の合意はなし（<strong>まずは無料の相談フェーズ</strong>）</li>
+          </ul>
+        </div>
+        <div class="card" style="padding: 28px 32px;">
+          <div class="card-title">次回ミーティング</div>
+          <ul>
+            <li><strong>3月18〜19日頃</strong>に2回目のZoomミーティング</li>
+            <li>25本企画案をベースにYouTube戦略を一緒に検討</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: ネクストアクション -->
+  <div class="slide">
+    <div class="slide-bg-num">07</div>
+    <div class="slide-header">
+      <div class="section-num">Section 07</div>
+      <div class="slide-title"><span class="gold">ネクスト</span>アクション</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">ちいくじ</div>
+          <ul>
+            <li>NDA（秘密保持契約書）を送付</li>
+            <li>25本のYouTube企画案のひな形を作成</li>
+            <li>NDA後、UTAGEとWordPressの中身を確認</li>
+            <li>競合リサーチ（せどり系YouTube）</li>
+            <li>次回ミーティングを3月18〜19日頃に設定</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">まいさん</div>
+          <ul>
+            <li>NDAに署名・返送</li>
+            <li>正しいメールアドレスをチャットワークで共有</li>
+            <li>UTAGEのオペレーター権限を付与</li>
+            <li>WordPressのパスワードを共有（NDA後）</li>
+            <li>次回ミーティングを予約</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top: 20px;">
+        <h3>備考</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> ちいくじの工作キットをAmazon FBAに登録する件も相互に検討</li>
+          <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> コミュニティのUTAGE移行はUTAGE側の機能追加待ち</li>
+          <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> Vimeo動画はUTAGEに移さず参照方式も検討</li>
+        </ul>
+      </div>
+      <div class="end-mark">— End —</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="prevSlide()">←</button>
+  <button onclick="nextSlide()">→</button>
+</div>
+<div class="page-indicator">
+  <span id="currentPage">01</span> — <span id="totalPages">08</span>
+</div>
+<div class="slide-footer">produced by いちじく</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  document.getElementById('totalPages').textContent = String(totalSlides).padStart(2,'0');
+  function showSlide(index) {
+    slides.forEach(s => { s.classList.remove('active'); const body = s.querySelector('.slide-body'); if (body) body.scrollTop = 0; });
+    slides[index].classList.add('active');
+    document.getElementById('currentPage').textContent = String(index + 1).padStart(2,'0');
+  }
+  function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; showSlide(currentSlide); } }
+  function prevSlide() { if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); } }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  });
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => { const diff = touchStartX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); } });
+</script>
+</body>
+</html>
