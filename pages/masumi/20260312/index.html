@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録：ますみさん プレミアム動画 打ち合わせ</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f5f3;
+    color: #333;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .slide-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-left: 4px solid;
+    border-image: linear-gradient(to bottom, #c9a96e, #e8d5a3) 1;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide-header {
+    padding: 48px 100px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .slide-body {
+    padding: 20px 100px 60px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 120px;
+  }
+
+  .slide.title-slide .slide-header {
+    padding: 0 100px;
+  }
+
+  .slide-bg-num {
+    position: absolute;
+    right: 60px;
+    bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: rgba(201,169,110,0.10);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: #c9a96e;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .slide-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, #c9a96e, #e8d5a3);
+    margin: 12px auto 0;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .main-subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .meta-info {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-item {
+    font-size: 0.82rem;
+    color: #666;
+  }
+
+  .meta-label {
+    color: #b8942e;
+    font-weight: 500;
+  }
+
+  .card {
+    background: #fafaf8;
+    border: 1px solid #eee;
+    border-top: 3px solid #c9a96e;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b8942e;
+    margin-bottom: 10px;
+  }
+
+  .card p, .card li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .card ul { padding-left: 18px; }
+  .card ul li { margin-bottom: 4px; }
+
+  .highlight {
+    background: #faf8f3;
+    border-left: 3px solid #c9a96e;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .highlight p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .highlight strong { color: #b8942e; }
+
+  .table-wrap {
+    width: 100%;
+    max-width: 700px;
+    overflow-x: auto;
+    margin-bottom: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  th {
+    background: #faf8f3;
+    color: #b8942e;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 2px solid #c9a96e;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    color: #666;
+    background: transparent;
+  }
+
+  .tag.gold {
+    border-color: #c9a96e;
+    color: #b8942e;
+    background: #faf8f3;
+  }
+
+  .card.urgent {
+    border-top: 3px solid;
+    border-image: linear-gradient(to right, #c26a5a, #e8a090) 1;
+  }
+
+  .card.urgent .card-title { color: #c26a5a; }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .checklist li::before {
+    content: '\2610';
+    position: absolute;
+    left: 0;
+    color: #c9a96e;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .nav button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover {
+    border-color: #c9a96e;
+    color: #c9a96e;
+  }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 28px;
+    left: 24px;
+    font-size: 0.7rem;
+    color: #ccc;
+    font-family: 'Cormorant Garamond', serif;
+    z-index: 100;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: #ccc;
+    z-index: 100;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #555;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .flow-arrow {
+    color: #c9a96e;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- Slide 1: タイトル -->
+  <div class="slide title-slide active" data-slide="0">
+    <div class="slide-header">
+      <div class="section-num">Meeting Minutes</div>
+      <div class="divider" style="margin-bottom: 24px;"></div>
+      <div class="main-title">ますみさん プレミアム動画<br>打ち合わせ</div>
+      <div class="main-subtitle">編集方針・構成・スケジュール・料金の確認</div>
+      <div class="meta-info">
+        <span class="meta-item"><span class="meta-label">日時</span>　2026.03.12 Thu 16:59-17:43</span>
+        <span class="meta-item"><span class="meta-label">形式</span>　オンライン</span>
+      </div>
+      <div class="meta-info" style="margin-top: 12px;">
+        <span class="meta-item"><span class="meta-label">参加者</span>　ちいくじ / 八木 潤平 / Masumi Hasegawa</span>
+      </div>
+      <div class="tags" style="margin-top: 20px;">
+        <span class="tag gold">プレミアム動画</span>
+        <span class="tag gold">動画編集</span>
+        <span class="tag">デザイン方針</span>
+        <span class="tag">トンマナ</span>
+      </div>
+    </div>
+    <div class="slide-bg-num">01</div>
+  </div>
+
+  <!-- Slide 2: 冒頭連絡 -->
+  <div class="slide" data-slide="1">
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">冒頭連絡（ますみさん入室前）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">アクシング動画投稿</div>
+        <ul>
+          <li>ちいくじチェックなしで本日投稿OK（急ぎのため）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">八木さんの紹介</div>
+        <ul>
+          <li>ちいくじチームの動画編集担当</li>
+          <li>秘密基地合宿参加者</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">01</div>
+  </div>
+
+  <!-- Slide 3: プレミアム動画の編集方針 -->
+  <div class="slide" data-slide="2">
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">プレミアム動画の編集方針</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">動画の現状</div>
+        <ul>
+          <li>素材10本を結合済み</li>
+          <li>カット + ベーステロップ（仮テロップ）まで完了</li>
+          <li>完成尺：約6分49秒（7分弱）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">ますみさんのデザイン要望</div>
+        <ul>
+          <li><strong>色調</strong>：明るすぎる色は避ける（年齢層が上の視聴者が離脱するため）</li>
+          <li><strong>雰囲気</strong>：奇抜な美容系ではなく、優しいヨガっぽいイメージ</li>
+          <li><strong>好みの色調整</strong>：直近の上4本の動画の色調が好み</li>
+          <li><strong>NG例</strong>：投稿2本目の動画（「知らない人を老ける...」）は色合いが好きではない</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">テロップ・バナー・被写体位置</div>
+        <ul>
+          <li><strong>テロップ</strong>：文字数にこだわりなし。見やすくてワクワクする感じならOK</li>
+          <li><strong>無料特典プレゼントバナー</strong>：不要（この動画自体が特典の一部のため）</li>
+          <li><strong>被写体の位置</strong>：ますみさんが画面中央に来るよう調整してほしい（素材ごとにズレあり）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">02</div>
+  </div>
+
+  <!-- Slide 4: 制作の進め方 -->
+  <div class="slide" data-slide="3">
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">制作の進め方</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>全部作って方向性が違うリスクを回避するため、まず<strong>冒頭1分のサンプル</strong>を作成し、ますみさんに確認してもらう。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">制作ステップ</div>
+        <div class="flow-step">八木さん＆ちいくじでデザイン・編集 <span class="flow-arrow">&rarr;</span> 冒頭1分サンプル作成 <span class="flow-arrow">&rarr;</span> ますみさん確認 <span class="flow-arrow">&rarr;</span> 残りを制作</div>
+      </div>
+    </div>
+    <div class="slide-bg-num">02</div>
+  </div>
+
+  <!-- Slide 5: 動画構成の整理 -->
+  <div class="slide" data-slide="4">
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">動画構成の整理</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">素材の中身（3パターン）</div>
+        <ul>
+          <li><strong>セミナー誘導バージョン（CTA）</strong> &rarr; 今回使用</li>
+          <li>個別相談誘導バージョン &rarr; 今回は不使用（グレーアウトして保存）</li>
+          <li>3つ目のパターン &rarr; 今回は不使用</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <p>今回は<strong>セミナー版のエンディングのみ</strong>で1本完成させる。個別相談バージョンは将来セミナーをやらない時期に使う可能性があるため、素材は保存しておく。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">その他</div>
+        <ul>
+          <li>ちいくじが「ファネル全体像」の資料を作成し、ますみさん＆八木さんに共有予定</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">03</div>
+  </div>
+
+  <!-- Slide 6: カメラ位置の調整 -->
+  <div class="slide" data-slide="5">
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">カメラ位置の調整</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">現状の問題</div>
+        <ul>
+          <li>素材ごとにますみさんの位置がズレている（特に後半で左寄り）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">対応方針</div>
+        <ul>
+          <li>素材単位で体の中心を画面中央に合わせるよう調整する</li>
+          <li>全素材でなく、目立つ2〜3箇所の調整でもOK</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">04</div>
+  </div>
+
+  <!-- Slide 7: スケジュール -->
+  <div class="slide" data-slide="6">
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title">スケジュール</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>ますみさんは本来本日公開希望だったが間に合わず。<strong>数日以内にリリース目標</strong>（2週間はかけない）。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">直近の予定</div>
+        <ul>
+          <li><strong>本日23時</strong>：ちいくじ＆八木さんでバナー等の方向性すり合わせ</li>
+          <li><strong>明日（3/13）</strong>：八木さんが冒頭1分のデザインサンプルを制作・提出</li>
+          <li>ますみさんがサンプル確認後、残りを制作</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-bg-num">05</div>
+  </div>
+
+  <!-- Slide 8: 料金 -->
+  <div class="slide" data-slide="7">
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title">料金</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>単価</th>
+              <th>備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>通常の対談動画</td>
+              <td>1分あたり 1,000円</td>
+              <td>通常レート</td>
+            </tr>
+            <tr>
+              <td><strong>今回のプレミアム動画</strong></td>
+              <td><strong>1分あたり 4,000円</strong></td>
+              <td>プレミアム2倍 x 初回トンマナ作成2倍</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight">
+        <p>約7分 &rarr; <strong>約24,000〜28,000円</strong>の見込み<br>
+        トンマナ（フォント・デザインテンプレ）は今後使えるよう保存</p>
+      </div>
+    </div>
+    <div class="slide-bg-num">06</div>
+  </div>
+
+  <!-- Slide 9: 案件全体の補足 -->
+  <div class="slide" data-slide="8">
+    <div class="slide-header">
+      <div class="section-num">Section 07</div>
+      <div class="slide-title">案件全体の補足（ますみさん退席後）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">契約・運用</div>
+        <ul>
+          <li>契約期間：6ヶ月</li>
+          <li>セミナー開催：期間中2〜3回の予定</li>
+          <li>日々のYouTube投稿はこちらでは行わない</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <p><strong>注意点：</strong>ますみさんは美意識が高く、細部にこだわりがある。丁寧に対応すること。</p>
+      </div>
+    </div>
+    <div class="slide-bg-num">07</div>
+  </div>
+
+  <!-- Slide 10: TODO -->
+  <div class="slide" data-slide="9">
+    <div class="slide-header">
+      <div class="section-num">Section 08</div>
+      <div class="slide-title">TODO（ネクストアクション）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>担当</th>
+              <th>タスク</th>
+              <th>期限</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>八木</td>
+              <td>冒頭1分のデザインサンプル制作</td>
+              <td>3/13</td>
+            </tr>
+            <tr>
+              <td>八木</td>
+              <td>素材ごとのカメラ位置調整</td>
+              <td>3/13</td>
+            </tr>
+            <tr>
+              <td>八木</td>
+              <td>個別相談バージョンの素材をグレーアウト保存</td>
+              <td>3/13</td>
+            </tr>
+            <tr>
+              <td>ちいくじ</td>
+              <td>ファネル全体像の資料作成（セミナー/個別相談の使い分け説明）</td>
+              <td>近日中</td>
+            </tr>
+            <tr>
+              <td>ちいくじ</td>
+              <td>プレミアム動画の後半部分を確認</td>
+              <td>本日中</td>
+            </tr>
+            <tr>
+              <td>ますみ</td>
+              <td>冒頭1分サンプルの確認・フィードバック</td>
+              <td>3/13以降</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="slide-bg-num">08</div>
+  </div>
+
+</div>
+
+<!-- ナビゲーション -->
+<div class="nav">
+  <button onclick="changeSlide(-1)">&#9664;</button>
+  <button onclick="changeSlide(1)">&#9654;</button>
+</div>
+<div class="page-indicator" id="pageIndicator">1 / 10</div>
+<div class="footer">produced by いちじく</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+    document.getElementById('pageIndicator').textContent = (index + 1) + ' / ' + totalSlides;
+  }
+
+  function changeSlide(dir) {
+    currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + dir));
+    showSlide(currentSlide);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      changeSlide(1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      changeSlide(-1);
+    }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+  document.addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      changeSlide(diff > 0 ? 1 : -1);
+    }
+  });
+</script>
+
+</body>
+</html>
