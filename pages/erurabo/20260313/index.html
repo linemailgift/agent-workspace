@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録：いちじく × えるらぼ 協業ミーティング</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #4B0082;
+    --purple-mid: #6B3FA0;
+    --purple-light: #8B6DB5;
+    --purple-pale: #f3eef8;
+    --gold: #c9a96e;
+    --gold-dark: #b8942e;
+    --gold-light: #e8d5a3;
+    --gold-pale: #faf8f3;
+    --red: #c26a5a;
+    --red-dark: #a8524a;
+    --red-light: #e8a090;
+    --red-pale: #fdf3f1;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f4f7;
+    color: #333;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .slide-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-left: 4px solid;
+    border-image: linear-gradient(to bottom, var(--purple-deep), var(--purple-light)) 1;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide.theme-gold {
+    border-image: linear-gradient(to bottom, var(--gold), var(--gold-light)) 1;
+  }
+  .slide.theme-red {
+    border-image: linear-gradient(to bottom, var(--red), var(--red-light)) 1;
+  }
+
+  .slide-header {
+    padding: 48px 100px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .slide-body {
+    padding: 20px 100px 60px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(75,0,130,0.15) transparent;
+  }
+
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(75,0,130,0.15); border-radius: 2px; }
+
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 100px;
+    background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 50%, var(--gold-pale) 100%);
+    border-image: none;
+    border-left: none;
+  }
+
+  .slide.title-slide .slide-header {
+    padding: 0 100px;
+  }
+
+  .slide-bg-num {
+    position: absolute;
+    right: 60px;
+    bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: rgba(75,0,130,0.05);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .theme-gold .slide-bg-num { color: rgba(201,169,110,0.07); }
+  .theme-red .slide-bg-num { color: rgba(194,106,90,0.07); }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--purple-mid);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .theme-gold .section-num { color: var(--gold-dark); }
+  .theme-red .section-num { color: var(--red); }
+
+  .slide-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 8px;
+  }
+  .theme-gold .slide-title { color: #8B6B2A; }
+  .theme-red .slide-title { color: var(--red-dark); }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, var(--purple-deep), var(--purple-light));
+    margin: 12px auto 0;
+  }
+  .theme-gold .divider { background: linear-gradient(to right, var(--gold-dark), var(--gold-light)); }
+  .theme-red .divider { background: linear-gradient(to right, var(--red), var(--red-light)); }
+
+  .ichijiku-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .main-subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .meta-info {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-item { font-size: 0.82rem; color: #666; }
+  .meta-label { color: var(--gold-dark); font-weight: 500; }
+
+  .card {
+    background: #fafafc;
+    border: 1px solid #ece8f0;
+    border-top: 3px solid var(--purple-mid);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-mid);
+    margin-bottom: 10px;
+  }
+  .card p, .card li { font-size: 0.82rem; line-height: 1.8; color: #555; }
+  .card ul { padding-left: 18px; }
+  .card ul li { margin-bottom: 4px; }
+
+  .card.c-gold {
+    background: #fdfcf8;
+    border: 1px solid #ede8dc;
+    border-top: 3px solid var(--gold);
+  }
+  .card.c-gold .card-title { color: var(--gold-dark); }
+
+  .card.c-red {
+    background: var(--red-pale);
+    border: 1px solid #f0ddd9;
+    border-top: 3px solid var(--red);
+  }
+  .card.c-red .card-title { color: var(--red-dark); }
+
+  .highlight {
+    background: var(--purple-pale);
+    border-left: 3px solid var(--purple-mid);
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 0 6px 6px 0;
+  }
+  .highlight p { font-size: 0.82rem; line-height: 1.8; color: #555; }
+  .highlight strong { color: var(--purple-deep); }
+
+  .highlight.hl-gold {
+    background: var(--gold-pale);
+    border-left-color: var(--gold);
+  }
+  .highlight.hl-gold strong { color: var(--gold-dark); }
+
+  .highlight.hl-red {
+    background: var(--red-pale);
+    border-left-color: var(--red);
+  }
+  .highlight.hl-red strong { color: var(--red-dark); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .tag.purple {
+    border: 1px solid var(--purple-light);
+    color: var(--purple-mid);
+    background: var(--purple-pale);
+  }
+  .tag.gold {
+    border: 1px solid var(--gold);
+    color: var(--gold-dark);
+    background: var(--gold-pale);
+  }
+
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #555;
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 0;
+    color: var(--purple-mid);
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav button {
+    width: 28px; height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .nav button:hover {
+    border-color: var(--purple-mid);
+    color: var(--purple-mid);
+    background: var(--purple-pale);
+  }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 28px;
+    left: 24px;
+    font-size: 0.7rem;
+    color: #ccc;
+    font-family: 'Cormorant Garamond', serif;
+    z-index: 100;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: var(--purple-light);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer img { width: 16px; height: 16px; }
+
+  .vs-box {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 14px;
+  }
+  .vs-box .vs-item {
+    flex: 1;
+    background: #fafafc;
+    border: 1px solid #ece8f0;
+    border-top: 3px solid var(--purple-mid);
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .vs-box .vs-item.gold {
+    border-top-color: var(--gold);
+    background: #fdfcf8;
+    border-color: #ede8dc;
+  }
+  .vs-box .vs-item .vs-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .vs-box .vs-item:first-child .vs-title { color: var(--purple-mid); }
+  .vs-box .vs-item.gold .vs-title { color: var(--gold-dark); }
+  .vs-box .vs-item p, .vs-box .vs-item li {
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: #555;
+  }
+  .vs-box .vs-item ul { padding-left: 16px; }
+
+  @media (max-width: 768px) {
+    .slide-header { padding: 32px 24px 0; }
+    .slide-body { padding: 16px 24px 60px; }
+    .slide.title-slide .slide-header { padding: 0 24px; }
+    .main-title { font-size: 1.4rem; }
+    .vs-box { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- ========== 紫：タイトル ========== -->
+  <div class="slide title-slide active" data-slide="0">
+    <div class="slide-header">
+      <img src="ichijiku-icon.png" class="ichijiku-icon" alt="いちじく">
+      <div class="section-num">Meeting Minutes</div>
+      <div class="divider" style="margin-bottom: 24px;"></div>
+      <div class="main-title">いちじく × えるらぼ<br>協業ミーティング</div>
+      <div class="main-subtitle">同業チーム同士の連携の可能性を探る初回顔合わせ</div>
+      <div class="meta-info">
+        <span class="meta-item"><span class="meta-label">日時</span>　2026.03 Zoom</span>
+        <span class="meta-item"><span class="meta-label">形式</span>　Zoom（約60分）</span>
+      </div>
+      <div class="tags" style="margin-top: 20px;">
+        <span class="tag purple">UTAGE協業</span>
+        <span class="tag purple">チーム連携</span>
+        <span class="tag purple">ディレクター育成</span>
+        <span class="tag purple">構築×運用</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：打ち合わせの目的 ========== -->
+  <div class="slide" data-slide="1">
+    <div class="slide-bg-num">01</div>
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">打ち合わせの目的</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>タイの合宿で灘本さん（えるらぼ代表）とゆきえさんが話したことがきっかけ。<strong>UTAGE業界で同業同士が手を組んで助け合える関係</strong>を作れないかという初回の顔合わせ。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">参加者</div>
+        <ul>
+          <li><strong>ちいくじ</strong> — いちじくチーム代表（UTAGE構築代行・おもちゃ工作）</li>
+          <li><strong>灘本 敏さん</strong> — えるらぼ代表（UTAGE運用支援・ディレクター育成）</li>
+          <li><strong>ちぃちゃん</strong> — えるらぼ共同代表（クラブハウスからの創業メンバー）</li>
+          <li><strong>有田耕太郎さん</strong> — いちじくチームのサポート・橋渡し役</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">経緯</div>
+        <ul>
+          <li>タイ合宿の帰りのタクシーで灘本さんとゆきえさんが協業の話をした</li>
+          <li>有田さんがいちじくのコミュニティに参加しており、橋渡し役として同席</li>
+          <li>えるらぼ側は2年前からちいくじと面識あり（オートウェビナー・大阪でのご挨拶）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：お互いの事業概要 ========== -->
+  <div class="slide" data-slide="2">
+    <div class="slide-bg-num">02</div>
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">お互いの事業概要</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="vs-box">
+        <div class="vs-item">
+          <div class="vs-title">いちじく</div>
+          <ul>
+            <li>UTAGE<strong>構築代行</strong>がメイン</li>
+            <li>おさる講座生からの依頼が中心</li>
+            <li>メンバー約30名（コアは6〜7名）</li>
+            <li>LP制作・動画編集など得意分野を持つメンバーで分業</li>
+            <li>子育て中のママの副業支援を目指す</li>
+          </ul>
+        </div>
+        <div class="vs-item gold">
+          <div class="vs-title">えるらぼ</div>
+          <ul>
+            <li>UTAGE<strong>運用支援</strong>がメイン</li>
+            <li>ディレクター育成（企業のCMOになれる人材）</li>
+            <li>クラブハウス発祥のコミュニティ</li>
+            <li>AIでステップ配信・シナリオを書ける仕組み構築中</li>
+            <li>タイ合宿など海外イベントも企画</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight">
+        <p><strong>共通点：</strong>どちらもUTAGEを軸にしたチーム運営。「ウェブで集客→教育→販売」のフレームワークは同じ。得意領域が<strong>構築 vs 運用</strong>で補完関係にある。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 赤：お互いの課題 ========== -->
+  <div class="slide theme-red" data-slide="3">
+    <div class="slide-bg-num">03</div>
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">お互いの課題感</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-red">
+        <div class="card-title">いちじくの課題</div>
+        <ul>
+          <li>案件が増えてちいくじ一人では回しきれなくなっている</li>
+          <li>コミュニケーションコスト・管理コストが高くなり<strong>赤字リスクのある案件</strong>も</li>
+          <li>「おさる式」に縛られており、独自ブランド（いちじく式）の確立が必要</li>
+          <li>マニュアル化・体系化がまだ途上</li>
+          <li>値付けが「どんぶり300,000円」で項目別の単価設定ができていない</li>
+          <li>ちいくじ不在時（日本一周旅）の体制づくりが必要</li>
+        </ul>
+      </div>
+      <div class="card c-red">
+        <div class="card-title">えるらぼの課題</div>
+        <ul>
+          <li>「おさる式で作って」と言われると対応できない（真似事になってしまう）</li>
+          <li>初心者層（ビジネス未経験のママ層）を救いたいが、自分たちでは手が回らない</li>
+          <li>構築の実務を任せられるパートナーがいない</li>
+          <li>ディレクター育成に注力しているため、構築作業に時間を割けない</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 金：協業の方向性 ========== -->
+  <div class="slide theme-gold" data-slide="4">
+    <div class="slide-bg-num">04</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">協業の方向性</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-gold">
+        <div class="card-title">構築 × 運用の相互紹介</div>
+        <ul>
+          <li><strong>いちじく → えるらぼ：</strong>構築後の運用支援が必要な案件を紹介</li>
+          <li><strong>えるらぼ → いちじく：</strong>構築作業が必要な案件をいちじくに依頼</li>
+          <li>「いちじく式」「えるらぼ式」という共通言語でやり方を伝達</li>
+        </ul>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">デザイナー・制作者の連携</div>
+        <ul>
+          <li>えるらぼのディレクターがいちじくのデザイナーと直接つながる可能性</li>
+          <li>お互いのメンバーの得意分野を活かした案件割り振り</li>
+        </ul>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">初心者層の支援連携</div>
+        <ul>
+          <li>えるらぼが救いたい初心者ママ層 × いちじくの細切れ作業モデル</li>
+          <li>100円からの小さなタスクで挑戦のハードルを下げる仕組みの参考事例あり</li>
+          <li>ステージが上がった人をえるらぼのディレクター育成へ送客する流れ</li>
+        </ul>
+      </div>
+      <div class="highlight hl-gold">
+        <p><strong>灘本さんの言葉：</strong>「同業同士が手を組んでいくのは大賛成。お互い困ったときに助け合えるつながりになれたらめっちゃいい」</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 金：共有されたビジョン ========== -->
+  <div class="slide theme-gold" data-slide="5">
+    <div class="slide-bg-num">05</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">共有されたビジョン</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-gold">
+        <div class="card-title">ちいくじのビジョン</div>
+        <ul>
+          <li>日本一周旅をしながらノマドで事業を回す（再来月に出発予定）</li>
+          <li>子供とは工作で遊び、大人にはUTAGEで稼げることを伝える</li>
+          <li>離婚で元妻のキャリアを潰してしまった「罪滅ぼし」として、女性の副業支援をしたい</li>
+          <li>AIを活用して構築コストを下げ、マニュアル化で誰でもできる仕組みに</li>
+        </ul>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">えるらぼのビジョン（ちぃちゃん）</div>
+        <ul>
+          <li>クラブハウスのコロナ禍発祥 → 声でつながって命が助かった人たちがいる原点</li>
+          <li>子育てワンオペのママたちの可能性を開きたい</li>
+          <li>競争ではなく協業 → 得意を活かして日本経済を潤す</li>
+          <li>「何を残していけるか」のステージに入った</li>
+        </ul>
+      </div>
+      <div class="highlight hl-gold">
+        <p><strong>ちぃちゃんの言葉：</strong>「強豪としてバチバチするんじゃなくて、それぞれが得意なところで手を組んでいけるような形にしていかないと。」</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：合意事項 ========== -->
+  <div class="slide" data-slide="6">
+    <div class="slide-bg-num">06</div>
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title">合意事項</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">今回合意したこと</div>
+        <ul>
+          <li><strong>協業に対して双方前向き</strong> — 具体的な内容は次回以降詰める</li>
+          <li>義理人情を大事にする関係性を重視（灘本さんの価値観）</li>
+          <li>情報交換は気軽にやる（マニュアル共有なども可）</li>
+          <li>有田さんが橋渡し役として両コミュニティを繋ぐ</li>
+          <li>今回の録画データを共有し、ゆきえさんにも内容を確認してもらう</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">今後の課題（未決定事項）</div>
+        <ul>
+          <li>具体的に「何をやるか」はまだ決まっていない</li>
+          <li>案件紹介のフロー・費用分配の仕組みは今後検討</li>
+          <li>いちじく側の体系化（いちじく式のブランド確立）が先決</li>
+          <li>えるらぼ側のディレクターとの具体的な連携方法</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：ネクストアクション ========== -->
+  <div class="slide" data-slide="7">
+    <div class="slide-bg-num">07</div>
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title">ネクストアクション</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="card-title">ちいくじ</div>
+        <ul class="checklist">
+          <li>ゆきえさんに録画を共有し、次回ミーティングに同席してもらう</li>
+          <li>いちじく式のマニュアル化・体系化を進める</li>
+          <li>協業のアイデアがあればえるらぼ側に共有</li>
+          <li>今週の懇親会（作業会から参加）で直接交流</li>
+        </ul>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">えるらぼ（灘本さん）</div>
+        <ul class="checklist">
+          <li>録画データをちいくじに共有（ギガファイル等で送付）</li>
+          <li>チームで協業アイデアを検討し共有</li>
+          <li>有田さん経由でいちじくの動きをウォッチ</li>
+        </ul>
+      </div>
+      <div class="highlight">
+        <p><strong>次回ミーティング：</strong>具体的な日程は未定。アイデアを共有しながら、次回はより具体的な「何をやるか」を決める場に。ゆきえさんも参加予定。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ナビゲーション -->
+<div class="nav">
+  <button onclick="changeSlide(-1)">&#9664;</button>
+  <button onclick="changeSlide(1)">&#9654;</button>
+</div>
+<div class="page-indicator" id="pageIndicator">1 / 8</div>
+<div class="footer">
+  <img src="ichijiku-icon.png" alt="いちじく">
+  produced by いちじく
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach((s, i) => { s.classList.toggle('active', i === index); });
+    document.getElementById('pageIndicator').textContent = (index + 1) + ' / ' + totalSlides;
+  }
+
+  function changeSlide(dir) {
+    currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + dir));
+    showSlide(currentSlide);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>
