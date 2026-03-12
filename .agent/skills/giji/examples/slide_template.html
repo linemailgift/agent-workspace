@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>議事録 - おがたつ × ちいくじ Zoom打ち合わせ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;300;400;500;600;700;900&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #fff;
+    color: #1a1a1a;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .slide-container { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    pointer-events: none;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Gold accent line on left */
+  .slide::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, #c9a96e, #e8d5a8, #c9a96e);
+    z-index: 3;
+  }
+
+  /* Background section number - large watermark */
+  .slide-bg-num {
+    position: absolute;
+    right: 60px;
+    bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16rem;
+    font-weight: 300;
+    color: rgba(201, 169, 110, 0.10);
+    line-height: 1;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+  }
+
+  /* Fixed header area */
+  .slide-header {
+    position: relative;
+    z-index: 2;
+    padding: 48px 100px 0;
+    flex-shrink: 0;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Section number */
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #c9a96e;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* Slide title */
+  .slide-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .slide-title .gold { color: #b8942e; }
+
+  /* Divider */
+  .divider {
+    width: 48px; height: 1px;
+    background: #c9a96e;
+    margin: 16px 0 0;
+  }
+
+  /* Scrollable content area */
+  .slide-body {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 100px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,169,110,0.3) transparent;
+  }
+
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-track { background: transparent; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
+
+  /* Content */
+  .content {
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card {
+    background: #fafaf8;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 24px 28px;
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, #c9a96e, #e8d5a8);
+  }
+
+  .card-title {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #b8942e;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .card ul { list-style: none; padding: 0; }
+
+  .card li {
+    padding: 4px 0;
+    font-size: 0.85rem;
+    color: #444;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 16px;
+    font-weight: 400;
+  }
+
+  .card li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #c9a96e;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: #faf8f3;
+    border-left: 3px solid #c9a96e;
+    padding: 20px 24px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .highlight-box h3 {
+    color: #b8942e;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .highlight-box p, .highlight-box li {
+    color: #444;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  /* Table */
+  .slide-table {
+    width: 100%;
+    max-width: 860px;
+    border-collapse: collapse;
+  }
+
+  .slide-table th {
+    background: #faf8f3;
+    color: #b8942e;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 2px solid #c9a96e;
+  }
+
+  .slide-table td {
+    padding: 12px 20px;
+    font-size: 0.88rem;
+    color: #444;
+    border-bottom: 1px solid #eee;
+  }
+
+  .slide-table strong { color: #1a1a1a; font-weight: 600; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    border: 1px solid #ddd;
+    color: #666;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 0.75rem;
+    margin: 3px 4px;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+  }
+
+  .tag.gold {
+    border-color: #c9a96e;
+    color: #b8942e;
+    background: #faf8f3;
+  }
+
+  /* Content list */
+  .content ul { list-style: none; padding: 0; }
+
+  .content > ul > li {
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.7;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .content > ul > li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: #c9a96e;
+    font-weight: 300;
+  }
+
+  .content strong { color: #1a1a1a; font-weight: 600; }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 16px;
+    right: 20px;
+    display: flex;
+    gap: 4px;
+    z-index: 100;
+  }
+
+  .nav button {
+    width: 28px; height: 28px;
+    border-radius: 0;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    color: #bbb;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .nav button:hover {
+    border-color: #c9a96e;
+    color: #b8942e;
+  }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    color: #ccc;
+    letter-spacing: 2px;
+    z-index: 100;
+  }
+
+  /* Title slide special */
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px;
+    padding-bottom: 120px;
+  }
+
+  .slide.title-slide::before { display: none; }
+
+  /* Footer */
+  .slide-footer {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.65rem;
+    color: #ccc;
+    letter-spacing: 2px;
+    font-weight: 300;
+    z-index: 100;
+  }
+
+  .slide.title-slide::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px; height: 500px;
+    border: 1px solid rgba(201,169,110,0.1);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .title-line {
+    width: 80px; height: 1px;
+    background: #c9a96e;
+    margin: 16px auto;
+  }
+
+  .title-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 8px;
+    color: #c9a96e;
+    text-transform: uppercase;
+  }
+
+  .title-main {
+    font-size: 2.6rem;
+    font-weight: 200;
+    color: #1a1a1a;
+    line-height: 1.5;
+    letter-spacing: 2px;
+  }
+
+  .title-main strong { font-weight: 700; }
+
+  .title-meta {
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .flow-item {
+    background: #fafaf8;
+    border: 1px solid #eee;
+    padding: 14px 18px;
+    text-align: center;
+    min-width: 110px;
+    position: relative;
+  }
+
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 1px;
+    background: #c9a96e;
+  }
+
+  .flow-item .icon { font-size: 1.2rem; margin-bottom: 4px; }
+  .flow-item .label { font-size: 0.72rem; color: #666; line-height: 1.4; }
+
+  .flow-arrow { color: #c9a96e; font-size: 1.1rem; font-weight: 300; }
+
+  .flow-item.final { border-color: #c9a96e; }
+  .flow-item.final .label { color: #b8942e; font-weight: 600; }
+
+  /* End slide */
+  .end-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 8px;
+    color: #ccc;
+    margin-top: 36px;
+  }
+
+  .card.full-width { grid-column: 1 / -1; }
+  .card.urgent::before { background: linear-gradient(90deg, #c26a5a, #e8a090); }
+  .card.urgent .card-title { color: #c26a5a; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+
+  <!-- Slide 1: Title -->
+  <div class="slide title-slide active">
+    <div class="slide-bg-num" style="color: rgba(201,169,110,0.04); font-size: 22rem; right: 50%; transform: translateX(50%);">M</div>
+    <div class="title-label">Meeting Minutes</div>
+    <div class="title-line"></div>
+    <div class="title-main">
+      <strong>おがたつ</strong> × <strong>ちいくじ</strong><br>
+      Zoom 打ち合わせ
+    </div>
+    <div class="title-line"></div>
+    <div class="title-meta" style="margin-top: 8px;">2026年3月 ／ 約1時間</div>
+    <div style="margin-top: 20px; display: flex; gap: 12px;">
+      <span class="tag gold">中学生コーチおがたつさん — 小川 達也</span>
+      <span class="tag gold">ちいくじ — ウラカタチーム</span>
+    </div>
+  </div>
+
+  <!-- Slide 2: 目的 -->
+  <div class="slide">
+    <div class="slide-bg-num">01</div>
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">打ち合わせの<span class="gold">目的</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight-box" style="margin-top: 8px;">
+        <p style="font-size: 1.05rem; line-height: 2;">
+          おがたつが運営する<strong>中学生向けオンライン塾</strong>の<br>
+          UTAGE構築・集客支援について<br>
+          ちいくじにどのような<strong>サポートを依頼できるか</strong>を相談
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: 現状 -->
+  <div class="slide">
+    <div class="slide-bg-num">02</div>
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">おがたつさんの<span class="gold">現状</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">事業概要</div>
+          <ul>
+            <li>中学生向けオンライン数学コーチング塾</li>
+            <li>もともと教員（セミナー・授業は得意）</li>
+            <li>SNSは <strong>Threads</strong> がメイン</li>
+            <li>今年から <strong>YouTube</strong> に注力予定</li>
+            <li>今年から <strong>英語科目</strong> も追加</li>
+            <li>週1のオンライン授業を開始予定</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">AI活用状況</div>
+          <ul>
+            <li><strong>Gemini</strong> + <strong>Genスパーク</strong> を活用</li>
+            <li><strong>Claude</strong> を最近導入（ナレッジ整理中）</li>
+            <li>会員サイトにオリジナルAIを搭載</li>
+            <li>保護者対応用のGems作成済み</li>
+            <li>YouTube台本の量産プロンプト作成済み</li>
+            <li>編集者3人体制を構築</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: UTAGE構築状況 -->
+  <div class="slide">
+    <div class="slide-bg-num">03</div>
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">UTAGEの<span class="gold">構築状況</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">受講生用 会員サイト</div>
+          <ul>
+            <li>マインドセット編</li>
+            <li>数学講座（全学年対応）</li>
+            <li>テスト対策コンテンツ</li>
+            <li>ライブ講義アーカイブ</li>
+            <li>オリジナルAI（画像→回答）</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">保護者用 会員サイト</div>
+          <ul>
+            <li>音声データ配信</li>
+            <li>SNS発信コンテンツ（PDF）</li>
+            <li>おすすめ学習サイト</li>
+            <li>保護者向けAI（進路相談等）</li>
+            <li>子供側サイトの閲覧も可能</li>
+          </ul>
+        </div>
+        <div class="card full-width">
+          <div class="card-title">構築済み要素</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+            <span class="tag">VSL</span>
+            <span class="tag">決済ページ</span>
+            <span class="tag">ステップ配信</span>
+            <span class="tag">イベント予約</span>
+            <span class="tag">合同説明会</span>
+            <span class="tag">特典（PDF/動画/スライド）</span>
+            <span class="tag">LP</span>
+            <span class="tag">WordPress HP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: 課題 -->
+  <div class="slide">
+    <div class="slide-bg-num">04</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">課題と<span class="gold">ニーズ</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card urgent">
+          <div class="card-title">最優先：ステップ配信</div>
+          <ul>
+            <li>LINE登録→個別相談への導線が弱い</li>
+            <li>シナリオ設計が未整備</li>
+            <li>すぐに個別相談に入る人が少ない</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">集客フローの整備</div>
+          <ul>
+            <li>オートウェビナー化を検討中</li>
+            <li>6月にローンチ予定</li>
+            <li>既存リストへのアプローチ強化</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">デザイン統一</div>
+          <ul>
+            <li>リッチメニュー・サムネに統一感なし</li>
+            <li>バナー・アイコン等が未整備</li>
+            <li>世界観・トンマナの統一が必要</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">その他</div>
+          <ul>
+            <li>英語追加で会員サイト整理が必要</li>
+            <li>特典量産（問題集が最も効果大）</li>
+            <li>裏方を任せてサポートに集中したい</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: 集客フロー -->
+  <div class="slide">
+    <div class="slide-bg-num">05</div>
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title">現在の<span class="gold">集客フロー</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content">
+        <div class="flow">
+          <div class="flow-item"><div class="icon">📱</div><div class="label">Threads<br>発信</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">💬</div><div class="label">LINE<br>登録</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">🎥</div><div class="label">セミナー<br>アーカイブ</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><div class="icon">🤝</div><div class="label">個別<br>相談</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item final"><div class="icon">✦</div><div class="label">成約</div></div>
+        </div>
+        <div class="highlight-box">
+          <h3>Key Insights</h3>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> アーカイブ視聴後の相談は<strong>時間短縮＋成約率UP</strong></li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> 問題集配布が<strong>最もリストインにつながる</strong></li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> 今回の合同説明会で<strong>8名入会</strong>の実績</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: 提案 -->
+  <div class="slide">
+    <div class="slide-bg-num">06</div>
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title">ちいくじの<span class="gold">提案</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">すぐできること</div>
+          <ul>
+            <li>デザイン統一（サムネ・リッチメニュー）</li>
+            <li>英語コンテンツの会員サイト整理</li>
+            <li>特典のWebアプリ化（診断等）</li>
+            <li>既存特典のリニューアル</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">AI活用サポート</div>
+          <ul>
+            <li>AIエージェントで大量コンテンツ作成</li>
+            <li>トンマナ設定→統一デザイン量産</li>
+            <li>Threads/X/Insta向けマルチ展開</li>
+            <li>100個のメッセージも量産可能</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">相談しながら進めるもの</div>
+          <ul>
+            <li>ステップ配信のシナリオ設計</li>
+            <li>セールスの仕掛け・導線設計</li>
+            <li>LP（ランディングページ）制作</li>
+          </ul>
+        </div>
+        <div class="card" style="opacity: 0.6;">
+          <div class="card-title">今回の対象外</div>
+          <ul>
+            <li>ホームページ → 既存担当者</li>
+            <li>YouTube動画編集 → 別料金</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: 料金 -->
+  <div class="slide">
+    <div class="slide-bg-num">07</div>
+    <div class="slide-header">
+      <div class="section-num">Section 07</div>
+      <div class="slide-title">合意事項：<span class="gold">料金</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content" style="display:flex; flex-direction:column; gap:20px;">
+        <table class="slide-table">
+          <tr><th>項目</th><th>金額</th><th>タイミング</th></tr>
+          <tr><td>着手金</td><td>30万円</td><td>契約時（3月）</td></tr>
+          <tr><td>2回目</td><td>20万円</td><td>ローンチ時（5〜6月）</td></tr>
+          <tr><td>合計</td><td>50万円（モニター価格）</td><td>—</td></tr>
+          <tr><td>成功報酬</td><td>10%</td><td>ローンチ後の売上に対して</td></tr>
+        </table>
+        <div style="color:#aaa; font-size:0.8rem; letter-spacing:0.5px;">
+          ※ 業務委託契約（コンサル＋丸投げ型）／ NDA先行締結
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: スケジュール -->
+  <div class="slide">
+    <div class="slide-bg-num">08</div>
+    <div class="slide-header">
+      <div class="section-num">Section 08</div>
+      <div class="slide-title"><span class="gold">スケジュール</span></div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content" style="display:flex; flex-direction:column; gap:20px;">
+        <table class="slide-table">
+          <tr><th>時期</th><th>内容</th></tr>
+          <tr><td>3月中旬〜</td><td>NDA締結・契約・入金（30万円）</td></tr>
+          <tr><td>3月20日頃〜</td><td>本格着手（確定申告完了後）</td></tr>
+          <tr><td>3月〜5月</td><td>セミナー資料・特典・ステップ配信・LP等の制作</td></tr>
+          <tr><td><strong>6月</strong></td><td><strong>ローンチ実施</strong>（2回目入金：20万円）</td></tr>
+          <tr><td>6月〜7月</td><td>成果確認・成功報酬精算</td></tr>
+        </table>
+        <div class="highlight-box">
+          <h3>入会需要のピーク</h3>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> <strong>年度始め（2〜3月）</strong>が最大のチャンス</li>
+            <li style="padding:4px 0; padding-left:16px; position:relative;"><span style="position:absolute;left:0;color:#c9a96e;">—</span> テスト後（6月・8〜9月・12月・3月）— 年4回</li>
+          </ul>
+        </div>
+        <div style="color:#aaa; font-size:0.8rem;">定例：2週間に1回のZoom壁打ち</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 10: Next Action -->
+  <div class="slide">
+    <div class="slide-bg-num">09</div>
+    <div class="slide-header">
+      <div class="section-num">Section 09</div>
+      <div class="slide-title"><span class="gold">ネクスト</span>アクション</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-title">ちいくじ</div>
+          <ul>
+            <li>NDAの送付</li>
+            <li>業務委託契約書の作成</li>
+            <li>チャットワークでチーム作成</li>
+            <li>セミナー資料・会員サイトの確認</li>
+            <li>特典・ナレッジの情報収集</li>
+            <li>チームメンバー（2〜3名）アサイン</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">おがたつさん</div>
+          <ul>
+            <li>セミナーアーカイブの共有</li>
+            <li>会員サイトへのアクセス権付与</li>
+            <li>既存特典の共有</li>
+            <li>ホームページは既存担当者に整備依頼</li>
+          </ul>
+        </div>
+      </div>
+      <div class="end-mark">— End —</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="prevSlide()">←</button>
+  <button onclick="nextSlide()">→</button>
+</div>
+<div class="page-indicator">
+  <span id="currentPage">01</span> — <span id="totalPages">10</span>
+</div>
+<div class="slide-footer">produced by いちじく</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  document.getElementById('totalPages').textContent = String(totalSlides).padStart(2,'0');
+
+  function showSlide(index) {
+    slides.forEach(s => {
+      s.classList.remove('active');
+      const body = s.querySelector('.slide-body');
+      if (body) body.scrollTop = 0;
+    });
+    slides[index].classList.add('active');
+    document.getElementById('currentPage').textContent = String(index + 1).padStart(2,'0');
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) { currentSlide++; showSlide(currentSlide); }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+  });
+</script>
+</body>
+</html>
