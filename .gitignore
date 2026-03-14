@@ -3,7 +3,9 @@ my-video/
 omikuji/
 いちじく/
 冒険/
-クライアント/おがたつ/
+クライアント/おがたつ/*
+!クライアント/おがたつ/gh-pages/
+!クライアント/おがたつ/YouTube戦略提案.html
 クライアント/ますみ/
 .DS_Store
 node_modules/
