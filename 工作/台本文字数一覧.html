@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台本25本 文字数一覧</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background: #0f0f1a; color: #e0e0e0; padding: 24px; }
+h1 { text-align: center; font-size: 1.8rem; margin-bottom: 8px; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 32px; }
+.summary { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; flex-wrap: wrap; }
+.summary-card { background: #1a1a2e; border-radius: 12px; padding: 16px 28px; text-align: center; border: 1px solid #333; }
+.summary-card .label { font-size: 0.8rem; color: #888; margin-bottom: 4px; }
+.summary-card .value { font-size: 1.6rem; font-weight: 700; color: #a855f7; }
+.summary-card .value.total { color: #ec4899; }
+.group { margin-bottom: 28px; }
+.group-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.group-badge { display: inline-block; width: 36px; height: 36px; line-height: 36px; text-align: center; border-radius: 8px; font-weight: 700; font-size: 1.1rem; color: #fff; }
+.group-A .group-badge { background: #7c3aed; }
+.group-B .group-badge { background: #2563eb; }
+.group-C .group-badge { background: #059669; }
+.group-D .group-badge { background: #d97706; }
+.group-E .group-badge { background: #dc2626; }
+.group-title { font-size: 1rem; font-weight: 600; }
+.group-A .group-title { color: #a78bfa; }
+.group-B .group-title { color: #60a5fa; }
+.group-C .group-title { color: #34d399; }
+.group-D .group-title { color: #fbbf24; }
+.group-E .group-title { color: #f87171; }
+table { width: 100%; border-collapse: collapse; background: #1a1a2e; border-radius: 12px; overflow: hidden; }
+th { background: #252540; padding: 10px 16px; text-align: left; font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+th:last-child { text-align: right; }
+td { padding: 10px 16px; border-top: 1px solid #2a2a40; font-size: 0.95rem; }
+td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+tr:hover td { background: #252540; }
+.bar-cell { position: relative; }
+.bar { height: 6px; border-radius: 3px; position: absolute; bottom: 4px; left: 16px; opacity: 0.5; }
+.group-A .bar { background: #7c3aed; }
+.group-B .bar { background: #2563eb; }
+.group-C .bar { background: #059669; }
+.group-D .bar { background: #d97706; }
+.group-E .bar { background: #dc2626; }
+.group-subtotal { text-align: right; padding: 8px 16px; font-size: 0.85rem; color: #888; }
+.group-subtotal span { color: #ccc; font-weight: 600; }
+footer { text-align: center; margin-top: 32px; color: #555; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+
+<h1>工作チャンネル台本 25本 文字数一覧</h1>
+<p class="subtitle">エンゲージメント強化済み（コメント誘導 + コール&レスポンス）</p>
+
+<div class="summary">
+  <div class="summary-card">
+    <div class="label">台本数</div>
+    <div class="value">25本</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">合計文字数</div>
+    <div class="value total">63,821字</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">平均文字数</div>
+    <div class="value">2,553字</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">最小 / 最大</div>
+    <div class="value">2,168 / 3,297</div>
+  </div>
+</div>
+
+<!-- Group A -->
+<div class="group group-A">
+  <div class="group-header">
+    <span class="group-badge">A</span>
+    <span class="group-title">なぜ工作？（親の意識改革）</span>
+  </div>
+  <table>
+    <tr><th>No.</th><th>タイトル</th><th>文字数</th></tr>
+    <tr><td>A-1</td><td class="bar-cell">未来は工作で決まる<div class="bar" style="width:55%"></div></td><td>2,168</td></tr>
+    <tr><td>A-2</td><td class="bar-cell">おうちでモンテッソーリ<div class="bar" style="width:61%"></div></td><td>2,331</td></tr>
+    <tr><td>A-3</td><td class="bar-cell">AI時代の工作力<div class="bar" style="width:67%"></div></td><td>2,506</td></tr>
+    <tr><td>A-4</td><td class="bar-cell">スマホ漬け対策<div class="bar" style="width:66%"></div></td><td>2,458</td></tr>
+    <tr><td>A-5</td><td class="bar-cell">その声かけ危険<div class="bar" style="width:76%"></div></td><td>2,739</td></tr>
+  </table>
+  <div class="group-subtotal">小計: <span>12,202字</span></div>
+</div>
+
+<!-- Group B -->
+<div class="group group-B">
+  <div class="group-header">
+    <span class="group-badge">B</span>
+    <span class="group-title">工作×脳科学（効果のエビデンス）</span>
+  </div>
+  <table>
+    <tr><th>No.</th><th>タイトル</th><th>文字数</th></tr>
+    <tr><td>B-1</td><td class="bar-cell">手は第2の脳<div class="bar" style="width:59%"></div></td><td>2,287</td></tr>
+    <tr><td>B-2</td><td class="bar-cell">非認知能力が育つ<div class="bar" style="width:62%"></div></td><td>2,370</td></tr>
+    <tr><td>B-3</td><td class="bar-cell">IQ爆上がり<div class="bar" style="width:66%"></div></td><td>2,461</td></tr>
+    <tr><td>B-4</td><td class="bar-cell">多動は才能だ<div class="bar" style="width:66%"></div></td><td>2,458</td></tr>
+    <tr><td>B-5</td><td class="bar-cell">ギフテッドの育て方<div class="bar" style="width:78%"></div></td><td>2,797</td></tr>
+  </table>
+  <div class="group-subtotal">小計: <span>12,373字</span></div>
+</div>
+
+<!-- Group C -->
+<div class="group group-C">
+  <div class="group-header">
+    <span class="group-badge">C</span>
+    <span class="group-title">STEAM教育（科学・技術・工学・芸術・数学）</span>
+  </div>
+  <table>
+    <tr><th>No.</th><th>タイトル</th><th>文字数</th></tr>
+    <tr><td>C-1</td><td class="bar-cell">科学：理科脳が育つ<div class="bar" style="width:82%"></div></td><td>2,927</td></tr>
+    <tr><td>C-2</td><td class="bar-cell">技術：一生怪我しない<div class="bar" style="width:81%"></div></td><td>2,888</td></tr>
+    <tr><td>C-3</td><td class="bar-cell">工学：仕組みがわかる<div class="bar" style="width:87%"></div></td><td>3,057</td></tr>
+    <tr><td>C-4</td><td class="bar-cell">芸術：センスは作れる<div class="bar" style="width:78%"></div></td><td>2,824</td></tr>
+    <tr><td>C-5</td><td class="bar-cell">数学：算数嫌いは治る<div class="bar" style="width:95%"></div></td><td>3,297</td></tr>
+  </table>
+  <div class="group-subtotal">小計: <span>14,993字</span></div>
+</div>
+
+<!-- Group D -->
+<div class="group group-D">
+  <div class="group-header">
+    <span class="group-badge">D</span>
+    <span class="group-title">能力別（具体スキル）</span>
+  </div>
+  <table>
+    <tr><th>No.</th><th>タイトル</th><th>文字数</th></tr>
+    <tr><td>D-1</td><td class="bar-cell">天才的ヒラメキ術<div class="bar" style="width:60%"></div></td><td>2,306</td></tr>
+    <tr><td>D-2</td><td class="bar-cell">パッと見てわかる力<div class="bar" style="width:59%"></div></td><td>2,295</td></tr>
+    <tr><td>D-3</td><td class="bar-cell">空間認識能力で解決<div class="bar" style="width:62%"></div></td><td>2,357</td></tr>
+    <tr><td>D-4</td><td class="bar-cell">手先が器用に<div class="bar" style="width:67%"></div></td><td>2,491</td></tr>
+    <tr><td>D-5</td><td class="bar-cell">問題解決力の引き出し<div class="bar" style="width:69%"></div></td><td>2,550</td></tr>
+  </table>
+  <div class="group-subtotal">小計: <span>11,999字</span></div>
+</div>
+
+<!-- Group E -->
+<div class="group group-E">
+  <div class="group-header">
+    <span class="group-badge">E</span>
+    <span class="group-title">お悩み解決（実践Tips）</span>
+  </div>
+  <table>
+    <tr><th>No.</th><th>タイトル</th><th>文字数</th></tr>
+    <tr><td>E-1</td><td class="bar-cell">部屋が汚れない<div class="bar" style="width:63%"></div></td><td>2,379</td></tr>
+    <tr><td>E-2</td><td class="bar-cell">道具は投資だ<div class="bar" style="width:62%"></div></td><td>2,355</td></tr>
+    <tr><td>E-3</td><td class="bar-cell">作品すててOK<div class="bar" style="width:64%"></div></td><td>2,408</td></tr>
+    <tr><td>E-4</td><td class="bar-cell">自由研究1日で高評価<div class="bar" style="width:65%"></div></td><td>2,447</td></tr>
+    <tr><td>E-5</td><td class="bar-cell">失敗しても笑える<div class="bar" style="width:73%"></div></td><td>2,665</td></tr>
+  </table>
+  <div class="group-subtotal">小計: <span>12,254字</span></div>
+</div>
+
+<footer>更新日: 2026-03-14 ｜ エンゲージメント強化版（コメント誘導×1 + C&R×5-7 / 各台本）</footer>
+
+</body>
+</html>
