@@ -4,26 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube サムネイル一覧 - 洋子さん（@07nailschool）</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: 'Noto Sans JP', sans-serif;
-  background: #1a1a2e;
-  color: #fff;
+  background: #f7f5f2;
+  color: #2f2f2f;
   padding: 40px 20px;
 }
 h1 {
   text-align: center;
   font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: #e8d5b7;
+  margin-bottom: 6px;
+  color: #2f2f2f;
+  font-weight: 900;
 }
 .subtitle {
   text-align: center;
-  color: #999;
+  color: #0083a6;
   margin-bottom: 40px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
 }
 .grid {
   display: grid;
@@ -33,32 +36,35 @@ h1 {
   margin: 0 auto;
 }
 .card {
-  background: #16213e;
+  background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  border: 1px solid #ece8e3;
 }
 .card-label {
   padding: 8px 16px;
   font-size: 0.75rem;
-  color: #aaa;
+  color: #999;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #faf8f5;
 }
 .card-label .num {
-  background: #c9a96e;
-  color: #1a1a2e;
+  background: #0083a6;
+  color: #fff;
   padding: 2px 10px;
   border-radius: 10px;
   font-weight: 700;
   font-size: 0.7rem;
 }
 .card-label .cat {
-  color: #c9a96e;
+  color: #f1198e;
+  font-weight: 700;
 }
 
-/* サムネイル共通 1280x720 → 縮小表示 */
+/* サムネイル共通 16:9 */
 .thumbnail {
   width: 100%;
   aspect-ratio: 16/9;
@@ -69,104 +75,177 @@ h1 {
   justify-content: center;
 }
 
-/* カテゴリ別カラーテーマ */
-.theme-pro { background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #0a1628 100%); }
-.theme-talk { background: linear-gradient(135deg, #0a1628 0%, #1b2d4e 40%, #0a2818 100%); }
-.theme-trust { background: linear-gradient(135deg, #2e1a0a 0%, #4e3b1b 40%, #281a0a 100%); }
-.theme-career { background: linear-gradient(135deg, #0a2828 0%, #1b3d4e 40%, #0a1a28 100%); }
-.theme-value { background: linear-gradient(135deg, #2e0a1a 0%, #4e1b2d 40%, #280a1a 100%); }
+/* カテゴリ別カラーテーマ - 洋子さんブランドカラー */
+.theme-pro {
+  background: linear-gradient(135deg, #f7f5f2 0%, #faf4f8 30%, #f0e8ef 100%);
+}
+.theme-talk {
+  background: linear-gradient(135deg, #f0f7f9 0%, #e8f4f7 30%, #f5f9fa 100%);
+}
+.theme-trust {
+  background: linear-gradient(135deg, #faf8f3 0%, #f7f2e8 30%, #faf6f0 100%);
+}
+.theme-career {
+  background: linear-gradient(135deg, #f0f7f5 0%, #e8f5f1 30%, #f5faf8 100%);
+}
+.theme-value {
+  background: linear-gradient(135deg, #faf4f8 0%, #f7e8f0 30%, #fdf5f9 100%);
+}
 
-/* デコレーション要素 */
+/* 左サイドのカラーバー */
+.thumbnail .side-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+}
+.theme-pro .side-bar { background: linear-gradient(180deg, #f1198e, #ddb849); }
+.theme-talk .side-bar { background: linear-gradient(180deg, #0083a6, #00b4d8); }
+.theme-trust .side-bar { background: linear-gradient(180deg, #ddb849, #f1198e); }
+.theme-career .side-bar { background: linear-gradient(180deg, #0083a6, #ddb849); }
+.theme-value .side-bar { background: linear-gradient(180deg, #f1198e, #0083a6); }
+
+/* 右下の大きな番号（透かし） */
+.bg-num {
+  position: absolute;
+  right: 30px;
+  bottom: -10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10rem;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+.theme-pro .bg-num { color: rgba(241,25,142,0.06); }
+.theme-talk .bg-num { color: rgba(0,131,166,0.06); }
+.theme-trust .bg-num { color: rgba(221,184,73,0.06); }
+.theme-career .bg-num { color: rgba(0,131,166,0.06); }
+.theme-value .bg-num { color: rgba(241,25,142,0.06); }
+
+/* デコ円 */
 .thumbnail::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 400px;
-  height: 400px;
+  top: -40%;
+  right: -15%;
+  width: 350px;
+  height: 350px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 70%);
   pointer-events: none;
 }
+.theme-pro::before { background: radial-gradient(circle, rgba(241,25,142,0.05) 0%, transparent 70%); }
+.theme-talk::before { background: radial-gradient(circle, rgba(0,131,166,0.05) 0%, transparent 70%); }
+.theme-trust::before { background: radial-gradient(circle, rgba(221,184,73,0.06) 0%, transparent 70%); }
+.theme-career::before { background: radial-gradient(circle, rgba(0,131,166,0.05) 0%, transparent 70%); }
+.theme-value::before { background: radial-gradient(circle, rgba(241,25,142,0.05) 0%, transparent 70%); }
+
+/* 下部ライン */
 .thumbnail::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #c9a96e, #e8d5b7, #c9a96e);
+  height: 3px;
 }
-
-/* アクセントライン */
-.accent-line {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  bottom: 20px;
-  width: 4px;
-  background: linear-gradient(180deg, #c9a96e, transparent);
-  border-radius: 2px;
-}
+.theme-pro::after { background: linear-gradient(90deg, #f1198e, #ddb849); }
+.theme-talk::after { background: linear-gradient(90deg, #0083a6, #00b4d8); }
+.theme-trust::after { background: linear-gradient(90deg, #ddb849, #f1198e); }
+.theme-career::after { background: linear-gradient(90deg, #0083a6, #ddb849); }
+.theme-value::after { background: linear-gradient(90deg, #f1198e, #0083a6); }
 
 /* テキスト */
 .thumb-content {
   position: relative;
   z-index: 2;
-  padding: 40px 50px 40px 50px;
+  padding: 36px 50px 36px 40px;
   text-align: left;
   width: 100%;
 }
 .main-copy {
   font-size: 2.2rem;
   font-weight: 900;
-  line-height: 1.3;
-  color: #fff;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-  margin-bottom: 16px;
+  line-height: 1.35;
+  color: #2f2f2f;
+  margin-bottom: 14px;
   letter-spacing: -0.02em;
 }
-.main-copy .highlight {
-  color: #e8d5b7;
-  background: linear-gradient(transparent 60%, rgba(201,169,110,0.3) 60%);
-  padding: 0 4px;
+/* ピンク強調 */
+.main-copy .pink {
+  color: #f1198e;
 }
-.main-copy .red {
-  color: #ff6b6b;
+/* ティール強調 */
+.main-copy .teal {
+  color: #0083a6;
 }
-.main-copy .accent {
-  color: #c9a96e;
+/* ゴールド強調 */
+.main-copy .gold {
+  color: #b8942e;
+}
+/* ハイライト（ピンク下線） */
+.main-copy .hl {
+  background: linear-gradient(transparent 55%, rgba(241,25,142,0.15) 55%);
+  padding: 0 2px;
+}
+/* ゴールド下線 */
+.main-copy .hl-gold {
+  background: linear-gradient(transparent 55%, rgba(221,184,73,0.18) 55%);
+  padding: 0 2px;
 }
 .sub-copy {
-  font-size: 1rem;
-  font-weight: 400;
-  color: rgba(255,255,255,0.7);
-  letter-spacing: 0.05em;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.04em;
 }
 
 /* ブランドマーク */
 .brand {
   position: absolute;
-  bottom: 16px;
+  bottom: 14px;
   right: 20px;
-  font-size: 0.65rem;
-  color: rgba(201,169,110,0.5);
-  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  color: #ccc;
+  letter-spacing: 0.12em;
+  font-weight: 700;
 }
 
 /* カテゴリバッジ */
 .cat-badge {
   position: absolute;
-  top: 16px;
-  right: 20px;
-  background: rgba(201,169,110,0.2);
-  border: 1px solid rgba(201,169,110,0.4);
-  color: #e8d5b7;
-  padding: 4px 14px;
+  top: 14px;
+  right: 16px;
+  padding: 3px 12px;
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+}
+.theme-pro .cat-badge {
+  background: rgba(241,25,142,0.08);
+  border: 1px solid rgba(241,25,142,0.2);
+  color: #f1198e;
+}
+.theme-talk .cat-badge {
+  background: rgba(0,131,166,0.08);
+  border: 1px solid rgba(0,131,166,0.2);
+  color: #0083a6;
+}
+.theme-trust .cat-badge {
+  background: rgba(221,184,73,0.1);
+  border: 1px solid rgba(221,184,73,0.3);
+  color: #b8942e;
+}
+.theme-career .cat-badge {
+  background: rgba(0,131,166,0.08);
+  border: 1px solid rgba(0,131,166,0.2);
+  color: #0083a6;
+}
+.theme-value .cat-badge {
+  background: rgba(241,25,142,0.08);
+  border: 1px solid rgba(241,25,142,0.2);
+  color: #f1198e;
 }
 
 /* セクションヘッダー */
@@ -176,54 +255,75 @@ h1 {
   padding: 0 10px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 .section-header .icon {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
 }
 .section-header h2 {
-  font-size: 1.2rem;
-  color: #e8d5b7;
+  font-size: 1.15rem;
+  color: #2f2f2f;
+  font-weight: 900;
 }
 .section-header .count {
-  color: #666;
+  color: #bbb;
   font-size: 0.8rem;
 }
-.icon-pro { background: rgba(45,27,78,0.6); }
-.icon-talk { background: rgba(27,45,78,0.6); }
-.icon-trust { background: rgba(78,59,27,0.6); }
-.icon-career { background: rgba(27,61,78,0.6); }
-.icon-value { background: rgba(78,27,45,0.6); }
+.icon-pro { background: #f1198e; }
+.icon-talk { background: #0083a6; }
+.icon-trust { background: #ddb849; }
+.icon-career { background: #0083a6; }
+.icon-value { background: #f1198e; }
 
 .instructions {
   max-width: 1400px;
   margin: 60px auto 0;
   padding: 30px;
-  background: #16213e;
+  background: #fff;
   border-radius: 12px;
-  border-left: 4px solid #c9a96e;
+  border-left: 4px solid #0083a6;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 .instructions h3 {
-  color: #e8d5b7;
+  color: #0083a6;
   margin-bottom: 12px;
+  font-size: 1rem;
 }
-.instructions p, .instructions li {
-  color: #aaa;
+.instructions li {
+  color: #666;
   font-size: 0.85rem;
   line-height: 1.8;
 }
+
+/* ダイヤモンド装飾（ブランドサイト参照） */
+.diamond {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  opacity: 0.06;
+  pointer-events: none;
+}
+.theme-pro .diamond { background: #f1198e; }
+.theme-talk .diamond { background: #0083a6; }
+.theme-trust .diamond { background: #ddb849; }
+.theme-career .diamond { background: #0083a6; }
+.theme-value .diamond { background: #f1198e; }
 </style>
 </head>
 <body>
 
 <h1>YouTube サムネイル 25本</h1>
-<p class="subtitle">別所洋子（@07nailschool）｜自爪育成専門ネイルスクール</p>
+<p class="subtitle">ネイルリジェネリスト®︎ 別所洋子｜@07nailschool</p>
 
 <!-- ① プロ思考 -->
 <div class="section-header">
@@ -233,70 +333,71 @@ h1 {
 </div>
 <div class="grid">
 
-<!-- 01 -->
 <div class="card">
   <div class="card-label"><span class="num">#01</span><span class="cat">プロ思考</span></div>
   <div class="thumbnail theme-pro">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">PRO MINDSET</div>
+    <div class="bg-num">01</div>
+    <div class="diamond" style="top:60px;right:180px;"></div>
     <div class="thumb-content">
-      <div class="main-copy">「ネイリスト」と<br>「<span class="highlight">専門家</span>」の<br><span class="red">決定的な違い</span></div>
+      <div class="main-copy">「ネイリスト」と<br>「<span class="hl">専門家</span>」の<br><span class="pink">決定的な違い</span></div>
       <div class="sub-copy">99%が気づいていない"定義"の差</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 02 -->
 <div class="card">
   <div class="card-label"><span class="num">#02</span><span class="cat">プロ思考</span></div>
   <div class="thumbnail theme-pro">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">PRO MINDSET</div>
+    <div class="bg-num">02</div>
     <div class="thumb-content">
-      <div class="main-copy">あなたのサロンが<br>売るべきは<br><span class="red">"技術"じゃない</span></div>
+      <div class="main-copy">あなたのサロンが<br>売るべきは<br><span class="pink">"技術"じゃない</span></div>
       <div class="sub-copy">高単価サロンが本当に売っているもの</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 03 -->
 <div class="card">
   <div class="card-label"><span class="num">#03</span><span class="cat">プロ思考</span></div>
   <div class="thumbnail theme-pro">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">PRO MINDSET</div>
+    <div class="bg-num">03</div>
     <div class="thumb-content">
-      <div class="main-copy">説明できない技術は<br><span class="red">"存在しない"</span><br>のと同じ</div>
+      <div class="main-copy">説明できない技術は<br><span class="pink">"存在しない"</span><br>のと同じ</div>
       <div class="sub-copy">一流ネイリストが必ず持っている「言語化力」</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 04 -->
 <div class="card">
   <div class="card-label"><span class="num">#04</span><span class="cat">プロ思考</span></div>
   <div class="thumbnail theme-pro">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">PRO MINDSET</div>
+    <div class="bg-num">04</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="highlight">指名が止まらない</span>人が<br>やっている<br><span class="accent">たった一つの習慣</span></div>
+      <div class="main-copy"><span class="hl">指名が止まらない</span>人が<br>やっている<br><span class="gold">たった一つの習慣</span></div>
       <div class="sub-copy">技術以外で圧倒的な差がつくポイント</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 05 -->
 <div class="card">
   <div class="card-label"><span class="num">#05</span><span class="cat">プロ思考</span></div>
   <div class="thumbnail theme-pro">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">PRO MINDSET</div>
+    <div class="bg-num">05</div>
     <div class="thumb-content">
-      <div class="main-copy">「<span class="highlight">上手い</span>」のに<br><span class="red">選ばれない</span><br>ネイリストの共通点</div>
+      <div class="main-copy">「<span class="hl">上手い</span>」のに<br><span class="pink">選ばれない</span><br>ネイリストの共通点</div>
       <div class="sub-copy">技術力だけで勝負する時代は終わりました</div>
     </div>
     <div class="brand">@07nailschool</div>
@@ -313,70 +414,70 @@ h1 {
 </div>
 <div class="grid">
 
-<!-- 06 -->
 <div class="card">
   <div class="card-label"><span class="num">#06</span><span class="cat">対話力</span></div>
   <div class="thumbnail theme-talk">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">COMMUNICATION</div>
+    <div class="bg-num">06</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="accent">最初の10分</span>で<br><span class="red">決まる</span></div>
+      <div class="main-copy"><span class="teal">最初の10分</span>で<br><span class="pink">決まる</span></div>
       <div class="sub-copy">リピート率が変わるカウンセリング設計</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 07 -->
 <div class="card">
   <div class="card-label"><span class="num">#07</span><span class="cat">対話力</span></div>
   <div class="thumbnail theme-talk">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">COMMUNICATION</div>
+    <div class="bg-num">07</div>
     <div class="thumb-content">
-      <div class="main-copy">その説明、<br><span class="red">不安にさせてます</span></div>
+      <div class="main-copy">その説明、<br><span class="pink">不安にさせてます</span></div>
       <div class="sub-copy">お客様がホッとする魔法の言い換え5選</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 08 -->
 <div class="card">
   <div class="card-label"><span class="num">#08</span><span class="cat">対話力</span></div>
   <div class="thumbnail theme-talk">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">COMMUNICATION</div>
+    <div class="bg-num">08</div>
     <div class="thumb-content">
-      <div class="main-copy">「<span class="highlight">お任せで</span>」は<br><span class="red">危険信号</span></div>
+      <div class="main-copy">「<span class="hl">お任せで</span>」は<br><span class="pink">危険信号</span></div>
       <div class="sub-copy">本音を引き出すプロの質問術3選</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 09 -->
 <div class="card">
   <div class="card-label"><span class="num">#09</span><span class="cat">対話力</span></div>
   <div class="thumbnail theme-talk">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">COMMUNICATION</div>
+    <div class="bg-num">09</div>
     <div class="thumb-content">
-      <div class="main-copy">その専門用語、<br>お客様は<br><span class="red">理解してません</span></div>
+      <div class="main-copy">その専門用語、<br>お客様は<br><span class="pink">理解してません</span></div>
       <div class="sub-copy">信頼を下げる「伝わらない説明」の正体</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 10 -->
 <div class="card">
   <div class="card-label"><span class="num">#10</span><span class="cat">対話力</span></div>
   <div class="thumbnail theme-talk">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">COMMUNICATION</div>
+    <div class="bg-num">10</div>
     <div class="thumb-content">
-      <div class="main-copy">クレームの<span class="accent">8割</span>は<br><span class="red">説明不足</span></div>
+      <div class="main-copy">クレームの<span class="teal">8割</span>は<br><span class="pink">説明不足</span></div>
       <div class="sub-copy">トラブルを未然に防ぐ事前説明5つの鉄則</div>
     </div>
     <div class="brand">@07nailschool</div>
@@ -393,70 +494,70 @@ h1 {
 </div>
 <div class="grid">
 
-<!-- 11 -->
 <div class="card">
   <div class="card-label"><span class="num">#11</span><span class="cat">信頼構築</span></div>
   <div class="thumbnail theme-trust">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">BRANDING</div>
+    <div class="bg-num">11</div>
     <div class="thumb-content">
-      <div class="main-copy">比較されたら<span class="red">負け</span></div>
+      <div class="main-copy">比較されたら<span class="pink">負け</span></div>
       <div class="sub-copy">"この人しかいない"と思わせるポジションの作り方</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 12 -->
 <div class="card">
   <div class="card-label"><span class="num">#12</span><span class="cat">信頼構築</span></div>
   <div class="thumbnail theme-trust">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">BRANDING</div>
+    <div class="bg-num">12</div>
     <div class="thumb-content">
-      <div class="main-copy">同じ技術なのに<br><span class="red">なぜ差がつく？</span></div>
+      <div class="main-copy">同じ技術なのに<br><span class="pink">なぜ差がつく？</span></div>
       <div class="sub-copy">プロに見える発信 vs 素人っぽい発信</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 13 -->
 <div class="card">
   <div class="card-label"><span class="num">#13</span><span class="cat">信頼構築</span></div>
   <div class="thumbnail theme-trust">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">BRANDING</div>
+    <div class="bg-num">13</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="highlight">実績○万人</span>は<br><span class="red">信用されない</span></div>
+      <div class="main-copy"><span class="hl-gold">実績○万人</span>は<br><span class="pink">信用されない</span></div>
       <div class="sub-copy">お客様が本当に見ているのはココだった</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 14 -->
 <div class="card">
   <div class="card-label"><span class="num">#14</span><span class="cat">信頼構築</span></div>
   <div class="thumbnail theme-trust">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">BRANDING</div>
+    <div class="bg-num">14</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="accent">広告費ゼロ</span>で<br>予約が埋まる</div>
+      <div class="main-copy"><span class="gold">広告費ゼロ</span>で<br>予約が埋まる</div>
       <div class="sub-copy">紹介が止まらないサロンだけがやっている5つのこと</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 15 -->
 <div class="card">
   <div class="card-label"><span class="num">#15</span><span class="cat">信頼構築</span></div>
   <div class="thumbnail theme-trust">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">BRANDING</div>
+    <div class="bg-num">15</div>
     <div class="thumb-content">
-      <div class="main-copy">予約ボタンを<br><span class="red">押させる</span><br><span class="highlight">心理学</span></div>
+      <div class="main-copy">予約ボタンを<br><span class="pink">押させる</span><br><span class="hl-gold">心理学</span></div>
       <div class="sub-copy">値引きなしで"今すぐ行きたい"と思わせる6つの仕掛け</div>
     </div>
     <div class="brand">@07nailschool</div>
@@ -473,70 +574,70 @@ h1 {
 </div>
 <div class="grid">
 
-<!-- 16 -->
 <div class="card">
   <div class="card-label"><span class="num">#16</span><span class="cat">キャリア</span></div>
   <div class="thumbnail theme-career">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">CAREER</div>
+    <div class="bg-num">16</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="accent">10年続く人</span>だけが<br>知っていること</div>
+      <div class="main-copy"><span class="teal">10年続く人</span>だけが<br>知っていること</div>
       <div class="sub-copy">離職率7割の業界で生き残る5つの共通点</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 17 -->
 <div class="card">
   <div class="card-label"><span class="num">#17</span><span class="cat">キャリア</span></div>
   <div class="thumbnail theme-career">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">CAREER</div>
+    <div class="bg-num">17</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="highlight">好きなのに</span><br><span class="red">辞めたい</span>あなたへ</div>
+      <div class="main-copy"><span class="hl">好きなのに</span><br><span class="pink">辞めたい</span>あなたへ</div>
       <div class="sub-copy">消耗しないネイリストの「働き方設計」4つのルール</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 18 -->
 <div class="card">
   <div class="card-label"><span class="num">#18</span><span class="cat">キャリア</span></div>
   <div class="thumbnail theme-career">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">CAREER</div>
+    <div class="bg-num">18</div>
     <div class="thumb-content">
-      <div class="main-copy">当てはまったら<br><span class="red">要注意</span></div>
+      <div class="main-copy">当てはまったら<br><span class="pink">要注意</span></div>
       <div class="sub-copy">伸びなくなるネイリスト5つの停滞サイン</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 19 -->
 <div class="card">
   <div class="card-label"><span class="num">#19</span><span class="cat">キャリア</span></div>
   <div class="thumbnail theme-career">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">CAREER</div>
+    <div class="bg-num">19</div>
     <div class="thumb-content">
-      <div class="main-copy">伸びる人は<br><span class="accent">ここで学び直す</span></div>
+      <div class="main-copy">伸びる人は<br><span class="teal">ここで学び直す</span></div>
       <div class="sub-copy">ネイリスト人生の5つの分岐点</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 20 -->
 <div class="card">
   <div class="card-label"><span class="num">#20</span><span class="cat">キャリア</span></div>
   <div class="thumbnail theme-career">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">CAREER</div>
+    <div class="bg-num">20</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="accent">50歳</span>でも<br>現役でいるために</div>
+      <div class="main-copy"><span class="teal">50歳</span>でも<br>現役でいるために</div>
       <div class="sub-copy">ネイリスト「将来不安ゼロ」のキャリア戦略</div>
     </div>
     <div class="brand">@07nailschool</div>
@@ -553,70 +654,70 @@ h1 {
 </div>
 <div class="grid">
 
-<!-- 21 -->
 <div class="card">
   <div class="card-label"><span class="num">#21</span><span class="cat">価値設計</span></div>
   <div class="thumbnail theme-value">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">VALUE</div>
+    <div class="bg-num">21</div>
     <div class="thumb-content">
-      <div class="main-copy">「<span class="highlight">高い</span>」が<br><span class="accent">信頼に変わる</span>瞬間</div>
+      <div class="main-copy">「<span class="hl">高い</span>」が<br><span class="gold">信頼に変わる</span>瞬間</div>
       <div class="sub-copy">安売りサロンが選ばれなくなる本当の理由</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 22 -->
 <div class="card">
   <div class="card-label"><span class="num">#22</span><span class="cat">価値設計</span></div>
   <div class="thumbnail theme-value">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">VALUE</div>
+    <div class="bg-num">22</div>
     <div class="thumb-content">
-      <div class="main-copy">値上げしても<br>お客様は<br><span class="accent">離れません</span></div>
+      <div class="main-copy">値上げしても<br>お客様は<br><span class="teal">離れません</span></div>
       <div class="sub-copy">怖いのは値上げじゃなくて○○だった</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 23 -->
 <div class="card">
   <div class="card-label"><span class="num">#23</span><span class="cat">価値設計</span></div>
   <div class="thumbnail theme-value">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">VALUE</div>
+    <div class="bg-num">23</div>
     <div class="thumb-content">
-      <div class="main-copy"><span class="highlight">安いサロン</span>ほど<br><span class="red">信用されない</span></div>
+      <div class="main-copy"><span class="hl">安いサロン</span>ほど<br><span class="pink">信用されない</span></div>
       <div class="sub-copy">お客様が「不安になる」価格の正体</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 24 -->
 <div class="card">
   <div class="card-label"><span class="num">#24</span><span class="cat">価値設計</span></div>
   <div class="thumbnail theme-value">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">VALUE</div>
+    <div class="bg-num">24</div>
     <div class="thumb-content">
-      <div class="main-copy">あなたの技術は<br><span class="accent">"一生モノの資産"</span>です</div>
+      <div class="main-copy">あなたの技術は<br><span class="gold">"一生モノの資産"</span>です</div>
       <div class="sub-copy">時給計算をやめた瞬間、サロンが変わる</div>
     </div>
     <div class="brand">@07nailschool</div>
   </div>
 </div>
 
-<!-- 25 -->
 <div class="card">
   <div class="card-label"><span class="num">#25</span><span class="cat">価値設計</span></div>
   <div class="thumbnail theme-value">
-    <div class="accent-line"></div>
+    <div class="side-bar"></div>
     <div class="cat-badge">VALUE</div>
+    <div class="bg-num">25</div>
     <div class="thumb-content">
-      <div class="main-copy">価格に迷う人が知らない<br>「<span class="accent">自信の正体</span>」</div>
+      <div class="main-copy">価格に迷う人が知らない<br>「<span class="gold">自信の正体</span>」</div>
       <div class="sub-copy">根拠があれば、もう迷わない</div>
     </div>
     <div class="brand">@07nailschool</div>
@@ -626,13 +727,15 @@ h1 {
 </div>
 
 <div class="instructions">
-  <h3>サムネイル利用ガイド</h3>
+  <h3>トンマナガイド</h3>
   <ul>
-    <li>各サムネイルは16:9（1280x720px相当）で設計されています</li>
-    <li>実際の撮影時は、洋子さんの写真を右側に配置し、テキストを左寄せにするレイアウトを推奨</li>
-    <li>カテゴリ別に背景色を変えることでシリーズ感を演出しています</li>
-    <li>赤文字（.red）= 注意・衝撃ワード、ゴールド（.accent）= ポジティブ・価値ワード、ハイライト（.highlight）= キーワード強調</li>
-    <li>Canvaやナノバナナで実際のサムネイルを作成する際の文言・配色ガイドとしてお使いください</li>
+    <li><strong>ブランドカラー:</strong> ピンク(#f1198e) / ティール(#0083a6) / ゴールド(#ddb849) / ベージュ背景(#f7f5f2)</li>
+    <li><strong>ピンク(.pink)</strong> = 衝撃・注意・問題提起ワード</li>
+    <li><strong>ティール(.teal)</strong> = 数字・ポジティブ・解決ワード</li>
+    <li><strong>ゴールド(.gold)</strong> = 価値・信頼・資産ワード</li>
+    <li><strong>トーン:</strong> 高級専門サロンの洗練感。「本物」「専門家」「信頼」がキーワード</li>
+    <li>実撮影時は洋子さんの写真を右側配置、テキスト左寄せレイアウト推奨</li>
+    <li>参照: <a href="https://uunalumirise1.my.canva.site/nail-regenerist" style="color:#0083a6;">ネイルリジェネリスト®︎養成講座LP</a></li>
   </ul>
 </div>
 
