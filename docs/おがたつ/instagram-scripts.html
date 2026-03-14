@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram台本マップ - おがたつ</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    background: #111; color: #ddd; line-height: 1.7; padding: 20px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  a { color: #8bb4f0; }
+
+  .header { text-align: center; padding: 40px 20px 28px; margin-bottom: 28px; }
+  .header h1 { font-size: 1.6rem; color: #fff; margin-bottom: 6px; }
+  .header p { color: #888; font-size: 0.88rem; }
+
+  /* 構造図 */
+  .map { margin-bottom: 40px; }
+  .map h2 { font-size: 1.15rem; color: #fff; margin-bottom: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .map-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;
+  }
+  .pillar {
+    background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 20px;
+  }
+  .pillar-title {
+    font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 4px;
+  }
+  .pillar-desc { font-size: 0.78rem; color: #888; margin-bottom: 12px; }
+  .pillar-count {
+    display: inline-block; background: #333; color: #ccc; padding: 2px 10px;
+    border-radius: 10px; font-size: 0.72rem; font-weight: 600; margin-bottom: 10px;
+  }
+  .pillar-list { list-style: none; }
+  .pillar-list li {
+    font-size: 0.82rem; color: #aaa; padding: 4px 0; border-bottom: 1px solid #222;
+    cursor: pointer;
+  }
+  .pillar-list li:hover { color: #fff; }
+  .pillar-list li:last-child { border-bottom: none; }
+  .pillar-list li .num { color: #666; margin-right: 6px; font-size: 0.72rem; }
+
+  /* フィルター */
+  .filters { margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-btn {
+    background: #222; border: 1px solid #333; color: #aaa; padding: 6px 16px;
+    border-radius: 20px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover, .filter-btn.active { background: #333; color: #fff; border-color: #555; }
+
+  /* 台本カード */
+  .scripts-section { margin-bottom: 40px; }
+  .scripts-section h2 { font-size: 1.15rem; color: #fff; margin-bottom: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .scripts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
+
+  .script-card {
+    background: #1a1a1a; border: 1px solid #333; border-radius: 10px;
+    padding: 20px; transition: border-color 0.15s;
+  }
+  .script-card:hover { border-color: #555; }
+  .script-card .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .script-card h3 { font-size: 0.95rem; color: #fff; flex: 1; }
+  .script-card .tags { display: flex; gap: 6px; flex-shrink: 0; margin-left: 10px; }
+  .tag {
+    font-size: 0.65rem; padding: 2px 8px; border-radius: 8px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .tag-hook { background: #2a1a1a; color: #e88; }
+  .tag-method { background: #1a2a1a; color: #8c8; }
+  .tag-story { background: #1a1a2a; color: #88c; }
+  .tag-mind { background: #2a2a1a; color: #cc8; }
+  .tag-parent { background: #2a1a2a; color: #c8c; }
+  .tag-quiz { background: #1a2a2a; color: #8cc; }
+
+  .script-body { margin-top: 10px; }
+  .script-block {
+    margin-bottom: 8px; padding: 8px 12px; border-radius: 6px;
+    background: #111; border: 1px solid #222;
+  }
+  .script-block-label {
+    font-size: 0.68rem; color: #666; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .script-block [contenteditable] {
+    font-size: 0.82rem; color: #ccc; outline: none; min-height: 20px;
+    border-bottom: 1px solid transparent; transition: border-color 0.15s;
+  }
+  .script-block [contenteditable]:focus {
+    border-bottom-color: #555; color: #fff;
+  }
+  .script-block [contenteditable]:hover {
+    color: #eee;
+  }
+
+  .script-meta {
+    display: flex; gap: 12px; margin-top: 10px; font-size: 0.72rem; color: #666;
+  }
+
+  /* テンプレート構造 */
+  .template-section { margin-bottom: 40px; }
+  .template-section h2 { font-size: 1.15rem; color: #fff; margin-bottom: 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .template-box {
+    background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 24px; margin-bottom: 16px;
+  }
+  .template-box h3 { font-size: 0.95rem; color: #fff; margin-bottom: 12px; }
+  .t-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #222; align-items: baseline; }
+  .t-row:last-child { border-bottom: none; }
+  .t-time { font-size: 0.75rem; color: #888; font-weight: 600; min-width: 70px; font-family: monospace; }
+  .t-label { font-size: 0.85rem; color: #ddd; }
+  .t-note { font-size: 0.78rem; color: #666; margin-left: 4px; }
+
+  /* ツールバー */
+  .toolbar {
+    position: sticky; top: 0; z-index: 100; background: #111; border-bottom: 1px solid #333;
+    padding: 10px 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .toolbar .left { display: flex; gap: 8px; align-items: center; }
+  .toolbar .right { display: flex; gap: 8px; }
+  .toolbar button {
+    background: #222; border: 1px solid #333; color: #aaa; padding: 6px 14px;
+    border-radius: 6px; font-size: 0.78rem; cursor: pointer;
+  }
+  .toolbar button:hover { background: #333; color: #fff; }
+  .count-display { font-size: 0.78rem; color: #666; }
+
+  .footer { text-align: center; padding: 32px; color: #555; font-size: 0.75rem; border-top: 1px solid #222; margin-top: 40px; }
+
+  @media (max-width: 640px) {
+    body { padding: 12px; }
+    .scripts-grid, .map-grid { grid-template-columns: 1fr; }
+    .script-card .card-top { flex-direction: column; }
+    .script-card .tags { margin-left: 0; margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>Instagram Reels 台本マップ</h1>
+  <p>中学生コーチ おがたつ｜1分リール × 30本｜クリックで編集可能</p>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="left">
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterScripts('all')">全て</button>
+      <button class="filter-btn" onclick="filterScripts('hook')">衝撃フック</button>
+      <button class="filter-btn" onclick="filterScripts('method')">メソッド紹介</button>
+      <button class="filter-btn" onclick="filterScripts('story')">ストーリー</button>
+      <button class="filter-btn" onclick="filterScripts('mind')">マインド</button>
+      <button class="filter-btn" onclick="filterScripts('parent')">保護者向け</button>
+      <button class="filter-btn" onclick="filterScripts('quiz')">クイズ/あるある</button>
+    </div>
+  </div>
+  <div class="right">
+    <span class="count-display" id="countDisplay">30本 表示中</span>
+  </div>
+</div>
+
+<!-- 構造図 -->
+<div class="map">
+  <h2>コンテンツ構造マップ</h2>
+  <div class="map-grid">
+    <div class="pillar">
+      <div class="pillar-title">A. 衝撃フック系</div>
+      <div class="pillar-desc">「え、マジ？」で止める → 信頼獲得 → LINE誘導</div>
+      <div class="pillar-count">6本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s01')"><span class="num">01</span>塾に通っても成績が上がらない本当の理由</li>
+        <li onclick="scrollToCard('s02')"><span class="num">02</span>99%の中学生が知らない「割り算の真実」</li>
+        <li onclick="scrollToCard('s03')"><span class="num">03</span>通知表の数字は見るな</li>
+        <li onclick="scrollToCard('s04')"><span class="num">04</span>数学ができないのは才能じゃない</li>
+        <li onclick="scrollToCard('s05')"><span class="num">05</span>教科書には載ってない立式の裏ワザ</li>
+        <li onclick="scrollToCard('s06')"><span class="num">06</span>数学のテスト「あと10点」取る方法</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">B. メソッド紹介系</div>
+      <div class="pillar-desc">独自メソッドを1分で体験 → 「もっと知りたい」へ</div>
+      <div class="pillar-count">6本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s07')"><span class="num">07</span>方程式3ステップ【1分で完全理解】</li>
+        <li onclick="scrollToCard('s08')"><span class="num">08</span>100マス計算で数学の成績が上がる理由</li>
+        <li onclick="scrollToCard('s09')"><span class="num">09</span>文章題は「表」を書けば解ける</li>
+        <li onclick="scrollToCard('s10')"><span class="num">10</span>線分図と数直線の使い分け【一発理解】</li>
+        <li onclick="scrollToCard('s11')"><span class="num">11</span>直線の式を最速で求める2ステップ</li>
+        <li onclick="scrollToCard('s12')"><span class="num">12</span>証明問題はテンプレで解ける</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">C. ストーリー系</div>
+      <div class="pillar-desc">実話ベースで感情を動かす → 共感 → フォロー</div>
+      <div class="pillar-count">6本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s13')"><span class="num">13</span>10点の男子が泣いた日</li>
+        <li onclick="scrollToCard('s14')"><span class="num">14</span>偏差値40→学芸大合格した僕の話</li>
+        <li onclick="scrollToCard('s15')"><span class="num">15</span>3ヶ月で100点取った子の秘密</li>
+        <li onclick="scrollToCard('s16')"><span class="num">16</span>「数学嫌い」が口癖だった子の変化</li>
+        <li onclick="scrollToCard('s17')"><span class="num">17</span>入試本番94点を取った子の3ヶ月前</li>
+        <li onclick="scrollToCard('s18')"><span class="num">18</span>2万枚テストを採点してわかったこと</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">D. マインド系</div>
+      <div class="pillar-desc">考え方を変える → 行動変容 → 長期フォロワーに</div>
+      <div class="pillar-count">5本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s19')"><span class="num">19</span>「人のせいにする子」は絶対伸びない</li>
+        <li onclick="scrollToCard('s20')"><span class="num">20</span>問題をたくさんやるのは逆効果</li>
+        <li onclick="scrollToCard('s21')"><span class="num">21</span>数学はゴールの決まった迷路</li>
+        <li onclick="scrollToCard('s22')"><span class="num">22</span>「やればできる」は本当だった</li>
+        <li onclick="scrollToCard('s23')"><span class="num">23</span>勉強量が足りない子の見分け方</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">E. 保護者向け</div>
+      <div class="pillar-desc">親の不安に刺さる → 相談導線 → 高転換率</div>
+      <div class="pillar-count">4本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s24')"><span class="num">24</span>塾代月3万円がムダになる家庭の特徴</li>
+        <li onclick="scrollToCard('s25')"><span class="num">25</span>数学が得意な子の親がやっていること</li>
+        <li onclick="scrollToCard('s26')"><span class="num">26</span>通知表「3」を「4」にする親の声かけ</li>
+        <li onclick="scrollToCard('s27')"><span class="num">27</span>受験に間に合うか不安なお母さんへ</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">F. クイズ/あるある系</div>
+      <div class="pillar-desc">参加型でエンゲージメント獲得 → 拡散</div>
+      <div class="pillar-count">3本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s28')"><span class="num">28</span>この計算、正解率たった12%</li>
+        <li onclick="scrollToCard('s29')"><span class="num">29</span>数学苦手な人あるある5選</li>
+        <li onclick="scrollToCard('s30')"><span class="num">30</span>元教員が出す「ひっかけ問題」</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- テンプレート構造 -->
+<div class="template-section">
+  <h2>1分リール 台本テンプレート</h2>
+  <div class="map-grid">
+    <div class="template-box">
+      <h3>基本構造（全台本共通）</h3>
+      <div class="t-row"><span class="t-time">0:00-0:03</span><span class="t-label">フック</span><span class="t-note">— スクロールを止める1文</span></div>
+      <div class="t-row"><span class="t-time">0:03-0:10</span><span class="t-label">問題提起</span><span class="t-note">— 共感 or 恐怖</span></div>
+      <div class="t-row"><span class="t-time">0:10-0:45</span><span class="t-label">本題</span><span class="t-note">— 1つだけ。具体的に。</span></div>
+      <div class="t-row"><span class="t-time">0:45-0:55</span><span class="t-label">まとめ</span><span class="t-note">— 一言で結論を繰り返す</span></div>
+      <div class="t-row"><span class="t-time">0:55-1:00</span><span class="t-label">CTA</span><span class="t-note">— 保存/フォロー/コメント誘導</span></div>
+    </div>
+    <div class="template-box">
+      <h3>編集のコツ</h3>
+      <div class="t-row"><span class="t-time">フック</span><span class="t-label">テロップ大きく。顔出し。最初の1秒で結論が見える。</span></div>
+      <div class="t-row"><span class="t-time">テロップ</span><span class="t-label">キーワードは黄色 or 赤で強調。文字サイズは大きめ。</span></div>
+      <div class="t-row"><span class="t-time">BGM</span><span class="t-label">テンポ速め。教育系はポップ系が相性良い。</span></div>
+      <div class="t-row"><span class="t-time">CTA</span><span class="t-label">「保存して見返して」が最強。保存率はアルゴリズムに効く。</span></div>
+      <div class="t-row"><span class="t-time">キャプション</span><span class="t-label">概要欄にLINE特典リンク。本文は質問形式で締める。</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 台本一覧 -->
+<div class="scripts-section">
+  <h2>全30本 台本一覧（クリックで編集可能）</h2>
+  <div class="scripts-grid" id="scriptsGrid">
+
+    <!-- ===== A. 衝撃フック系 ===== -->
+
+    <div class="script-card" id="s01" data-cat="hook">
+      <div class="card-top">
+        <h3>01. 塾に通っても成績が上がらない本当の理由</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「毎月3万円、塾に払ってるのに成績上がらない。それ、塾のせいじゃないです」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">塾に通ってるのに点数が変わらない。実はこれ、めちゃくちゃ多い。14年間教員やって1000人以上見てきたけど、原因はほぼ同じ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">原因は「計算の土台」ができてないまま先に進んでること。足し算引き算の「いくつといくつ」、かけ算割り算の「何のいくつ分」。この2パターンが体に染み込んでないと、方程式も関数も絶対にできない。バットも持たずにバッターボックスに立ってるようなもの。大谷さんでもそれじゃホームラン打てません。まず100マス計算。これを毎日タイムアタックでやる。2分切れるようになったら世界が変わります。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">塾に行く前に、まず計算の土台。ここを飛ばしたら何やっても同じです。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">この投稿保存して見返してね。無料の100マス計算シートはプロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者+中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s02" data-cat="hook">
+      <div class="card-top">
+        <h3>02. 99%の中学生が知らない「割り算の真実」</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「割り算で割り切れない時、どうする？　答えは"分数でいい"。これ知らない子、めちゃくちゃ多い」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">2万枚以上テスト採点してきたけど、ここで点落としてる子が本当に多い。割り切れないから空白にしちゃう。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">中学数学では割り切れなかったら分数で答えればOK。これ、小学校ではあんまり出てこないから知らない子が多い。例えば 7÷3。割り切れないよね。でも答えは 7/3 でいい。これだけで入試本番で5点10点変わる。「割り切れなくていい、分数でいい」。これ、僕が教員時代に毎年教室に貼ってた標語です。注意一秒、ケガ一生。ケアレスミスも同じ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">割り切れなくていい、分数でいい。この一言覚えておくだけで点数変わります。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">ケアレスミス対策の完全版はプロフィールのリンクから無料で受け取れます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s03" data-cat="hook">
+      <div class="card-top">
+        <h3>03. 通知表の数字は見るな</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「通知表もらったら数字を見るな。見るべきはそこじゃない」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">通知表が返ってきたら「3だった…」「4だった！」って数字だけ見て終わりにしてない？ 元教員として言います。それ、もったいなすぎる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">見るべきは3つの観点の「ABC」の部分。知識・技能、思考・判断・表現、主体的に学習に取り組む態度。この3つ。ここにBがあったら、そのBをAに変えるのが最短ルート。特に「主体的に〜」はノート提出と授業態度でほぼ決まる。つまり今日からでも変えられる。3を4にしたかったら「Bを1つAに変える」。これだけ意識すれば内申点は上がります。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">通知表は数字じゃなくてABCを見る。Bを1つAに変える。これが内申アップの最短ルート。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">この情報、知らない人多いから保存して広めてください。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者+中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s04" data-cat="hook">
+      <div class="card-top">
+        <h3>04. 数学ができないのは才能じゃない</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「"自分は数学できない"って言ってる人、今すぐやめてください」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">数学ができないのは才能の問題じゃない。14年間で1000人以上見てきた僕が断言します。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">「数学できない」って口にした瞬間、脳が「できなくていい理由」を探し始める。これ、心理学で自己成就予言って言うんだけど、自分で自分にブレーキかけてるだけ。実は僕も高3の夏まで文系で、偏差値40だった。でもそこから理転して東京学芸大学の数学科に現役合格した。変わったのは才能じゃない。「やる」って決めたかどうか。まず「できない」を口にするのをやめる。それだけで本当に変わります。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">数学ができないんじゃなくて、正しいやり方を知らないだけ。まず「できない」って言うのをやめよう。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">共感したらフォローしてね。一緒に変わろう。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s05" data-cat="hook">
+      <div class="card-top">
+        <h3>05. 教科書には載ってない立式の裏ワザ</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「文章題がわからない人、"四角"を書いてください。これだけで解けます」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">文章題って何から手をつけていいかわからないよね。実は教科書には載ってない、めちゃくちゃ簡単な方法がある。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">立式の4ステップ。まず求めたいものを四角で囲む。次に線分図か数直線を書く。足し算引き算の場面なら線分図、かけ算割り算なら数直線。これを覚えるだけで文章題は迷子にならない。数学ってゴールの決まった迷路なんです。迷路って上から見たら簡単でしょ？ 線分図と数直線は、上から迷路を見る方法。これ知ってるだけで世界変わるよ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">文章題は四角で囲んで、線分図か数直線を書く。これだけ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">立式の練習プリント20問、プロフィールのリンクから無料で受け取れるよ。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s06" data-cat="hook">
+      <div class="card-top">
+        <h3>06. 数学のテスト「あと10点」取る方法</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「数学のテスト、あと10点上げたい人。勉強量じゃなくて"ここ"を変えてください」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">頑張ってるのにあと10点が取れない。2万枚以上テスト採点してきてわかった、その10点を落としてる原因。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">ケアレスミス。これだけで10点は落としてる。特に多いのが3つ。1つ目、負の数が出てきた時に符号を間違える。「この先負の数、スピード落とせ」。2つ目、分配法則ですべての項にかけ忘れる。「すべての項に、を忘れるな」。3つ目、さっき言った割り算で分数にしない。この3つを意識するだけであと10点は確実に変わる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">あと10点は新しいことを覚えるんじゃなくて、ミスを減らすだけで取れる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">テスト前にこの投稿見返して。保存しておいてね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <!-- ===== B. メソッド紹介系 ===== -->
+
+    <div class="script-card" id="s07" data-cat="method">
+      <div class="card-top">
+        <h3>07. 方程式3ステップ【1分で完全理解】</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「方程式、3ステップで解けます。これ以外のやり方は全部遠回り」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">方程式って難しそうに見えるけど、実はやることは3つしかない。1000人以上に教えてきたこの方法、1分で教えます。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">ステップ1、文字の項を左辺、数字の項を右辺に移項する。ステップ2、それぞれ計算する。ステップ3、文字の係数で両辺を割る。以上。例えば 3x + 5 = 14。ステップ1で 3x = 14 - 5。ステップ2で 3x = 9。ステップ3で x = 3。これだけ。どんな方程式もこの3ステップ。スーパーマリオで言ったらクリボーかノコノコレベル。怖がらなくて大丈夫。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">移項、計算、割る。この3つだけ。覚えた人はコメントに「3ステップ」って書いて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">練習問題つきの完全版はプロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s08" data-cat="method">
+      <div class="card-top">
+        <h3>08. 100マス計算で数学の成績が上がる理由</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「中学生に100マス計算？って思ったでしょ。でもこれが一番効くんです」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">100マス計算って小学生のやつでしょ？って思うかもしれない。でも数学ができない中学生に一番足りてないのは、実はここ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">数学の計算って全部、足し算引き算かけ算割り算の組み合わせ。方程式も関数も図形も、最後は四則計算に行き着く。ここが遅い・不正確だと、上に何を積んでも崩れる。自転車に乗るのと同じで、考えなくても手が動くレベルまで持っていく。そのために100マス計算をタイムアタックでやる。毎日やって記録をつける。2分を切れたら計算の土台は完成。ここから一気に伸びます。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">計算は「考えなくてもできる」レベルにする。そのための100マス計算。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">無料の100マス計算シートと記録シート、プロフィールのリンクからどうぞ。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生+保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s09" data-cat="method">
+      <div class="card-top">
+        <h3>09. 文章題は「表」を書けば解ける</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「文章題が苦手な人、今から教える"表の書き方"で人生変わります」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">文章題、何からやればいいかわからない。式が立てられない。これ、全部「表」を書けば解決する。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">方程式の利用4ステップ。1、何をxにするか決める。2、表を書いて等しい関係を見つける。3、方程式を解く。4、解の吟味。ポイントは表の書き方。縦に数量、つまり単位があるもの。横に種類を書く。下の2つをかけると一番上になるように並べる。残り2マスになったら勝ったも同然。ここまで来たら方程式は自動的にできる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">文章題は表を書く。これだけで迷子にならなくなる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">文章題の入試過去問107問つきのプリント、プロフィールのリンクから無料。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s10" data-cat="method">
+      <div class="card-top">
+        <h3>10. 線分図と数直線の使い分け【一発理解】</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「線分図と数直線、どっちを使えばいいかわからない人。たった1つのルールで解決します」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">文章題で図を書けって言われるけど、線分図と数直線どっち書けばいいの？って迷うよね。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">ルールは1つだけ。足し算引き算の場面なら線分図。かけ算割り算の場面なら数直線。これだけ。「いくつといくつ」の関係なら線分図。棒を横に並べて合計や差を見る。「何のいくつ分」の関係なら数直線。1あたりの量×個数の構造を見る。このルール知ってるだけで文章題の正答率が劇的に上がる。僕の受講生はこれで定期テスト20点以上アップした子が何人もいます。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">足し算引き算は線分図、かけ算割り算は数直線。このルールだけ覚えて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">保存してテスト前に見返してね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s11" data-cat="method">
+      <div class="card-top">
+        <h3>11. 直線の式を最速で求める2ステップ</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「直線の式、連立方程式で求めてる人。それ、全くセンスないです」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">一次関数の問題で直線の式を求める場面、めちゃくちゃ出る。でも連立方程式で解くのは時間のムダ。もっと速い方法がある。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">2ステップだけ。ステップ1、変化の割合（傾き）を求める。yの増加量÷xの増加量。ステップ2、y = ax + b に座標を1つ代入して b を求める。以上。例えば (1, 3) と (3, 7) を通る直線。傾きは (7-3)÷(3-1) = 2。y = 2x + b に (1, 3) を代入して 3 = 2 + b、b = 1。答え y = 2x + 1。10秒で終わる。明治図書で10年以上関数の原稿書いてきた僕が言うから間違いない。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">傾きを出す、代入する。2ステップ。これ以外は遠回り。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">一次関数の入試過去問165問のプリント、プロフィールのリンクから無料。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s12" data-cat="method">
+      <div class="card-top">
+        <h3>12. 証明問題はテンプレで解ける</h3>
+        <div class="tags"><span class="tag tag-method">メソッド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「証明問題、白紙で出してる人。テンプレートに当てはめるだけで部分点もらえます」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">証明って何書けばいいかわからないから白紙にする。でも白紙は0点。テンプレ使えば最低でも部分点は取れる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">証明のテンプレートはこれ。「○○において」で始める。次に「仮定より〜」で条件を3つ書く。「①〜 ②〜 ③〜」。最後に「①②③より、△△の条件が成り立つので○○である」。これだけ。ドラえもんを上手に書く方がよっぽど難しい。証明は才能じゃなくてパターン。合同条件3つ、相似条件3つ。これを覚えてテンプレに当てはめるだけ。入試でも定期テストでもこれで8割取れます。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">証明は白紙にしない。テンプレに当てはめる。それだけで点数変わる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">このテンプレ使えるって思ったら保存して。詳しくはプロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <!-- ===== C. ストーリー系 ===== -->
+
+    <div class="script-card" id="s13" data-cat="story">
+      <div class="card-top">
+        <h3>13. 10点の男子が泣いた日</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「数学いつも10点の男子生徒が、中3の秋に突然泣き出した」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">教員時代に忘れられない出来事がある。数学がいつも10点前後の男の子の話。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">その子は授業中もずっとボーっとしてた。でも中3の秋、急に泣き出したんです。「先生、俺もう間に合わないですよね」って。僕は言った。「間に合うかどうかは俺が決めることじゃない。お前が決めることだ」。そこからその子は毎日放課後に質問に来るようになった。毎日。1月末のテストで70点以上取った。最終的に進学校に合格した。変わったのは能力じゃない。「やる」って決めた瞬間。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">10点から70点。才能じゃない。決めたかどうか。今からでも間に合う。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">この話に共感したらコメントで教えて。一緒に変わろう。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s14" data-cat="story">
+      <div class="card-top">
+        <h3>14. 偏差値40→学芸大合格した僕の話</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「高3の夏、偏差値40の文系だった僕が、なぜ東京学芸大学の数学科に現役合格できたか」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">今でこそ数学の先生やってるけど、高3の夏まで僕は文系で数学の偏差値は40だった。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">きっかけは消防士を目指してた友達。毎日必死に勉強してた。その姿を見て「俺は何やってるんだ」って思った。そこから理転を決めた。周りには無理だって言われた。でも毎日朝から晩まで数学をやった。わからなくても投げ出さなかった。結果、東京学芸大学数学科に現役合格。偏差値40から60以上の大学に。ここで学んだのは「やり方」より「やると決める」ことの方がよっぽど大事だってこと。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">偏差値は過去の数字でしかない。今日決めれば、明日から変われる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">変わりたい人、フォローして。全力で背中押します。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s15" data-cat="story">
+      <div class="card-top">
+        <h3>15. 3ヶ月で100点取った子の秘密</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「定期テスト59点だった子が、3ヶ月後に100点取った。何をしたと思う？」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">特別な塾に通ったわけでも、天才だったわけでもない。やったことはすごくシンプル。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">やったことは3つだけ。1つ目、100マス計算を毎日タイムアタック。計算のスピードと正確さを上げた。2つ目、方程式の3ステップを徹底的に反復。移項、計算、割る。これを体に叩き込んだ。3つ目、間違えた問題だけをノートにまとめて3回解き直した。問題をたくさんやるんじゃなくて、同じ問題を完璧にする。量じゃなくて質。これで59点から100点。3ヶ月。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">計算の土台、基本の反復、間違いの解き直し。この3つだけで100点は取れる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">具体的なやり方はプロフィールのリンクから。無料で全部教えてます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生+保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s16" data-cat="story">
+      <div class="card-top">
+        <h3>16. 「数学嫌い」が口癖だった子の変化</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「"数学嫌い"が口癖だった子が、ある日"先生、数学おもしろい"って言った」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">数学が嫌い。これ、本当は嫌いなんじゃなくて「わからないから嫌い」なだけ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">その子はずっと「数学嫌い」って言ってた。でも計算の土台からやり直して、方程式の3ステップを教えて、初めて自力で方程式が解けた瞬間「え、できた」って顔が変わった。RPGで言ったら、ずっと雑魚キャラに負けてたのに初めてボス倒した感じ。そこから変わった。勉強時間も自分から増やすようになった。嫌いだったんじゃない。できなかっただけ。できるようになったら好きになる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">数学嫌いは「わからないから嫌い」。正しいやり方でやれば、好きに変わる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">数学を好きに変える方法、プロフィールのリンクから無料で公開中。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s17" data-cat="story">
+      <div class="card-top">
+        <h3>17. 入試本番94点を取った子の3ヶ月前</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「入試本番で数学94点取った子、3ヶ月前は50点台だった」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">実力テスト50点台。受験まであと3ヶ月。普通なら諦めるよね。でもこの子は諦めなかった。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">まずケアレスミスを徹底的に潰した。「割り切れなくていい分数でいい」「この先負の数スピード落とせ」「すべての項にを忘れるな」。この3つの標語をノートの表紙に貼った。次に方程式と関数の基本を3ステップで完全に固めた。最後に入試過去問をひたすら解いた。3ヶ月間、毎日欠かさず。結果、入試本番94点。50点台から94点。3ヶ月で。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">3ヶ月あれば変われる。正しいやり方で、毎日やれば。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">受験に不安がある人、プロフィールのリンクから無料で相談できます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生+保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s18" data-cat="story">
+      <div class="card-top">
+        <h3>18. 2万枚テストを採点してわかったこと</h3>
+        <div class="tags"><span class="tag tag-story">ストーリー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「14年間で2万枚以上のテストを採点してきた元教員が、1つだけ伝えたいこと」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">2万枚。想像できる？ 毎回クラス全員分のテストを赤ペンで1枚1枚チェックしてきた。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">2万枚見てわかったこと。点数が低い子と高い子の差は、才能でも勉強時間でもなかった。「基本を丁寧にやってるかどうか」これだけ。90点以上の子は計算ミスがほぼゼロ。途中式をしっかり書いてる。逆に50点以下の子は暗算で解こうとして計算ミスだらけ。途中式もない。やってることが難しいんじゃない。基本を雑にやってるだけ。丁寧にやれば誰でも上がる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">2万枚の結論。基本を丁寧に。途中式を書く。これだけ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">この投稿、保存しておいてね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生+保護者</span></div>
+    </div>
+
+    <!-- ===== D. マインド系 ===== -->
+
+    <div class="script-card" id="s19" data-cat="mind">
+      <div class="card-top">
+        <h3>19. 「人のせいにする子」は絶対伸びない</h3>
+        <div class="tags"><span class="tag tag-mind">マインド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「1000人以上教えてきて、絶対に伸びない子の特徴が1つだけある」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">頭の良さでも、勉強時間でもない。これやってる限り絶対に伸びない。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">人のせいにすること。「先生の教え方が悪い」「塾が合ってない」「問題集が悪い」。全部外に原因を求めてる。でも結果を変えるには自分が変わるしかない。環境を変えても自分が変わらなければ同じ結果になる。逆に「自分に何ができるか」を考えられる子は必ず伸びる。さっき言った10点だった男の子も、泣いたあの日から人のせいにするのをやめた。だから変われた。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">人のせいにしてる限り変われない。「自分に何ができるか」を考えよう。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">この考え方に共感した人、コメントで教えて。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s20" data-cat="mind">
+      <div class="card-top">
+        <h3>20. 問題をたくさんやるのは逆効果</h3>
+        <div class="tags"><span class="tag tag-mind">マインド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「問題集3冊やってるのに点数上がらない人、今すぐ2冊捨ててください」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">ワーク3周、塾の宿題、市販の問題集。それだけやって平均点前後。これ、実際にいた子の話。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">教員8年目の時の話。その女の子はめちゃくちゃ頑張ってた。でも成績は平均点の前後をウロウロ。なぜか。量に囚われて「他でも使える解き方を取り出す」ことをしてなかった。10問解くより、1問を完璧に理解する方が大事。「この問題はなぜこの式になるのか」「他の問題にも使えるのか」。これを考えながら解く。量より質。1冊を完璧にする方が3冊を雑にやるより100倍効果ある。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">量じゃなくて質。1冊を完璧にする。これが最短ルート。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">正しい勉強法、もっと詳しくはプロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生+保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s21" data-cat="mind">
+      <div class="card-top">
+        <h3>21. 数学はゴールの決まった迷路</h3>
+        <div class="tags"><span class="tag tag-mind">マインド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「数学が難しいと思ってる人、考え方を1つ変えるだけで楽になる」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">数学って終わりが見えない感じがするよね。でも実は、数学は「ゴールが決まってる迷路」なんです。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">迷路って中にいると迷うでしょ。でも上から見たら簡単。ゴールまでの道が全部見える。数学も同じ。正しい解き方のパターンを知ってれば、上から迷路を見てるのと同じ状態になれる。方程式なら3ステップ。文章題なら4ステップ。関数なら必ずグラフを書く。これが「上から見る方法」。ナビなしで知らない街を走るのと、ナビありで走るの、どっちが安心？数学の正しい手順はナビと同じ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">数学はゴールが決まった迷路。正しい手順を覚えれば迷わない。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">迷路の攻略法、全部プロフィールのリンクから教えてます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s22" data-cat="mind">
+      <div class="card-top">
+        <h3>22. 「やればできる」は本当だった</h3>
+        <div class="tags"><span class="tag tag-mind">マインド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「"やればできる"って綺麗事だと思ってた。でも1000人教えて、本当だった」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">やればできるなんて無責任な言葉だって思うかもしれない。でも14年間教えてきて、僕は確信してる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">ただし条件がある。「正しいやり方で」やること。がむしゃらに問題解いてもダメ。計算の土台を作って、正しい手順を覚えて、間違いを分析して直す。この順番でやれば、誰でも必ず伸びる。偏差値55から65になった子。大手模試54点から82点になった子。定期テスト59点から100点になった子。全員、特別な才能があったわけじゃない。「正しいやり方で、やった」だけ。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">やればできる。ただし正しいやり方で。それが全て。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">正しいやり方を知りたい人、プロフィールのリンクから。全部無料で教えてます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s23" data-cat="mind">
+      <div class="card-top">
+        <h3>23. 勉強量が足りない子の見分け方</h3>
+        <div class="tags"><span class="tag tag-mind">マインド</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「"うちの子、勉強してるのに…"ってお母さん。本当にしてますか？」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">勉強量が足りない子って、本人は「やってる」と思ってる。でも実際は全然足りてないケースが多い。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">見分け方は簡単。ノートを見ればわかる。勉強量が足りてる子はノートがどんどん増えていく。途中式もちゃんと書いてる。足りてない子はノートがスカスカ。暗算で済ませてる。もう1つ、タイマーを使ってるかどうか。勉強してるつもりでもスマホ触ったりボーっとしてる時間が多い。タイマーで25分集中、5分休憩。これだけでも実質の勉強量は倍になります。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">ノートとタイマー。この2つで「本当に勉強してるか」はすぐわかる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">お子さんの勉強に不安がある方、プロフィールのリンクから無料で相談できます。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者</span></div>
+    </div>
+
+    <!-- ===== E. 保護者向け ===== -->
+
+    <div class="script-card" id="s24" data-cat="parent">
+      <div class="card-top">
+        <h3>24. 塾代月3万円がムダになる家庭の特徴</h3>
+        <div class="tags"><span class="tag tag-parent">保護者向け</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「塾に毎月3万円払ってるお母さん、その3万円ムダになってるかもしれません」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">塾に通わせてるのに成績が上がらない。これ、保護者の方から一番多い相談です。3000回以上の三者面談でも何度も聞いてきました。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">塾代がムダになる家庭の特徴は「塾に丸投げ」してること。塾は学校の授業の先を教えてくれる場所。でもお子さんの問題が計算の土台にあるなら、先に進んでも意味がない。まずお子さんが100マス計算を何分でできるか試してみてください。3分以上かかるなら、塾より先にやることがある。計算の土台を固めてから塾に行けば、同じ月3万円でも効果が全然違います。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">塾の前に計算の土台。順番が大事です。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">無料の100マス計算シートはプロフィールのリンクから。まずはお子さんと一緒にやってみてください。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s25" data-cat="parent">
+      <div class="card-top">
+        <h3>25. 数学が得意な子の親がやっていること</h3>
+        <div class="tags"><span class="tag tag-parent">保護者向け</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「数学が得意な子の家庭には、共通する"親の習慣"がある」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">1000人以上の生徒と3000回以上の三者面談をしてきて、ある共通点に気づいた。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">それは「結果じゃなくて過程を褒める」こと。「100点すごいね」じゃなくて「毎日30分やってたもんね」。結果を褒めると、結果が出ない時に折れる。過程を褒めると、結果が出なくても続けられる。もう1つ、「教えない」こと。お子さんに聞かれても「一緒に考えよう」って言える親の子は伸びる。答えを教えると考える力が育たない。この2つだけ意識してください。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">過程を褒める。答えを教えない。これが数学得意な子の親の共通点。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">保存してパートナーにもシェアしてください。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s26" data-cat="parent">
+      <div class="card-top">
+        <h3>26. 通知表「3」を「4」にする親の声かけ</h3>
+        <div class="tags"><span class="tag tag-parent">保護者向け</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「通知表の"3"を"4"にしたい。実は親の声かけ1つで変わります」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">内申点が受験に直結する今、通知表を1つ上げたい保護者は多い。元教員が内側の仕組みを教えます。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">通知表の3つの観点のうち「主体的に学習に取り組む態度」。これが一番変えやすい。具体的にはノート提出と授業中の姿勢。だから親の声かけは「テスト頑張れ」じゃなくて「ノートちゃんと出した？」「今日の授業で手挙げた？」これでいい。テストの点数は急には上がらないけど、態度評価は明日から変えられる。お子さんに「先生は頑張りも見てくれてるよ」って伝えてあげてください。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">テストの点数より、ノート提出と授業態度。ここを声かけで変える。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">内申点の上げ方、もっと詳しくはプロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者</span></div>
+    </div>
+
+    <div class="script-card" id="s27" data-cat="parent">
+      <div class="card-top">
+        <h3>27. 受験に間に合うか不安なお母さんへ</h3>
+        <div class="tags"><span class="tag tag-parent">保護者向け</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「受験まであと半年。数学30点。間に合いますか？って聞かれたら、僕はこう答えます」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">三者面談で何百回も聞かれた質問。「先生、うちの子間に合いますか？」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">答えは「正しいやり方でやれば間に合う」。中学数学は範囲が決まってる。無限じゃない。方程式、関数、図形、データ、確率。この5つだけ。そして中学数学の苦手克服は、正しい順番でやれば3ヶ月で完了する。実際に3ヶ月で50点台から90点台になった子もいる。大事なのは「正しい順番」と「毎日やること」。逆に言えば、間違った順番で1年やっても変わらない。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">3ヶ月あれば変われる。でも正しい順番でやることが絶対条件。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">お子さんに合った攻略プラン、無料で相談できます。プロフィールのリンクから。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 保護者</span></div>
+    </div>
+
+    <!-- ===== F. クイズ/あるある系 ===== -->
+
+    <div class="script-card" id="s28" data-cat="quiz">
+      <div class="card-top">
+        <h3>28. この計算、正解率たった12%</h3>
+        <div class="tags"><span class="tag tag-quiz">クイズ</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「この問題、中学生の正解率たった12%。あなたは解ける？」（画面に問題表示）</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">3秒考えてみてください。3、2、1。答え出た？</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">-3²と(-3)²の違い。答えは-9と9。全然違う。カッコがあるかないかで答えが変わる。-3²はマイナスがついた3の2乗だから-(3×3)=-9。(-3)²は-3自体を2乗するから(-3)×(-3)=9。これ、テストで出たら1問2点〜5点。知ってるかどうかだけの差。「この先負の数、スピード落とせ」。この標語、覚えておいて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">カッコの有無で答えが変わる。正解できた人はコメントで「正解」って書いて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">こういう落とし穴、もっと知りたい人はフォローしてね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s29" data-cat="quiz">
+      <div class="card-top">
+        <h3>29. 数学苦手な人あるある5選</h3>
+        <div class="tags"><span class="tag tag-quiz">あるある</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「数学苦手な人あるある。3つ以上当てはまったらヤバいです」</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">14年間で1000人以上見てきて、数学苦手な子には共通する行動パターンがある。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">1、途中式を書かない。暗算でやろうとしてミスる。2、答え合わせで赤ペンで正解を写して終わり。なぜ間違えたか考えない。3、わからない問題を5分以上にらめっこ。答え見て理解する方が100倍効率いい。4、テスト前だけ勉強する。数学は毎日の積み重ね。5、「数学できない」って自分で言う。言った瞬間に脳がブレーキかける。いくつ当てはまった？</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">全部当てはまっても大丈夫。気づいたなら今日から変えられる。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">当てはまった数、コメントで教えて。変わりたい人フォローしてね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+    <div class="script-card" id="s30" data-cat="quiz">
+      <div class="card-top">
+        <h3>30. 元教員が出す「ひっかけ問題」</h3>
+        <div class="tags"><span class="tag tag-quiz">クイズ</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block">
+          <div class="script-block-label">0:00-0:03 フック</div>
+          <div contenteditable="true">「元教員が出すひっかけ問題。テストに出るから絶対見て」（画面に問題表示）</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:03-0:10 問題提起</div>
+          <div contenteditable="true">2(3x + 4) を展開してください。3秒で。3、2、1。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:10-0:45 本題</div>
+          <div contenteditable="true">正解は 6x + 8。でも6x + 4って書いた人いない？ これが3大ケアレスミスの1つ「すべての項にを忘れるな」。分配法則では2を3xにも4にもかける。すべての項に。これ忘れると一気に5点10点失う。テストで一番もったいないミス。解き方はわかってるのにミスで落とすの、悔しくない？ 「すべての項に、を忘れるな」この標語、ノートに書いておいて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:45-0:55 まとめ</div>
+          <div contenteditable="true">分配法則はすべての項にかける。これだけ。正解できた人はコメントで「完璧」って書いて。</div>
+        </div>
+        <div class="script-block">
+          <div class="script-block-label">0:55-1:00 CTA</div>
+          <div contenteditable="true">こういうひっかけ問題、毎週出すからフォローしてね。</div>
+        </div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: 中学生</span></div>
+    </div>
+
+  </div><!-- /scripts-grid -->
+</div><!-- /scripts-section -->
+
+<div class="footer">
+  <p>Instagram Reels 台本マップ｜中学生コーチ おがたつ｜2026年3月14日作成</p>
+  <p style="margin-top: 4px;">全30本｜クリックで直接編集可能｜おがたつさんの実際の話し方・メソッドに基づいて作成</p>
+</div>
+
+<script>
+function filterScripts(cat) {
+  const cards = document.querySelectorAll('.script-card');
+  let count = 0;
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = '';
+      count++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  document.getElementById('countDisplay').textContent = count + '本 表示中';
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.onclick.toString().includes("'" + cat + "'")) btn.classList.add('active');
+  });
+}
+
+function scrollToCard(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.borderColor = '#666';
+    setTimeout(() => { el.style.borderColor = '#333'; }, 2000);
+  }
+}
+</script>
+
+</body>
+</html>
