@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご提案書：UTAGE環境構築・改善プラン</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #4B0082;
+    --purple-mid: #6B3FA0;
+    --purple-light: #8B6DB5;
+    --purple-pale: #f3eef8;
+    --gold: #c9a96e;
+    --gold-dark: #b8942e;
+    --gold-light: #e8d5a3;
+    --gold-pale: #faf8f3;
+    --red: #c26a5a;
+    --red-dark: #a8524a;
+    --red-light: #e8a090;
+    --red-pale: #fdf3f1;
+    --green: #5a9e6f;
+    --green-dark: #3d7a50;
+    --green-light: #a0d4ad;
+    --green-pale: #f0f8f2;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f4f7;
+    color: #333;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .slide-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-left: 4px solid;
+    border-image: linear-gradient(to bottom, var(--purple-deep), var(--purple-light)) 1;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide.theme-gold {
+    border-image: linear-gradient(to bottom, var(--gold), var(--gold-light)) 1;
+  }
+  .slide.theme-red {
+    border-image: linear-gradient(to bottom, var(--red), var(--red-light)) 1;
+  }
+  .slide.theme-green {
+    border-image: linear-gradient(to bottom, var(--green), var(--green-light)) 1;
+  }
+
+  .slide-header {
+    padding: 48px 100px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .slide-body {
+    padding: 20px 100px 60px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(75,0,130,0.15) transparent;
+  }
+
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-thumb { background: rgba(75,0,130,0.15); border-radius: 2px; }
+
+  /* Title slide */
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 80px;
+    background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 50%, var(--gold-pale) 100%);
+    border-image: none;
+    border-left: none;
+  }
+
+  .slide.title-slide .slide-header {
+    padding: 0 100px;
+  }
+
+  .slide-bg-num {
+    position: absolute;
+    right: 60px;
+    bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16rem;
+    font-weight: 700;
+    color: rgba(75,0,130,0.05);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .theme-gold .slide-bg-num { color: rgba(201,169,110,0.07); }
+  .theme-red .slide-bg-num { color: rgba(194,106,90,0.07); }
+  .theme-green .slide-bg-num { color: rgba(90,158,111,0.07); }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--purple-mid);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .theme-gold .section-num { color: var(--gold-dark); }
+  .theme-red .section-num { color: var(--red); }
+  .theme-green .section-num { color: var(--green-dark); }
+
+  .slide-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 8px;
+  }
+  .theme-gold .slide-title { color: #8B6B2A; }
+  .theme-red .slide-title { color: var(--red-dark); }
+  .theme-green .slide-title { color: var(--green-dark); }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, var(--purple-deep), var(--purple-light));
+    margin: 12px auto 0;
+  }
+  .theme-gold .divider { background: linear-gradient(to right, var(--gold-dark), var(--gold-light)); }
+  .theme-red .divider { background: linear-gradient(to right, var(--red), var(--red-light)); }
+  .theme-green .divider { background: linear-gradient(to right, var(--green), var(--green-light)); }
+
+  .ichijiku-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .main-subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .meta-info {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-item { font-size: 0.82rem; color: #666; }
+  .meta-label { color: var(--gold-dark); font-weight: 500; }
+
+  /* Cards */
+  .card {
+    background: #fafafc;
+    border: 1px solid #ece8f0;
+    border-top: 3px solid var(--purple-mid);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-mid);
+    margin-bottom: 10px;
+  }
+  .card p, .card li { font-size: 0.82rem; line-height: 1.8; color: #555; }
+  .card ul { padding-left: 18px; }
+  .card ul li { margin-bottom: 4px; }
+
+  .card.c-gold {
+    background: #fdfcf8;
+    border: 1px solid #ede8dc;
+    border-top: 3px solid var(--gold);
+  }
+  .card.c-gold .card-title { color: var(--gold-dark); }
+
+  .card.c-red {
+    background: var(--red-pale);
+    border: 1px solid #f0ddd9;
+    border-top: 3px solid var(--red);
+  }
+  .card.c-red .card-title { color: var(--red-dark); }
+
+  .card.c-green {
+    background: var(--green-pale);
+    border: 1px solid #d0e8d6;
+    border-top: 3px solid var(--green);
+  }
+  .card.c-green .card-title { color: var(--green-dark); }
+
+  /* Highlights */
+  .highlight {
+    background: var(--purple-pale);
+    border-left: 3px solid var(--purple-mid);
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 0 6px 6px 0;
+  }
+  .highlight p { font-size: 0.82rem; line-height: 1.8; color: #555; }
+  .highlight strong { color: var(--purple-deep); }
+
+  .highlight.hl-gold {
+    background: var(--gold-pale);
+    border-left-color: var(--gold);
+  }
+  .highlight.hl-gold strong { color: var(--gold-dark); }
+
+  .highlight.hl-red {
+    background: var(--red-pale);
+    border-left-color: var(--red);
+  }
+  .highlight.hl-red strong { color: var(--red-dark); }
+
+  .highlight.hl-green {
+    background: var(--green-pale);
+    border-left-color: var(--green);
+  }
+  .highlight.hl-green strong { color: var(--green-dark); }
+
+  /* Table */
+  .table-wrap {
+    width: 100%;
+    max-width: 700px;
+    overflow-x: auto;
+    margin-bottom: 14px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  th {
+    background: var(--gold-pale);
+    color: var(--gold-dark);
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--gold);
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    line-height: 1.6;
+  }
+  tr:last-child td {
+    border-bottom: 2px solid var(--gold-light);
+  }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .tag.purple {
+    border: 1px solid var(--purple-light);
+    color: var(--purple-mid);
+    background: var(--purple-pale);
+  }
+  .tag.gold {
+    border: 1px solid var(--gold);
+    color: var(--gold-dark);
+    background: var(--gold-pale);
+  }
+  .tag.red {
+    border: 1px solid var(--red-light);
+    color: var(--red-dark);
+    background: var(--red-pale);
+  }
+
+  /* Flow */
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #555;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .flow-arrow { color: var(--gold); font-weight: 700; }
+
+  /* Plan cards */
+  .plan-card {
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .plan-card.recommended {
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(201,169,110,0.15);
+  }
+  .plan-card.recommended::before {
+    content: 'おすすめ';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 14px;
+    border-radius: 10px;
+  }
+  .plan-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 4px;
+  }
+  .plan-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-bottom: 10px;
+  }
+  .plan-price .yen { font-size: 0.9rem; font-family: 'Noto Sans JP', sans-serif; }
+  .plan-items { list-style: none; padding: 0; }
+  .plan-items li {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: #555;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .plan-items li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .plan-items li.not-included::before {
+    content: '—';
+    color: #ccc;
+  }
+  .plan-items li.not-included {
+    color: #bbb;
+  }
+
+  /* Comparison highlight */
+  .comparison-box {
+    background: linear-gradient(135deg, var(--purple-pale), var(--gold-pale));
+    border: 1px solid var(--gold-light);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+  }
+  .comparison-box .label {
+    font-size: 0.75rem;
+    color: var(--purple-mid);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .comparison-box .numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  .comparison-box .num-block {
+    text-align: center;
+  }
+  .comparison-box .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  .comparison-box .num-label {
+    font-size: 0.72rem;
+    color: #888;
+  }
+  .comparison-box .vs {
+    font-size: 0.8rem;
+    color: #bbb;
+    font-weight: 700;
+  }
+
+  /* Impact bar */
+  .impact-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .impact-label {
+    font-size: 0.78rem;
+    color: #555;
+    width: 140px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .impact-bar-bg {
+    flex: 1;
+    height: 24px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+  .impact-bar {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.8s ease;
+  }
+  .impact-bar.purple { background: linear-gradient(to right, var(--purple-deep), var(--purple-light)); }
+  .impact-bar.gold { background: linear-gradient(to right, var(--gold-dark), var(--gold)); }
+  .impact-bar.green { background: linear-gradient(to right, var(--green-dark), var(--green)); }
+  .impact-value {
+    font-size: 0.7rem;
+    color: #fff;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav button {
+    width: 28px; height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .nav button:hover {
+    border-color: var(--purple-mid);
+    color: var(--purple-mid);
+    background: var(--purple-pale);
+  }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 28px;
+    left: 24px;
+    font-size: 0.7rem;
+    color: #ccc;
+    font-family: 'Cormorant Garamond', serif;
+    z-index: 100;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: var(--purple-light);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer img { width: 16px; height: 16px; }
+
+  @media (max-width: 768px) {
+    .slide-header { padding: 32px 24px 0; }
+    .slide-body { padding: 16px 24px 60px; }
+    .slide.title-slide .slide-header { padding: 0 24px; }
+    .main-title { font-size: 1.4rem; }
+    .plan-price { font-size: 1.6rem; }
+    .impact-label { width: 100px; font-size: 0.7rem; }
+    .comparison-box .num { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- ========== タイトル ========== -->
+  <div class="slide title-slide active" data-slide="0">
+    <div class="slide-header">
+      <img src="ichijiku-icon.png" class="ichijiku-icon" alt="いちじく">
+      <div class="section-num">Proposal</div>
+      <div class="divider" style="margin-bottom: 24px;"></div>
+      <div class="main-title">UTAGE環境 構築・改善プラン<br>ご提案書</div>
+      <div class="main-subtitle">YouTube × LINE × 診断で集客導線を一本化</div>
+      <div class="meta-info">
+        <span class="meta-item"><span class="meta-label">作成日</span>　2026.03.13</span>
+        <span class="meta-item"><span class="meta-label">ご提案先</span>　伊達さま</span>
+        <span class="meta-item"><span class="meta-label">納期目安</span>　2026年3月末</span>
+      </div>
+      <div class="tags" style="margin-top: 20px;">
+        <span class="tag purple">UTAGE構築</span>
+        <span class="tag purple">ファネル改善</span>
+        <span class="tag purple">LINE配信</span>
+        <span class="tag purple">LP制作</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：現状の集客導線 ========== -->
+  <div class="slide" data-slide="1">
+    <div class="slide-bg-num">01</div>
+    <div class="slide-header">
+      <div class="section-num">Section 01</div>
+      <div class="slide-title">現在の集客導線</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>YouTubeから養成講座までの<strong>理想の流れ</strong>は既にお持ちです。しかし現状、この導線が<strong>途中で途切れている</strong>ため、見込み客を取りこぼしています。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">理想の集客導線</div>
+        <div class="flow-step">YouTube <span class="flow-arrow">→</span> LINE登録 <span class="flow-arrow">→</span> 診断 <span class="flow-arrow">→</span> ステップ配信 <span class="flow-arrow">→</span> 個別相談 <span class="flow-arrow">→</span> 養成講座</div>
+      </div>
+      <div class="card">
+        <div class="card-title">伊達さまの強み</div>
+        <ul>
+          <li>動物占い60種類の動画制作（残り約20種類のストックあり）</li>
+          <li>キャラクター全出しの動画で<strong>ファンが付きやすい</strong></li>
+          <li>YouTube経由の個別相談は<strong>ほぼ成約</strong>している</li>
+          <li>メルマガ登録者 約2,500名の既存資産</li>
+          <li>鑑定士養成講座（入門・中級・上級）の確立されたカリキュラム</li>
+        </ul>
+      </div>
+      <div class="highlight hl-red">
+        <p><strong>課題：</strong>UTAGEの導線が整っていないため、YouTube配信をストップ中。ファンが集まる動画があるのに、<strong>受け皿がない状態</strong>です。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 赤：現状の課題（1） ========== -->
+  <div class="slide theme-red" data-slide="2">
+    <div class="slide-bg-num">02</div>
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">現状の課題（ファネル・配信）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-red">
+        <div class="card-title">UTAGEファネルの問題</div>
+        <ul>
+          <li>ファネルの構築が整理されておらず、<strong>動線が途切れている</strong></li>
+          <li>シナリオが大量に存在するが、使われていないものが多数</li>
+          <li>YouTubeのリンクがUTAGEの正しい入口に繋がっていない</li>
+          <li>登録経路タグが未設定 → <strong>どこから来た人か分からない</strong></li>
+        </ul>
+      </div>
+      <div class="card c-red">
+        <div class="card-title">LINE配信の問題</div>
+        <ul>
+          <li>ステップ配信が途中で切れている（1通来て終了するケースあり）</li>
+          <li>1日目に3通も届く → <strong>ブロックされやすい</strong></li>
+          <li>文章だけで画像がなく、長文で読みにくい</li>
+          <li>アンケート未回答者へのリマインドがない</li>
+          <li>登録しても<strong>特典がもらえない</strong>（登録直後のメリットなし）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 赤：現状の課題（2） ========== -->
+  <div class="slide theme-red" data-slide="3">
+    <div class="slide-bg-num">03</div>
+    <div class="slide-header">
+      <div class="section-num">Section 02</div>
+      <div class="slide-title">現状の課題（診断・LP）</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-red">
+        <div class="card-title">診断の問題</div>
+        <ul>
+          <li>診断が1パターンしかなく、<strong>何を答えても同じ結果</strong>が返る</li>
+          <li>「あなたは的確です」と全員に同じ回答 → 信頼を損なう原因に</li>
+          <li>せっかく回答しても活かされていない印象を与える</li>
+        </ul>
+      </div>
+      <div class="card c-red">
+        <div class="card-title">LP・ライティングの問題</div>
+        <ul>
+          <li>画像の配置ずれ・文字切れなどデザインに改善余地あり</li>
+          <li>ファネル内の文章がAI生成感があり、<strong>伊達さまの言葉遣いと合っていない</strong></li>
+          <li>YouTubeのキャラクターと乖離した印象を与えている</li>
+        </ul>
+      </div>
+      <div class="highlight hl-red">
+        <p><strong>まとめ：</strong>「YouTube→LINE登録→教育→個別相談」の各ステップに穴がある状態です。これらを一つずつ塞ぐことで、<strong>既に持っている強いコンテンツの力</strong>を最大限活かせます。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：解決の全体像 ========== -->
+  <div class="slide" data-slide="4">
+    <div class="slide-bg-num">04</div>
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">解決の全体像</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>まず<strong>ファネル構築（基本）</strong>で導線を一本に繋げます。さらに<strong>オプション</strong>を追加することで、各ステップの成約率を引き上げます。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">基本：ファネル構築で「導線を繋ぐ」</div>
+        <ul>
+          <li>YouTube → LINE → 診断 → ステップ配信 → 個別相談の流れを整備</li>
+          <li>既存シナリオの読み解き・整理・不要なものの削除</li>
+          <li>登録経路タグの設定（どこから来た人か把握）</li>
+          <li>アンケート未回答者へのリマインド配信の設定</li>
+        </ul>
+        <p style="margin-top: 10px; font-size: 0.78rem; color: var(--purple-mid);">→ これだけでYouTube配信を再開でき、見込み客を受け止められるようになります</p>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">オプション：成約率を上げる仕組み</div>
+        <ul>
+          <li><strong>LP制作</strong> — 第一印象で離脱させない、信頼感あるページ</li>
+          <li><strong>ライティング＋診断アプリ</strong> — 伊達さまらしい言葉遣いで温め、動物占い診断で興味を引く</li>
+          <li><strong>特典サイト</strong> — 登録直後にメリットを提供し、ブロック防止</li>
+        </ul>
+        <p style="margin-top: 10px; font-size: 0.78rem; color: var(--gold-dark);">→ 導線を繋ぐだけでなく、各ステップの「質」を高めて成約率を底上げします</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 金：成約率への影響 ========== -->
+  <div class="slide theme-gold" data-slide="5">
+    <div class="slide-bg-num">05</div>
+    <div class="slide-header">
+      <div class="section-num">Section 03</div>
+      <div class="slide-title">なぜオプションが成約率を上げるのか</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-gold">
+        <div class="card-title">LP制作 → 登録率アップ</div>
+        <p>LINE登録ページはシンプルでOKですが、<strong>個別相談への誘導LP</strong>が弱いと最後の一押しで離脱します。デザイン・コピーを最適化することで、個別相談への申込率を引き上げます。</p>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">ライティング＋診断アプリ → 教育効果アップ</div>
+        <p>伊達さまのYouTubeのキャラクターに合った言葉遣いで配信することで<strong>ブロック率を下げ</strong>、動物占い簡易診断アプリ（誕生日入力→結果表示）で<strong>エンゲージメントを高め</strong>ます。「答えたら結果が変わる」本格的な診断が信頼構築に繋がります。</p>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">特典サイト → 初期離脱を防止</div>
+        <p>LINE登録直後に特典を受け取れる仕組みを作ることで、<strong>「登録したのに何もない」→ ブロック</strong>のパターンを防ぎます。YouTube動画の最後で「特典があるからLINEに来て」と自然に誘導できます。</p>
+      </div>
+      <div class="highlight hl-gold">
+        <p><strong>ポイント：</strong>ファネル構築だけでも動きますが、オプションを追加することで<strong>登録→成約までの各ステップの離脱率を減らし</strong>、同じアクセス数でも売上が変わります。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 金：料金プラン ========== -->
+  <div class="slide theme-gold" data-slide="6">
+    <div class="slide-bg-num">06</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">料金プラン</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+
+      <div class="plan-card">
+        <div class="plan-name">梅プラン — まず動かす</div>
+        <div class="plan-price">300,000<span class="yen">円（税別）</span></div>
+        <ul class="plan-items">
+          <li>UTAGEファネル構築（既存の読み解き＋動線再構築）</li>
+          <li>シナリオ整理・不要なものの削除</li>
+          <li>登録経路タグの設定</li>
+          <li>アンケートリマインド配信の設定</li>
+          <li>YouTube配信再開に必要な最低限の動線整備</li>
+          <li class="not-included">LP制作</li>
+          <li class="not-included">ライティング＋診断アプリ</li>
+          <li class="not-included">特典サイト制作</li>
+        </ul>
+      </div>
+
+      <div class="plan-card recommended">
+        <div class="plan-name">竹プラン — 成約率を上げる</div>
+        <div class="plan-price">550,000<span class="yen">円（税別）</span></div>
+        <ul class="plan-items">
+          <li>UTAGEファネル構築（梅プランの全内容）</li>
+          <li>LP制作 2ページ（オプトインLP＋個別相談LP）</li>
+          <li>LINEステップ配信ライティング＋画像</li>
+          <li>動物占い簡易診断アプリ制作</li>
+          <li class="not-included">特典サイト制作</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">松プラン — フル装備</div>
+        <div class="plan-price">650,000<span class="yen">円（税別）</span></div>
+        <ul class="plan-items">
+          <li>UTAGEファネル構築（梅プランの全内容）</li>
+          <li>LP制作 2ページ（オプトインLP＋個別相談LP）</li>
+          <li>LINEステップ配信ライティング＋画像</li>
+          <li>動物占い簡易診断アプリ制作</li>
+          <li>特典サイト制作（会員サイトに特典コーナー追加）</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 金：プラン別 内訳 ========== -->
+  <div class="slide theme-gold" data-slide="7">
+    <div class="slide-bg-num">07</div>
+    <div class="slide-header">
+      <div class="section-num">Section 04</div>
+      <div class="slide-title">プラン別 内訳</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>内容</th>
+              <th>金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag gold">基本</span><br><strong>UTAGEファネル構築</strong></td>
+              <td>既存ファネルの読み解き＋動線再構築<br>シナリオ整理・タグ設定・リマインド配信</td>
+              <td style="white-space:nowrap;"><strong>300,000円</strong></td>
+            </tr>
+            <tr>
+              <td><span class="tag purple">オプション</span><br><strong>LP制作（2ページ）</strong></td>
+              <td>オプトインLP（LINE登録用）<br>個別相談LP（デザイン＋ライティング込み）</td>
+              <td style="white-space:nowrap;"><strong>150,000円</strong></td>
+            </tr>
+            <tr>
+              <td><span class="tag purple">オプション</span><br><strong>ライティング＋診断</strong></td>
+              <td>LINEステップ配信メッセージ＋画像<br>動物占い簡易診断アプリ制作</td>
+              <td style="white-space:nowrap;"><strong>100,000円</strong></td>
+            </tr>
+            <tr>
+              <td><span class="tag purple">オプション</span><br><strong>特典サイト制作</strong></td>
+              <td>会員サイトに特典コーナーを追加<br>LINE登録者向け特典の設置</td>
+              <td style="white-space:nowrap;"><strong>100,000円</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight hl-gold">
+        <p><strong>組み合わせ自由：</strong>基本のファネル構築は必須ですが、オプションはご予算に合わせて自由に組み合わせていただけます。段階的に追加していくことも可能です。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：スケジュール ========== -->
+  <div class="slide theme-green" data-slide="8">
+    <div class="slide-bg-num">08</div>
+    <div class="slide-header">
+      <div class="section-num">Section 05</div>
+      <div class="slide-title">スケジュール</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card c-green">
+        <div class="card-title">納期：2026年3月末</div>
+        <ul>
+          <li>YouTube配信再開に合わせた<strong>3月末納品</strong>で対応可能です</li>
+          <li>既存LPはそのまま一旦復活 → 新しいものができたら差し替え</li>
+          <li>LINEステップ配信も下書きで準備 → <strong>切替日に一気にスイッチ</strong></li>
+        </ul>
+      </div>
+      <div class="card c-green">
+        <div class="card-title">進め方</div>
+        <ul>
+          <li><strong>STEP 1：</strong>プランの確定・お申し込み</li>
+          <li><strong>STEP 2：</strong>UTAGE環境の詳細調査（既存ファネル・シナリオの全体把握）</li>
+          <li><strong>STEP 3：</strong>新しい動線の設計・構築（並行してLP・ライティング作業）</li>
+          <li><strong>STEP 4：</strong>テスト配信・動作確認</li>
+          <li><strong>STEP 5：</strong>本番切替 → YouTube配信再開</li>
+        </ul>
+      </div>
+      <div class="highlight hl-green">
+        <p><strong>ポイント：</strong>構築中も現在の環境は維持されます。新しい仕組みが完成してから<strong>一気に切り替える方式</strong>なので、途中でサービスが止まることはありません。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 紫：まとめ ========== -->
+  <div class="slide" data-slide="9">
+    <div class="slide-bg-num">09</div>
+    <div class="slide-header">
+      <div class="section-num">Section 06</div>
+      <div class="slide-title">まとめ</div>
+      <div class="divider"></div>
+    </div>
+    <div class="slide-body">
+      <div class="highlight">
+        <p>伊達さまは<strong>強いコンテンツ（YouTube・養成講座）</strong>をお持ちです。今必要なのは、そのコンテンツの力を<strong>最大限に活かすための「仕組み」</strong>です。</p>
+      </div>
+      <div class="card">
+        <div class="card-title">ファネル構築（基本）でできること</div>
+        <ul>
+          <li>YouTube配信を再開できる → 見込み客を受け止める受け皿ができる</li>
+          <li>LINE登録→個別相談までの導線が一本に繋がる</li>
+          <li>登録者の流入経路が把握できるようになる</li>
+        </ul>
+      </div>
+      <div class="card c-gold">
+        <div class="card-title">オプション追加で変わること</div>
+        <ul>
+          <li>LP → 登録ページの第一印象が上がり、<strong>登録率アップ</strong></li>
+          <li>ライティング＋診断 → 伊達さまらしい配信で<strong>ブロック率ダウン、信頼構築</strong></li>
+          <li>特典サイト → 登録直後に価値提供、<strong>初期離脱を防止</strong></li>
+        </ul>
+        <p style="margin-top: 8px; font-size: 0.78rem; color: var(--gold-dark);">→ 同じアクセス数でも、各ステップの成約率が変わります</p>
+      </div>
+      <div class="comparison-box">
+        <div class="label">プラン比較</div>
+        <div class="numbers">
+          <div class="num-block">
+            <div class="num" style="color: var(--purple-mid);">300,000<span style="font-size:0.8rem">円</span></div>
+            <div class="num-label">梅（基本のみ）</div>
+          </div>
+          <div class="vs">/</div>
+          <div class="num-block">
+            <div class="num" style="color: var(--gold-dark);">550,000<span style="font-size:0.8rem">円</span></div>
+            <div class="num-label">竹（おすすめ）</div>
+          </div>
+          <div class="vs">/</div>
+          <div class="num-block">
+            <div class="num" style="color: var(--green-dark);">650,000<span style="font-size:0.8rem">円</span></div>
+            <div class="num-label">松（フル装備）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ナビゲーション -->
+<div class="nav">
+  <button onclick="changeSlide(-1)">&#9664;</button>
+  <button onclick="changeSlide(1)">&#9654;</button>
+</div>
+<div class="page-indicator" id="pageIndicator">1 / 10</div>
+<div class="footer">
+  <img src="ichijiku-icon.png" alt="いちじく">
+  produced by いちじく
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach((s, i) => { s.classList.toggle('active', i === index); });
+    document.getElementById('pageIndicator').textContent = (index + 1) + ' / ' + totalSlides;
+  }
+
+  function changeSlide(dir) {
+    currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + dir));
+    showSlide(currentSlide);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>
