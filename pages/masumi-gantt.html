@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ますみさん 事業ロードマップ — ガントチャート</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a96e;
+    --gold-dark: #b8942e;
+    --gold-light: #e8d5a3;
+    --gold-pale: #faf8f3;
+    --purple: #6B3FA0;
+    --purple-pale: #f3eef8;
+    --blue: #4a7fb5;
+    --blue-pale: #edf3fa;
+    --green: #5a9e6f;
+    --green-pale: #f0f8f2;
+    --yellow: #d4a72c;
+    --yellow-pale: #fdf8e8;
+    --orange: #d4782c;
+    --orange-pale: #fdf3e8;
+    --red: #c26a5a;
+    --red-pale: #fdf3f1;
+    --dark: #1a1a2e;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f8f7f5;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  /* ===== ヘッダー ===== */
+  .page-header {
+    background: linear-gradient(135deg, #fff 0%, var(--gold-pale) 100%);
+    border-bottom: 2px solid var(--gold-light);
+    padding: 40px 48px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .header-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .header-date {
+    font-size: 0.75rem;
+    color: #aaa;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .header-subtitle {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 16px;
+  }
+
+  /* ===== 凡例 ===== */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: #666;
+  }
+
+  .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+
+  /* ===== ガントチャート ===== */
+  .gantt-wrapper {
+    padding: 24px 48px 60px;
+    overflow-x: auto;
+  }
+
+  .gantt-container {
+    min-width: 1100px;
+  }
+
+  /* 月ヘッダー */
+  .month-header {
+    display: grid;
+    grid-template-columns: 240px repeat(7, 1fr);
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 0;
+  }
+
+  .month-header-label {
+    padding: 4px 12px;
+    font-size: 0.65rem;
+    color: #999;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  .month-header-label:first-child {
+    text-align: left;
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+
+  /* 週ヘッダー */
+  .week-header {
+    display: grid;
+    grid-template-columns: 240px repeat(28, 1fr);
+    border-bottom: 1px solid #e8e4dc;
+    margin-bottom: 0;
+  }
+
+  .week-label {
+    font-size: 0.55rem;
+    color: #ccc;
+    text-align: center;
+    padding: 2px 0;
+    border-left: 1px solid #f0ece4;
+  }
+
+  .week-label:first-child {
+    border-left: none;
+  }
+
+  .week-label.month-start {
+    border-left: 1px solid var(--gold-light);
+  }
+
+  /* セクション */
+  .gantt-section {
+    margin-bottom: 4px;
+  }
+
+  .section-title-row {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    background: var(--gold-pale);
+    border-left: 3px solid var(--gold);
+    margin-top: 12px;
+    margin-bottom: 2px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .section-title {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+  }
+
+  .section-theme {
+    padding: 8px 12px;
+    font-size: 0.7rem;
+    color: #999;
+    display: flex;
+    align-items: center;
+  }
+
+  /* タスク行 */
+  .gantt-row {
+    display: grid;
+    grid-template-columns: 240px repeat(28, 1fr);
+    min-height: 28px;
+    align-items: center;
+    border-bottom: 1px solid #f5f2ed;
+    transition: background 0.15s;
+  }
+
+  .gantt-row:hover {
+    background: rgba(201,169,110,0.04);
+  }
+
+  .task-name {
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .task-name .icon {
+    margin-right: 4px;
+  }
+
+  .task-name.milestone {
+    font-weight: 700;
+    color: #333;
+  }
+
+  /* バー */
+  .gantt-cell {
+    position: relative;
+    height: 100%;
+    border-left: 1px solid #f8f5f0;
+  }
+
+  .gantt-cell.month-start {
+    border-left: 1px solid #e8e4dc;
+  }
+
+  .bar {
+    position: absolute;
+    top: 6px;
+    height: 16px;
+    border-radius: 8px;
+    opacity: 0.85;
+    transition: opacity 0.2s, transform 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bar:hover {
+    opacity: 1;
+    transform: scaleY(1.2);
+    z-index: 10;
+  }
+
+  .bar-label {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.95);
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 0 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* バーの色 */
+  .bar.contract { background: linear-gradient(135deg, #8B6DB5, #a88bc7); }
+  .bar.product { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+  .bar.video { background: linear-gradient(135deg, var(--blue), #6a9fd5); }
+  .bar.funnel { background: linear-gradient(135deg, var(--purple), #8B6DB5); }
+  .bar.lp { background: linear-gradient(135deg, var(--green), #7ab88a); }
+  .bar.event { background: linear-gradient(135deg, var(--orange), #e89a5c); }
+  .bar.sales { background: linear-gradient(135deg, var(--red), #d88a7c); }
+  .bar.analysis { background: linear-gradient(135deg, #607d8b, #90a4ae); }
+  .bar.association { background: linear-gradient(135deg, var(--dark), #2d2d4e); }
+  .bar.content { background: linear-gradient(135deg, #26a69a, #4db6ac); }
+
+  /* マイルストーン */
+  .milestone-marker {
+    position: absolute;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    border-radius: 3px;
+    left: calc(50% - 10px);
+  }
+
+  .milestone-marker.gold { background: var(--gold); }
+  .milestone-marker.red { background: var(--red); }
+  .milestone-marker.purple { background: var(--purple); }
+  .milestone-marker.green { background: var(--green); }
+
+  /* ===== 下部サマリー ===== */
+  .summary-section {
+    padding: 32px 48px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .summary-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-top: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+
+  .summary-card h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-bottom: 12px;
+  }
+
+  .summary-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+  }
+
+  .summary-card th {
+    background: var(--gold-pale);
+    color: var(--gold-dark);
+    font-weight: 600;
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--gold-light);
+  }
+
+  .summary-card td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+  }
+
+  .summary-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .summary-card li {
+    font-size: 0.75rem;
+    color: #555;
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+    border-bottom: 1px solid #f8f8f8;
+  }
+
+  .summary-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  .summary-card li.c-contract::before { background: #8B6DB5; }
+  .summary-card li.c-event::before { background: var(--orange); }
+  .summary-card li.c-assoc::before { background: var(--dark); }
+
+  /* ===== フッター ===== */
+  .page-footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.65rem;
+    color: #ccc;
+    border-top: 1px solid #eee;
+  }
+
+  /* ===== 今日ライン ===== */
+  .today-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--red);
+    opacity: 0.5;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .today-label {
+    position: absolute;
+    top: -14px;
+    left: -12px;
+    font-size: 0.5rem;
+    color: var(--red);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ツールチップ */
+  .tooltip {
+    display: none;
+    position: fixed;
+    background: rgba(26,26,46,0.95);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    line-height: 1.6;
+    z-index: 1000;
+    max-width: 280px;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  .tooltip.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ===== ヘッダー ===== -->
+<div class="page-header">
+  <div class="header-top">
+    <span class="header-label">Roadmap — Gantt Chart</span>
+    <span class="header-date">Updated: 2026.03.14</span>
+  </div>
+  <div class="header-title">ますみさん 事業全体ロードマップ</div>
+  <div class="header-subtitle">Masumi式フェイスリフトヨガ / 顔筋トレ — 半年計画（2026年3月〜9月）</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#8B6DB5,#a88bc7)"></div>契約・法務</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold))"></div>商品設計</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--blue),#6a9fd5)"></div>動画制作</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--purple),#8B6DB5)"></div>ファネル</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--green),#7ab88a)"></div>LP制作</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--orange),#e89a5c)"></div>イベント</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--red),#d88a7c)"></div>販売</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#607d8b,#90a4ae)"></div>分析</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--dark),#2d2d4e)"></div>協会設立</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#26a69a,#4db6ac)"></div>コンテンツ</div>
+  </div>
+</div>
+
+<!-- ===== ガントチャート ===== -->
+<div class="gantt-wrapper">
+<div class="gantt-container" id="ganttChart">
+
+  <!-- 月ヘッダー -->
+  <div class="month-header">
+    <div class="month-header-label">タスク</div>
+    <div class="month-header-label">3月</div>
+    <div class="month-header-label">4月</div>
+    <div class="month-header-label">5月</div>
+    <div class="month-header-label">6月</div>
+    <div class="month-header-label">7月</div>
+    <div class="month-header-label">8月</div>
+    <div class="month-header-label">9月</div>
+  </div>
+
+  <!-- 週ヘッダー（各月4週 = 28列） -->
+  <div class="week-header">
+    <div class="week-label" style="border-left:none;"></div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+    <div class="week-label month-start">W1</div><div class="week-label">W2</div><div class="week-label">W3</div><div class="week-label">W4</div>
+  </div>
+
+  <!-- ========== 3月：準備 ========== -->
+  <div class="gantt-section">
+    <div class="section-title-row">
+      <div class="section-title">🟣 3月 — 準備・基盤固め</div>
+      <div class="section-theme">契約 / 商品設計 / 動画制作 / ファネル設計</div>
+    </div>
+  </div>
+
+  <div id="gantt-rows">
+    <!-- JavaScript で描画 -->
+  </div>
+
+</div>
+</div>
+
+<!-- ===== 下部サマリー ===== -->
+<div class="summary-section">
+  <div class="summary-card">
+    <h3>📋 契約書類（10種類）</h3>
+    <ul>
+      <li class="c-contract">顧問契約書 — 3月</li>
+      <li class="c-contract">受講契約書（利用規約） — 3月</li>
+      <li class="c-contract">特定商取引法に基づく表記 — 3月</li>
+      <li class="c-contract">プライバシーポリシー — 3月</li>
+      <li class="c-contract">講師養成講座 受講規約 — 5月</li>
+      <li class="c-contract">一般社団法人 定款 — 6月</li>
+      <li class="c-contract">協会規約・会員規約 — 6月</li>
+      <li class="c-contract">認定講師ライセンス契約書 — 6月</li>
+      <li class="c-contract">協会入会申込書 — 6月</li>
+      <li class="c-contract">商標登録出願書 — 6月</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3>🎤 オンラインイベント（5回）</h3>
+    <ul>
+      <li class="c-event">第1回 セルフケア体験セミナー — 4月中旬</li>
+      <li class="c-event">第2回 実践ワークショップ — 5月中旬</li>
+      <li class="c-event">第3回 養成講座説明会 — 6月上旬</li>
+      <li class="c-event">第4回 協会お披露目体験会 — 7月中旬</li>
+      <li class="c-event">第5回 2期説明会 + 成果発表 — 9月上旬</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3>🏛 協会設立ステップ</h3>
+    <ul>
+      <li class="c-assoc">方向性検討（任意団体 vs 社団法人） — 5月</li>
+      <li class="c-assoc">協会名・理念・目的の策定 — 5月</li>
+      <li class="c-assoc">認定基準の策定 — 5月</li>
+      <li class="c-assoc">定款ドラフト — 6月</li>
+      <li class="c-assoc">設立登記 — 6月</li>
+      <li class="c-assoc">法人口座開設 — 6月</li>
+      <li class="c-assoc">ロゴ・ブランドガイドライン — 6月</li>
+      <li class="c-assoc">協会サイト公開 — 7月</li>
+      <li class="c-assoc">認定講師 第1号輩出 — 9月</li>
+    </ul>
+  </div>
+</div>
+
+<div class="page-footer">produced by いちじく ｜ PT MSM FACE STUDIO — Masumi式フェイスリフトヨガ</div>
+
+<!-- ツールチップ -->
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// タスクデータ
+// start/end は月内の週（0起算。0=3月W1, 3=3月W4, 4=4月W1, ...27=9月W4）
+const tasks = [
+  // --- 3月 ---
+  { section: '3月', name: '顧問契約書 締結', type: 'contract', start: 1, end: 2, tip: '👤🟠 顧問契約の最終確認・締結' },
+  { section: '3月', name: '受講契約書 作成', type: 'contract', start: 2, end: 3, tip: '👤 お客さま向け受講契約書' },
+  { section: '3月', name: '特商法 / プライバシーポリシー', type: 'contract', start: 2, end: 3, tip: '👤 Webサイト掲載用の法的文書' },
+  { section: '3月', name: '競合調査', type: 'product', start: 1, end: 2, tip: '👤 日本語圏のフェイスヨガ・顔筋トレ市場' },
+  { section: '3月', name: '商品設計（セルフケア講座）確定', type: 'product', start: 2, end: 3, tip: '👤🟠 価格・回数・内容の決定' },
+  { section: '3月', name: '講師養成講座 導線設計', type: 'product', start: 2, end: 3, tip: '👤🟠 セルフケア→養成講座の流れ' },
+  { section: '3月', name: 'プレミアム動画 制作', type: 'video', start: 1, end: 3, tip: '🔵八木 冒頭サンプル→確認→完成版' },
+  { section: '3月', name: 'ファネル全体像 設計', type: 'funnel', start: 2, end: 3, tip: '👤 セミナー/個別相談の使い分け資料' },
+  { section: '3月', name: 'LINE配信設計', type: 'funnel', start: 3, end: 3, tip: '👤 ステップ配信の全体像' },
+
+  // --- 4月 ---
+  { section: '4月', name: 'セミナー告知LP 制作', type: 'lp', start: 4, end: 4, tip: '👤🔵 デザイン+コピー' },
+  { section: '4月', name: 'セルフケア講座 セールスLP', type: 'lp', start: 4, end: 5, tip: '👤🔵 講座販売用LP' },
+  { section: '4月', name: 'LINE登録特典 制作', type: 'content', start: 4, end: 4, tip: '👤🟠 セルフケア動画/PDFガイド' },
+  { section: '4月', name: 'UTAGEファネル構築', type: 'funnel', start: 4, end: 5, tip: '👤 セミナー申込→ステップ配信→リマインド' },
+  { section: '4月', name: 'プレミアム動画 公開', type: 'video', start: 4, end: 4, tip: '🟠 特典orセミナー教育用' },
+  { section: '4月', name: 'セミナー告知配信', type: 'event', start: 5, end: 5, tip: '🟠 LINE+Instagram' },
+  { section: '4月', name: '★ 第1回セミナー開催', type: 'event', start: 6, end: 6, tip: '🟠 初回オンラインセミナー', milestone: true },
+  { section: '4月', name: '個別相談→セルフケア販売', type: 'sales', start: 6, end: 7, tip: '🟠 セミナー参加者→個別相談→クロージング' },
+  { section: '4月', name: 'ローンチ初期レポート', type: 'analysis', start: 7, end: 7, tip: '👤 登録数/参加率/成約率' },
+
+  // --- 5月 ---
+  { section: '5月', name: 'ファネルデータ分析', type: 'analysis', start: 8, end: 8, tip: '👤 4月の各ステップ離脱率' },
+  { section: '5月', name: 'LP / LINE ABテスト', type: 'funnel', start: 8, end: 9, tip: '👤🔵 ヘッドコピー/画像/CTA改善' },
+  { section: '5月', name: '第2回セミナー企画', type: 'event', start: 8, end: 9, tip: '👤🟠 テーマ変更or改善版' },
+  { section: '5月', name: '★ 第2回セミナー開催', type: 'event', start: 10, end: 10, tip: '🟠 2回目オンラインセミナー', milestone: true },
+  { section: '5月', name: '養成講座 カリキュラム設計', type: 'product', start: 9, end: 10, tip: '👤🟠 講座の中身を設計' },
+  { section: '5月', name: '養成講座 受講規約 作成', type: 'contract', start: 10, end: 10, tip: '👤 受講規約' },
+  { section: '5月', name: '養成講座 セールスLP', type: 'lp', start: 10, end: 11, tip: '👤🔵 養成講座用LP' },
+  { section: '5月', name: '養成講座 申込ファネル構築', type: 'funnel', start: 11, end: 11, tip: '👤 LP→申込→決済→会員サイト' },
+  { section: '5月', name: '協会 方向性検討', type: 'association', start: 9, end: 10, tip: '👤🟠 任意団体 vs 一般社団法人' },
+  { section: '5月', name: '協会名・理念・認定基準', type: 'association', start: 10, end: 11, tip: '🟠 協会の骨格を策定' },
+  { section: '5月', name: '受講生の声 収集', type: 'content', start: 11, end: 11, tip: '🟠 ビフォーアフター素材' },
+
+  // --- 6月 ---
+  { section: '6月', name: '★ 第3回セミナー（説明会）', type: 'event', start: 12, end: 12, tip: '🟠 養成講座説明会', milestone: true },
+  { section: '6月', name: '養成講座 募集期間', type: 'sales', start: 12, end: 14, tip: '🟠 LP公開+LINE/メール告知+個別相談' },
+  { section: '6月', name: '募集締切カウントダウン', type: 'sales', start: 14, end: 15, tip: '👤 締切前の追い込み配信' },
+  { section: '6月', name: '受講生 契約・決済', type: 'contract', start: 15, end: 15, tip: '🟠 契約締結・決済処理' },
+  { section: '6月', name: '会員サイト準備', type: 'funnel', start: 15, end: 15, tip: '👤 養成講座用コース開設' },
+  { section: '6月', name: '定款ドラフト作成', type: 'association', start: 12, end: 13, tip: '👤 一般社団法人の定款' },
+  { section: '6月', name: '★ 一般社団法人 設立登記', type: 'association', start: 13, end: 13, tip: '🟠 司法書士 or 自力', milestone: true },
+  { section: '6月', name: '法人口座開設', type: 'association', start: 13, end: 14, tip: '🟠 法人銀行口座' },
+  { section: '6月', name: '協会規約・ライセンス契約', type: 'contract', start: 14, end: 15, tip: '👤 会員規約+認定講師契約書+入会申込書' },
+  { section: '6月', name: '協会ロゴ・サイト制作', type: 'lp', start: 14, end: 15, tip: '👤🔵 ブランドガイドライン+公式サイト' },
+  { section: '6月', name: '商標登録 検討', type: 'association', start: 15, end: 15, tip: '🟠 Masumi式/協会名' },
+
+  // --- 7月 ---
+  { section: '7月', name: '★ 養成講座 第1期 開講', type: 'sales', start: 16, end: 16, tip: '🟠 講師養成講座スタート', milestone: true },
+  { section: '7月', name: '受講生フォロー自動化', type: 'funnel', start: 16, end: 17, tip: '👤 チャットグループ+進捗管理+配信' },
+  { section: '7月', name: 'セルフケア講座 継続販売', type: 'sales', start: 16, end: 19, tip: '👤🟠 自動ファネル or セミナー' },
+  { section: '7月', name: '★ 協会サイト 公開', type: 'association', start: 16, end: 16, tip: '👤🟠 公式サイトお披露目', milestone: true },
+  { section: '7月', name: '★ 第4回イベント（協会お披露目）', type: 'event', start: 18, end: 18, tip: '🟠 体験会・公開セッション', milestone: true },
+  { section: '7月', name: '4〜6月 中間レビュー', type: 'analysis', start: 17, end: 17, tip: '👤 売上・ファネルデータ・成果報酬精算' },
+  { section: '7月', name: 'リトリート企画 検討', type: 'event', start: 19, end: 19, tip: '👤🟠 オフラインイベント' },
+
+  // --- 8月 ---
+  { section: '8月', name: '養成講座 中間アンケート', type: 'analysis', start: 20, end: 20, tip: '👤🟠 受講生満足度' },
+  { section: '8月', name: 'セルフケア→養成講座 アップセル', type: 'sales', start: 21, end: 21, tip: '🟠 既存受講生への案内' },
+  { section: '8月', name: '受講生の声 インタビュー', type: 'content', start: 21, end: 22, tip: '🟠🔵 LP掲載用素材' },
+  { section: '8月', name: 'コンテンツ追加（新トピック）', type: 'content', start: 20, end: 22, tip: '🟠 首筋・デコルテ等' },
+  { section: '8月', name: 'セールスLP改善版', type: 'lp', start: 22, end: 23, tip: '👤🔵 受講生の声を追加' },
+  { section: '8月', name: '第5回イベント企画', type: 'event', start: 22, end: 23, tip: '👤🟠 9月募集に向けた教育イベント' },
+  { section: '8月', name: '自動化ファネル構築', type: 'funnel', start: 22, end: 23, tip: '👤 常時集客モード化' },
+
+  // --- 9月 ---
+  { section: '9月', name: '★ 第5回セミナー（2期説明会）', type: 'event', start: 24, end: 24, tip: '🟠 成果発表+2期募集', milestone: true },
+  { section: '9月', name: '養成講座 2期 募集', type: 'sales', start: 24, end: 26, tip: '🟠 LP+配信+個別相談' },
+  { section: '9月', name: '2期 契約・決済', type: 'contract', start: 26, end: 27, tip: '🟠 新規受講生の契約' },
+  { section: '9月', name: '★ 認定講師 資格授与', type: 'association', start: 27, end: 27, tip: '🟠 第1期修了生への認定', milestone: true },
+  { section: '9月', name: '認定講師 紹介ページ', type: 'lp', start: 27, end: 27, tip: '👤🔵 協会サイト内' },
+  { section: '9月', name: '半年データ総まとめ', type: 'analysis', start: 26, end: 27, tip: '👤 売上・ファネル・成果報酬累計' },
+  { section: '9月', name: '★ 契約更新判断 MTG', type: 'contract', start: 27, end: 27, tip: '👤🟠 10月以降の戦略+条件協議', milestone: true },
+];
+
+// 描画
+const container = document.getElementById('gantt-rows');
+let currentSection = '';
+
+tasks.forEach(task => {
+  // セクション変更
+  if (task.section !== currentSection) {
+    currentSection = task.section;
+    const sectionColors = {
+      '3月': '🟣', '4月': '🔵', '5月': '🟢',
+      '6月': '🟡', '7月': '🟠', '8月': '🔴', '9月': '⚫'
+    };
+    const sectionThemes = {
+      '3月': '契約 / 商品設計 / 動画 / ファネル',
+      '4月': '初回ローンチ + セミナー + 販売',
+      '5月': '改善 + 養成講座準備 + 協会検討',
+      '6月': '養成講座募集 + 協会設立',
+      '7月': '講座開講 + 協会運用',
+      '8月': '拡大 + コンテンツ強化',
+      '9月': '2期募集 + 半年レビュー'
+    };
+
+    const sectionRow = document.createElement('div');
+    sectionRow.className = 'section-title-row';
+    sectionRow.innerHTML = `
+      <div class="section-title">${sectionColors[currentSection]} ${currentSection} — ${sectionThemes[currentSection].split(' / ')[0]}</div>
+      <div class="section-theme">${sectionThemes[currentSection]}</div>
+    `;
+    container.appendChild(sectionRow);
+  }
+
+  // タスク行
+  const row = document.createElement('div');
+  row.className = 'gantt-row';
+
+  // タスク名
+  const nameCell = document.createElement('div');
+  nameCell.className = 'task-name' + (task.milestone ? ' milestone' : '');
+  nameCell.textContent = task.name;
+  row.appendChild(nameCell);
+
+  // 28列
+  for (let i = 0; i < 28; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'gantt-cell' + (i % 4 === 0 ? ' month-start' : '');
+    cell.style.position = 'relative';
+
+    // バー描画
+    if (i === task.start) {
+      const span = task.end - task.start + 1;
+      const bar = document.createElement('div');
+      bar.className = 'bar ' + task.type;
+
+      bar.style.position = 'absolute';
+      bar.style.zIndex = '2';
+      bar.style.left = '2px';
+
+      if (task.milestone && span === 1) {
+        bar.style.right = '2px';
+        bar.style.width = 'auto';
+        bar.style.borderRadius = '4px';
+        bar.style.height = '18px';
+        bar.style.top = '5px';
+        bar.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+      } else if (span === 1) {
+        bar.style.right = '2px';
+        bar.style.width = 'auto';
+      }
+      // span > 1 の幅は後続の修正コードで計算
+
+      // ラベル（1週でも表示）
+      if (span >= 1) {
+        const label = document.createElement('span');
+        label.className = 'bar-label';
+        label.textContent = task.name.replace('★ ', '');
+        bar.appendChild(label);
+      }
+
+      // ツールチップ
+      bar.dataset.tip = task.tip;
+      bar.addEventListener('mouseenter', showTooltip);
+      bar.addEventListener('mousemove', moveTooltip);
+      bar.addEventListener('mouseleave', hideTooltip);
+
+      cell.appendChild(bar);
+    }
+
+    row.appendChild(cell);
+  }
+
+  container.appendChild(row);
+});
+
+// バーの幅修正（複数セルにまたがる場合）
+document.querySelectorAll('.bar').forEach(bar => {
+  const cell = bar.parentElement;
+  const row = cell.parentElement;
+  const cells = Array.from(row.querySelectorAll('.gantt-cell'));
+  const cellIndex = cells.indexOf(cell);
+
+  const task = tasks.find(t => bar.dataset.tip === t.tip);
+  if (task) {
+    const span = task.end - task.start + 1;
+    if (span > 1) {
+      const cellWidth = cell.offsetWidth;
+      bar.style.width = (cellWidth * span - 4) + 'px';
+    } else {
+      bar.style.left = '2px';
+      bar.style.right = '2px';
+      bar.style.width = 'auto';
+    }
+  }
+});
+
+// ウィンドウリサイズ時にバー幅を再計算
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.bar').forEach(bar => {
+    const cell = bar.parentElement;
+    const task = tasks.find(t => bar.dataset.tip === t.tip);
+    if (task) {
+      const span = task.end - task.start + 1;
+      if (span > 1) {
+        bar.style.width = (cell.offsetWidth * span - 4) + 'px';
+      } else {
+        bar.style.left = '2px';
+        bar.style.right = '2px';
+        bar.style.width = 'auto';
+      }
+    }
+  });
+});
+
+// ツールチップ
+const tooltip = document.getElementById('tooltip');
+
+function showTooltip(e) {
+  tooltip.textContent = e.target.closest('.bar').dataset.tip;
+  tooltip.classList.add('show');
+}
+
+function moveTooltip(e) {
+  tooltip.style.left = (e.clientX + 12) + 'px';
+  tooltip.style.top = (e.clientY - 30) + 'px';
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('show');
+}
+</script>
+
+</body>
+</html>
