@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>伊達さん UTAGE構築ロードマップ — ガントチャート</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #c9a96e; --gold-dark: #b8942e; --gold-light: #e8d5a3; --gold-pale: #faf8f3;
+    --purple: #6B3FA0; --purple-pale: #f3eef8;
+    --blue: #4a7fb5; --green: #5a9e6f; --orange: #d4782c; --red: #c26a5a; --dark: #1a1a2e; --teal: #26a69a;
+  }
+  body { font-family: 'Noto Sans JP', sans-serif; background: #f8f7f5; color: #333; min-height: 100vh; }
+
+  .page-header {
+    background: linear-gradient(135deg, #fff 0%, var(--gold-pale) 100%);
+    border-bottom: 2px solid var(--gold-light);
+    padding: 40px 48px 32px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .header-label { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+  .header-date { font-size: 0.75rem; color: #aaa; }
+  .header-title { font-size: 1.6rem; font-weight: 700; color: #333; margin-bottom: 4px; }
+  .header-subtitle { font-size: 0.85rem; color: #888; margin-bottom: 16px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #666; }
+  .legend-color { width: 14px; height: 14px; border-radius: 3px; }
+
+  .gantt-wrapper { padding: 24px 48px 60px; overflow-x: auto; }
+  .gantt-container { min-width: 1100px; }
+
+  /* 4週分（3/W2〜4/W1 = 4列相当だが、もっと細かく日単位にする） */
+  /* 3月W2(10-16), W3(17-21), W4(22-28), 3月末-4月頭(29-4/4) = 4ブロック */
+  /* → 7ブロック: 3/10-16, 3/17-21, 3/22-24, 3/25-28, 3/29-31, 4/1-2, 4/3-4 */
+
+  .month-header {
+    display: grid;
+    grid-template-columns: 280px repeat(7, 1fr);
+    border-bottom: 2px solid var(--gold);
+  }
+  .month-header-label {
+    padding: 6px 12px; font-size: 0.7rem; color: #999; text-align: center; letter-spacing: 1px;
+  }
+  .month-header-label:first-child { text-align: left; color: var(--gold-dark); font-weight: 600; }
+
+  .section-title-row {
+    display: grid; grid-template-columns: 280px 1fr;
+    background: var(--gold-pale); border-left: 3px solid var(--gold);
+    margin-top: 12px; margin-bottom: 2px; border-radius: 0 4px 4px 0;
+  }
+  .section-title { padding: 8px 12px; font-size: 0.78rem; font-weight: 700; color: var(--gold-dark); }
+  .section-theme { padding: 8px 12px; font-size: 0.7rem; color: #999; display: flex; align-items: center; }
+
+  .gantt-row {
+    display: grid; grid-template-columns: 280px repeat(7, 1fr);
+    min-height: 28px; align-items: center; border-bottom: 1px solid #f5f2ed; transition: background 0.15s;
+  }
+  .gantt-row:hover { background: rgba(201,169,110,0.04); }
+
+  .task-name {
+    padding: 4px 12px; font-size: 0.72rem; color: #555;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .task-name.milestone { font-weight: 700; color: #333; }
+
+  .gantt-cell { position: relative; height: 100%; border-left: 1px solid #f0ece4; }
+  .gantt-cell:nth-child(2) { border-left: none; }
+
+  .bar {
+    position: absolute; top: 6px; height: 16px; border-radius: 8px;
+    opacity: 0.85; transition: opacity 0.2s, transform 0.2s;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .bar:hover { opacity: 1; transform: scaleY(1.2); z-index: 10; }
+
+  .bar-label {
+    font-size: 0.55rem; color: rgba(255,255,255,0.9); font-weight: 600;
+    white-space: nowrap; padding: 0 6px; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .bar.contract { background: linear-gradient(135deg, #8B6DB5, #a88bc7); }
+  .bar.research { background: linear-gradient(135deg, var(--blue), #6a9fd5); }
+  .bar.lp { background: linear-gradient(135deg, var(--green), #7ab88a); }
+  .bar.app { background: linear-gradient(135deg, var(--teal), #4db6ac); }
+  .bar.writing { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+  .bar.step { background: linear-gradient(135deg, var(--purple), #8B6DB5); }
+  .bar.build { background: linear-gradient(135deg, var(--orange), #e89a5c); }
+  .bar.test { background: linear-gradient(135deg, #607d8b, #90a4ae); }
+  .bar.launch { background: linear-gradient(135deg, var(--red), #d88a7c); }
+  .bar.consult { background: linear-gradient(135deg, var(--dark), #2d2d4e); }
+
+  .summary-section {
+    padding: 32px 48px 60px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+  }
+  .summary-card { background: #fff; border: 1px solid #eee; border-top: 3px solid var(--gold); border-radius: 6px; padding: 20px 24px; }
+  .summary-card h3 { font-size: 0.85rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 12px; }
+  .summary-card ul { list-style: none; padding: 0; }
+  .summary-card li { font-size: 0.75rem; color: #555; padding: 4px 0; padding-left: 16px; position: relative; border-bottom: 1px solid #f8f8f8; }
+  .summary-card li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 2px; }
+  .summary-card li.c-phase::before { background: var(--purple); }
+  .summary-card li.c-dep::before { background: var(--red); }
+  .summary-card li.c-team::before { background: var(--gold-dark); }
+
+  .page-footer { text-align: center; padding: 20px; font-size: 0.65rem; color: #ccc; border-top: 1px solid #eee; }
+
+  .tooltip {
+    display: none; position: fixed; background: rgba(26,26,46,0.95); color: #fff;
+    padding: 8px 14px; border-radius: 6px; font-size: 0.72rem; line-height: 1.6;
+    z-index: 1000; max-width: 300px; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .tooltip.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-top">
+    <span class="header-label">Roadmap — Gantt Chart</span>
+    <span class="header-date">Updated: 2026.03.14</span>
+  </div>
+  <div class="header-title">伊達さん UTAGE構築ロードマップ</div>
+  <div class="header-subtitle">YouTube × LINE × 診断で集客導線を一本化 — ローンチ目標：4月1日〜4日</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#8B6DB5,#a88bc7)"></div>契約・準備</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--blue),#6a9fd5)"></div>調査・分析</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--green),#7ab88a)"></div>LP制作</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--teal),#4db6ac)"></div>診断アプリ</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold))"></div>ライティング</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--purple),#8B6DB5)"></div>ステップ配信</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--orange),#e89a5c)"></div>UTAGE構築</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#607d8b,#90a4ae)"></div>テスト</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--red),#d88a7c)"></div>ローンチ</div>
+    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,var(--dark),#2d2d4e)"></div>個別相談</div>
+  </div>
+</div>
+
+<div class="gantt-wrapper">
+<div class="gantt-container" id="ganttChart">
+
+  <div class="month-header">
+    <div class="month-header-label">タスク（52件）</div>
+    <div class="month-header-label">3/10-16</div>
+    <div class="month-header-label">3/17-21</div>
+    <div class="month-header-label">3/22-24</div>
+    <div class="month-header-label">3/25-28</div>
+    <div class="month-header-label">3/29-31</div>
+    <div class="month-header-label">4/1-2</div>
+    <div class="month-header-label">4/3-4</div>
+  </div>
+
+  <div id="gantt-rows"></div>
+
+</div>
+</div>
+
+<div class="summary-section">
+  <div class="summary-card">
+    <h3>📋 フェーズ構成（52タスク）</h3>
+    <ul>
+      <li class="c-phase">Phase 0 事前準備 — 〜3/16（5タスク）</li>
+      <li class="c-phase">Phase 1 調査・整理 — 3/17〜21（9タスク）</li>
+      <li class="c-phase">Phase 2 コンテンツ制作 — 3/22〜28（14タスク）</li>
+      <li class="c-phase">Phase 3 UTAGE構築 — 3/28〜31（10タスク）</li>
+      <li class="c-phase">Phase 4 テスト・確認 — 3/31〜4/1（8タスク）</li>
+      <li class="c-phase">Phase 5 ローンチ — 4/1〜4/4（6タスク）</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3>⚠️ 依存関係・注意事項</h3>
+    <ul>
+      <li class="c-dep">3者MTG完了後にPhase 1以降に着手</li>
+      <li class="c-dep">特典の内容は伊達さんの承認が必要</li>
+      <li class="c-dep">ライティングは伊達さんの口調確認が必須</li>
+      <li class="c-dep">YouTube動画リンク修正は伊達さん側の作業あり</li>
+      <li class="c-dep">ローンチ日 = YouTube配信再開日が理想</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3>👥 チーム体制</h3>
+    <ul>
+      <li class="c-team">👤 ちいくじ — ディレクション / 構築</li>
+      <li class="c-team">🔵 いちじくメンバー — 制作 / デザイン</li>
+      <li class="c-team">🟡 MIKIさん — 窓口 / クライアント対応</li>
+      <li class="c-team">🟠 伊達さん — コンテンツ承認 / YouTube</li>
+    </ul>
+  </div>
+</div>
+
+<div class="page-footer">produced by いちじく</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// 列: 0=3/10-16, 1=3/17-21, 2=3/22-24, 3=3/25-28, 4=3/29-31, 5=4/1-2, 6=4/3-4
+const tasks = [
+  // Phase 0: 事前準備
+  { section: 'Phase 0', name: '提案書作成（松竹梅プラン）', type: 'contract', start: 0, end: 0, tip: '👤 ✅完了済み' },
+  { section: 'Phase 0', name: '3者打ち合わせ日程調整', type: 'contract', start: 0, end: 0, tip: '🟡 伊達さんとの日程調整中' },
+  { section: 'Phase 0', name: '★ 3者打ち合わせ実施', type: 'contract', start: 0, end: 0, tip: '👤🟡🟠 提案・プラン決定', milestone: true },
+  { section: 'Phase 0', name: '受注プラン確定', type: 'contract', start: 0, end: 0, tip: '🟡 梅/竹/松のいずれかに決定' },
+  { section: 'Phase 0', name: 'UTAGEアクセス権共有', type: 'contract', start: 0, end: 0, tip: '🟡🟠 アカウント権限の付与' },
+
+  // Phase 1: 調査・整理
+  { section: 'Phase 1', name: '既存シナリオ 全体マッピング', type: 'research', start: 1, end: 1, tip: '👤🔵 使用中/未使用の仕分け' },
+  { section: 'Phase 1', name: '既存ファネル動線確認', type: 'research', start: 1, end: 1, tip: '👤🔵 途切れている箇所の特定' },
+  { section: 'Phase 1', name: 'メルマガシナリオ確認（589名）', type: 'research', start: 1, end: 1, tip: '👤🔵 既存リストの中身確認' },
+  { section: 'Phase 1', name: 'LINE登録経路の現状確認', type: 'research', start: 1, end: 1, tip: '👤🔵 YouTube/LP等の流入先' },
+  { section: 'Phase 1', name: '既存LP・会員サイト記録', type: 'research', start: 1, end: 1, tip: '🔵 スクリーンショット保存' },
+  { section: 'Phase 1', name: '既存LINEメッセージ全文回収', type: 'research', start: 1, end: 1, tip: '🔵 ライティング素材の収集' },
+  { section: 'Phase 1', name: 'YouTube動画視聴（口調メモ）', type: 'research', start: 1, end: 1, tip: '🔵 伊達さんのキャラクター把握' },
+  { section: 'Phase 1', name: '不要シナリオ アーカイブ案', type: 'research', start: 1, end: 1, tip: '👤 削除はせずアーカイブ' },
+  { section: 'Phase 1', name: '新ファネル設計図 作成', type: 'research', start: 1, end: 1, tip: '👤 新しい導線のフロー図' },
+
+  // Phase 2A: LINE・ステップ配信
+  { section: 'Phase 2', name: 'オプトインLP制作', type: 'lp', start: 2, end: 2, tip: '🔵 LINE登録ページ（シンプル版）' },
+  { section: 'Phase 2', name: 'LINEステップ配信シナリオ設計', type: 'step', start: 2, end: 2, tip: '👤 全体フロー・日数・メッセージ数' },
+  { section: 'Phase 2', name: 'リマインド配信の設計', type: 'step', start: 2, end: 2, tip: '👤 アンケート未回答者向け' },
+  { section: 'Phase 2', name: '登録経路タグの設計', type: 'step', start: 2, end: 2, tip: '👤 YouTube/LP/Instagram等' },
+  { section: 'Phase 2', name: '★ 診断アプリ制作（動物占い）', type: 'app', start: 2, end: 3, tip: '👤 誕生日→結果の簡易診断', milestone: true },
+  { section: 'Phase 2', name: 'ステップ配信ライティング（Day1-7）', type: 'writing', start: 2, end: 3, tip: '🔵 7日間分のLINE配信文面' },
+  { section: 'Phase 2', name: 'LINEメッセージ用画像制作', type: 'writing', start: 2, end: 3, tip: '🔵 診断結果・特典案内の画像' },
+
+  // Phase 2B: 個別相談
+  { section: 'Phase 2', name: '個別相談LP制作', type: 'lp', start: 2, end: 3, tip: '🔵 デザイン+ライティング' },
+  { section: 'Phase 2', name: '個別相談申込フォーム作成', type: 'consult', start: 3, end: 3, tip: '🔵 UTAGEフォーム' },
+  { section: 'Phase 2', name: '個別相談リマインドメッセージ', type: 'consult', start: 3, end: 3, tip: '🔵 前日・当日の自動メッセージ' },
+
+  // Phase 2C: 特典サイト
+  { section: 'Phase 2', name: '特典コンテンツ企画', type: 'writing', start: 2, end: 2, tip: '🟡🟠 伊達さんと相談して決定' },
+  { section: 'Phase 2', name: '特典ページ制作', type: 'lp', start: 3, end: 3, tip: '🔵 会員サイト内の特典コーナー' },
+  { section: 'Phase 2', name: '特典受取導線の構築', type: 'step', start: 3, end: 3, tip: '👤 LINE登録→特典ページ誘導' },
+
+  // Phase 2D: ライティング
+  { section: 'Phase 2', name: 'キャラクターガイドライン作成', type: 'writing', start: 2, end: 2, tip: '🔵 伊達さんの口調・言い回し定義' },
+  { section: 'Phase 2', name: '既存LINEメッセージ リライト', type: 'writing', start: 2, end: 3, tip: '🔵 AI感を排除した自然な文面に' },
+  { section: 'Phase 2', name: 'ライティング確認依頼', type: 'writing', start: 3, end: 3, tip: '🟡 MIKIさん+伊達さんにレビュー依頼' },
+
+  // Phase 3: UTAGE構築
+  { section: 'Phase 3', name: '新シナリオをUTAGEに構築', type: 'build', start: 4, end: 4, tip: '👤🔵 下書きモードで構築' },
+  { section: 'Phase 3', name: 'オプトインLPをUTAGEにアップ', type: 'build', start: 4, end: 4, tip: '🔵 LP反映' },
+  { section: 'Phase 3', name: '個別相談LPをUTAGEにアップ', type: 'build', start: 4, end: 4, tip: '🔵 LP反映' },
+  { section: 'Phase 3', name: '診断アプリをLINE配信に組込み', type: 'build', start: 4, end: 4, tip: '👤 診断→配信の連携' },
+  { section: 'Phase 3', name: '特典ページを会員サイトに設置', type: 'build', start: 4, end: 4, tip: '🔵 会員サイト内に特典コーナー' },
+  { section: 'Phase 3', name: '登録経路タグをUTAGEに設定', type: 'build', start: 4, end: 4, tip: '👤 タグ設定' },
+  { section: 'Phase 3', name: 'ステップ配信をUTAGEに入力', type: 'build', start: 4, end: 4, tip: '🔵 Day1-7のメッセージ入力' },
+  { section: 'Phase 3', name: 'リマインド配信をUTAGEに設定', type: 'build', start: 4, end: 4, tip: '👤 未回答者向け自動配信' },
+  { section: 'Phase 3', name: 'YouTubeリンク修正', type: 'build', start: 4, end: 4, tip: '🟡🟠 正しいLPへリンク差替え' },
+  { section: 'Phase 3', name: '全体フローの結合テスト', type: 'test', start: 4, end: 4, tip: '👤 テスト登録で動作確認' },
+
+  // Phase 4: テスト
+  { section: 'Phase 4', name: 'テスト①：YouTube経由→診断→配信', type: 'test', start: 4, end: 5, tip: '👤 YouTube → LINE → 診断 → ステップ' },
+  { section: 'Phase 4', name: 'テスト②：LP経由→導線確認', type: 'test', start: 4, end: 5, tip: '🔵 LP → LINE登録 → 特典' },
+  { section: 'Phase 4', name: 'テスト③：未回答→リマインド確認', type: 'test', start: 4, end: 5, tip: '👤 アンケート未回答パターン' },
+  { section: 'Phase 4', name: '登録経路タグの動作確認', type: 'test', start: 4, end: 5, tip: '👤 各経路のタグ付与チェック' },
+  { section: 'Phase 4', name: '特典ページ表示確認（PC/スマホ）', type: 'test', start: 4, end: 5, tip: '🔵 レスポンシブ確認' },
+  { section: 'Phase 4', name: 'MIKIさんに最終確認依頼', type: 'test', start: 5, end: 5, tip: '🟡 全体の最終チェック' },
+  { section: 'Phase 4', name: '伊達さんに最終確認依頼', type: 'test', start: 5, end: 5, tip: '🟡🟠 クライアント承認' },
+  { section: 'Phase 4', name: '修正対応（FB反映）', type: 'test', start: 5, end: 5, tip: '👤🔵 フィードバック対応' },
+
+  // Phase 5: ローンチ
+  { section: 'Phase 5', name: '★★ 旧→新シナリオに切替', type: 'launch', start: 5, end: 5, tip: '👤 本番スイッチ！', milestone: true },
+  { section: 'Phase 5', name: 'LP差替え（旧→新）', type: 'launch', start: 5, end: 5, tip: '🔵 新LP公開' },
+  { section: 'Phase 5', name: 'YouTube配信再開の連絡', type: 'launch', start: 5, end: 5, tip: '🟡 伊達さんへ再開GO連絡' },
+  { section: 'Phase 5', name: 'ローンチ後24時間 動作監視', type: 'launch', start: 5, end: 6, tip: '👤 エラー・不具合チェック' },
+  { section: 'Phase 5', name: '初期データ確認（登録/診断/配信）', type: 'launch', start: 6, end: 6, tip: '👤 登録数/診断完了率/到達率' },
+  { section: 'Phase 5', name: '伊達さんへ初期レポート報告', type: 'launch', start: 6, end: 6, tip: '🟡 ローンチ結果レポート' },
+];
+
+const container = document.getElementById('gantt-rows');
+let currentSection = '';
+
+const sectionMeta = {
+  'Phase 0': { icon: '🟣', label: '事前準備', theme: '契約 / 3者MTG / アクセス権', period: '〜3/16' },
+  'Phase 1': { icon: '🔵', label: '調査・整理', theme: 'UTAGE分析 / ファネル設計', period: '3/17〜21' },
+  'Phase 2': { icon: '🟢', label: 'コンテンツ制作', theme: 'LP / 配信 / 診断 / 特典 / ライティング', period: '3/22〜28' },
+  'Phase 3': { icon: '🟠', label: 'UTAGE構築', theme: '下書き構築 / 組込み / 結合テスト', period: '3/28〜31' },
+  'Phase 4': { icon: '🔴', label: 'テスト・確認', theme: '全パターンテスト / 最終承認', period: '3/31〜4/1' },
+  'Phase 5': { icon: '⭐', label: 'ローンチ', theme: '本番切替 / YouTube再開 / 監視', period: '4/1〜4/4' },
+};
+
+tasks.forEach(task => {
+  if (task.section !== currentSection) {
+    currentSection = task.section;
+    const meta = sectionMeta[currentSection];
+    const row = document.createElement('div');
+    row.className = 'section-title-row';
+    row.innerHTML = `
+      <div class="section-title">${meta.icon} ${currentSection} ${meta.label}（${meta.period}）</div>
+      <div class="section-theme">${meta.theme}</div>
+    `;
+    container.appendChild(row);
+  }
+
+  const row = document.createElement('div');
+  row.className = 'gantt-row';
+
+  const nameCell = document.createElement('div');
+  nameCell.className = 'task-name' + (task.milestone ? ' milestone' : '');
+  nameCell.textContent = task.name;
+  row.appendChild(nameCell);
+
+  for (let i = 0; i < 7; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'gantt-cell';
+    cell.style.position = 'relative';
+
+    if (i === task.start) {
+      const span = task.end - task.start + 1;
+      const bar = document.createElement('div');
+      bar.className = 'bar ' + task.type;
+
+      if (task.milestone && span === 1) {
+        bar.style.left = '2px'; bar.style.right = '2px';
+        bar.style.borderRadius = '4px'; bar.style.height = '18px'; bar.style.top = '5px';
+        bar.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+      } else {
+        bar.style.left = '2px'; bar.style.right = '2px'; bar.style.width = 'auto';
+      }
+
+      if (span >= 2) {
+        const label = document.createElement('span');
+        label.className = 'bar-label';
+        label.textContent = task.name.replace(/★+ /, '');
+        bar.appendChild(label);
+      }
+
+      bar.dataset.tip = task.tip;
+      bar.addEventListener('mouseenter', showTooltip);
+      bar.addEventListener('mousemove', moveTooltip);
+      bar.addEventListener('mouseleave', hideTooltip);
+      cell.appendChild(bar);
+    }
+    row.appendChild(cell);
+  }
+  container.appendChild(row);
+});
+
+// Fix multi-cell bar widths
+document.querySelectorAll('.bar').forEach(bar => {
+  const cell = bar.parentElement;
+  const task = tasks.find(t => bar.dataset.tip === t.tip);
+  if (task) {
+    const span = task.end - task.start + 1;
+    if (span > 1) {
+      bar.style.width = (cell.offsetWidth * span - 4) + 'px';
+      bar.style.right = 'auto';
+    }
+  }
+});
+
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.bar').forEach(bar => {
+    const cell = bar.parentElement;
+    const task = tasks.find(t => bar.dataset.tip === t.tip);
+    if (task) {
+      const span = task.end - task.start + 1;
+      if (span > 1) {
+        bar.style.width = (cell.offsetWidth * span - 4) + 'px';
+        bar.style.right = 'auto';
+      }
+    }
+  });
+});
+
+const tooltip = document.getElementById('tooltip');
+function showTooltip(e) { tooltip.textContent = e.target.closest('.bar').dataset.tip; tooltip.classList.add('show'); }
+function moveTooltip(e) { tooltip.style.left = (e.clientX + 12) + 'px'; tooltip.style.top = (e.clientY - 30) + 'px'; }
+function hideTooltip() { tooltip.classList.remove('show'); }
+</script>
+
+</body>
+</html>
