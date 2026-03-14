@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTAGE構築サービス ご提案書 — 中川様</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#8B5CF6;--purple-dark:#7C3AED;--pink:#EC4899;
+  --text:#1F2937;--sub:#6B7280;--panel:#F3F0FF;--panel2:#FAF5FF;
+  --grad:linear-gradient(135deg,#8B5CF6 0%,#7C3AED 30%,#EC4899 100%);
+  --cap:linear-gradient(135deg,#8B5CF6,#A78BFA);
+}
+body{font-family:'Noto Sans JP',sans-serif;background:#111;color:var(--text);overflow:hidden;height:100vh}
+
+/* Slide container */
+.slides{position:relative;width:100vw;height:100vh}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:none;flex-direction:column;
+  background:var(--grad);padding:8px;
+}
+.slide.active{display:flex}
+.slide-inner{
+  flex:1;background:#fff;border-radius:12px;overflow-y:auto;
+  padding:56px 64px 40px;display:flex;flex-direction:column;position:relative;
+}
+
+/* watermark */
+.watermark{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:14rem;font-weight:900;color:rgba(139,92,246,0.04);
+  white-space:nowrap;pointer-events:none;z-index:0;
+  font-family:'Cormorant Garamond',serif;letter-spacing:-8px;
+}
+
+/* headings */
+.bar-heading{border-left:4px solid var(--purple-dark);padding-left:16px;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:20px;position:relative;z-index:1}
+.capsule{display:inline-block;background:var(--cap);color:#fff;padding:8px 28px;border-radius:25px;font-size:1rem;font-weight:600;letter-spacing:1px;margin-bottom:20px}
+
+/* circle icon */
+.ci{width:64px;height:64px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+
+/* grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+
+/* card */
+.card{background:var(--panel);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.card h4{font-size:1.05rem;font-weight:700;color:var(--text)}
+.card p,.card li{font-size:0.88rem;color:var(--sub);line-height:1.7}
+.card ul{list-style:none;padding:0}
+.card li{padding-left:16px;position:relative}
+.card li::before{content:'•';position:absolute;left:0;color:var(--purple)}
+
+/* pricing */
+.price-card{border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;display:flex;flex-direction:column}
+.price-head{padding:16px;text-align:center;color:#fff;font-weight:700;font-size:1.1rem}
+.price-body{padding:24px;flex:1;display:flex;flex-direction:column;gap:8px;background:#fff}
+.price-amount{text-align:center;font-size:2.4rem;font-weight:900;color:var(--purple-dark);margin:8px 0}
+.price-amount span{font-size:1rem;font-weight:400}
+.price-body li{font-size:0.85rem;color:var(--sub);padding:4px 0;padding-left:16px;position:relative;border-bottom:1px solid #f3f4f6;list-style:none}
+.price-body li::before{content:'✓';position:absolute;left:0;color:var(--purple);font-weight:700}
+
+/* step flow */
+.step-flow{display:flex;align-items:flex-start;justify-content:center;gap:12px}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;text-align:center}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--purple)}
+.step-arrow{display:flex;align-items:center;padding-top:40px;color:#ccc;font-size:1.5rem}
+.step-label{display:inline-block;background:var(--cap);color:#fff;padding:6px 20px;border-radius:20px;font-size:0.8rem;font-weight:600}
+.step-text{font-size:0.82rem;color:var(--sub);line-height:1.6;max-width:220px}
+
+/* row */
+.frow{display:flex;gap:20px;align-items:flex-start}
+.frow .ci{flex-shrink:0}
+.frow-content h4{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.frow-content p{font-size:0.88rem;color:var(--sub);line-height:1.7}
+
+/* table */
+.stbl{width:100%;border-collapse:collapse;font-size:0.88rem}
+.stbl th{background:var(--panel);color:var(--purple-dark);font-weight:600;padding:10px 14px;text-align:left;border-bottom:2px solid #ddd}
+.stbl td{padding:10px 14px;border-bottom:1px solid #f0f0f0;color:var(--sub)}
+.stbl td:first-child{font-weight:500;color:var(--text)}
+
+/* footer */
+.slide-footer{text-align:center;font-size:0.65rem;color:#9CA3AF;padding-top:16px;margin-top:auto}
+
+/* nav */
+.nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:100}
+.nav button{background:rgba(255,255,255,0.85);border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem;color:var(--purple-dark);box-shadow:0 2px 10px rgba(0,0,0,0.15);transition:all 0.2s}
+.nav button:hover{background:#fff;transform:scale(1.1)}
+.page-num{position:fixed;bottom:24px;right:32px;font-size:0.75rem;color:rgba(255,255,255,0.7);z-index:100}
+
+/* animate */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .an{animation:fadeInUp 0.5s ease-out both}
+.d1{animation-delay:0.1s}.d2{animation-delay:0.2s}.d3{animation-delay:0.3s}.d4{animation-delay:0.4s}.d5{animation-delay:0.5s}.d6{animation-delay:0.6s}.d7{animation-delay:0.7s}
+
+/* title slide special */
+.title-slide .slide-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.title-main{font-size:2.6rem;font-weight:900;letter-spacing:2px;margin-bottom:8px;z-index:1}
+.title-blocks{display:flex;gap:6px;margin:20px 0;z-index:1}
+.title-block{width:64px;height:68px;background:rgba(139,92,246,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;color:var(--purple)}
+.title-sub{font-size:1rem;color:var(--purple);font-weight:500;z-index:1;margin-bottom:40px}
+.title-band{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,0.85);padding:20px 40px;border-radius:0 0 12px 12px;z-index:1}
+.title-band p{font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.8}
+
+/* important box */
+.imp-box{background:#FEF3C7;border-left:4px solid #F59E0B;border-radius:0 8px 8px 0;padding:16px 20px;font-size:0.88rem;color:#92400E;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="slides" id="slides">
+
+<!-- ========== Slide 1: 表紙 ========== -->
+<div class="slide title-slide active">
+  <div class="slide-inner">
+    <div class="watermark">UTAGE</div>
+    <div class="an d1 title-main">UTAGE構築サービス</div>
+    <div class="an d2 title-blocks">
+      <div class="title-block">サ</div><div class="title-block">ー</div><div class="title-block">ビ</div><div class="title-block">ス</div><div class="title-block">ご</div><div class="title-block">提</div><div class="title-block">案</div><div class="title-block">書</div>
+    </div>
+    <div class="an d3 title-sub">ウラカタチーム いちじく</div>
+    <div class="an d4 title-band">
+      <p>FXオンラインサロン「ボストレード」の<br>会員サイト構築・LINE最適化・運用自動化をワンストップでサポート</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Slide 2: 単なる「制作」ではなく ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">単なる「制作」ではなく「事業成長のパートナー」として</div>
+
+    <div class="an d2 capsule">対象となる方</div>
+    <div class="an d3 grid2" style="margin-bottom:32px">
+      <div class="frow"><div class="ci">📘</div><div class="frow-content"><h4>UTAGEを導入済みだが活用しきれていない方</h4><p>会員サイトが継ぎ接ぎ状態、セキュリティに不安がある方</p></div></div>
+      <div class="frow"><div class="ci">🔄</div><div class="frow-content"><h4>手作業の運用をシステム化したい方</h4><p>LINE配信・サブスク管理・リマインドを自動化したい方</p></div></div>
+    </div>
+
+    <div class="an d4 capsule">サービスの特徴</div>
+    <div class="an d5 frow" style="margin-bottom:20px"><div class="ci">♾️</div><div class="frow-content"><h4>期限の定めなし</h4><p>期間制限はありません。初期構築から運用・改善まで伴走します。</p></div></div>
+    <div class="an d6 frow"><div class="ci">💡</div><div class="frow-content"><h4>自走できる仕組み</h4><p>最初の1つ目は私が構築し、2回目以降は貴社で運用・量産できるようノウハウを共有します。</p></div></div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 3: ワンストップ構築 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">ボストレードの課題をワンストップで解決</div>
+    <div class="an d2 capsule">3つの課題 → UTAGEで一元解決</div>
+
+    <div class="an d3 grid3" style="flex:1">
+      <div class="card" style="border-top:3px solid var(--purple)">
+        <div class="ci" style="margin:0 auto">🏠</div>
+        <h4 style="text-align:center">会員サイト構築</h4>
+        <ul>
+          <li>WordPress → UTAGEへ移行</li>
+          <li>ユーザー別アクセス権限</li>
+          <li>退会者のアクセス停止</li>
+          <li>動画教材の一元管理</li>
+          <li>バンドルコースで複数サービス統合</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--pink)">
+        <div class="ci" style="margin:0 auto">💬</div>
+        <h4 style="text-align:center">LINE配信最適化</h4>
+        <ul>
+          <li>配信数削減（月10万円→大幅カット）</li>
+          <li>1通でLPに誘導する形式に変更</li>
+          <li>リマインド配信を完全自動化</li>
+          <li>イベント応募・管理の一元化</li>
+          <li>手作業ゼロ → 漏れ防止</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid #F59E0B">
+        <div class="ci" style="margin:0 auto">💳</div>
+        <h4 style="text-align:center">サブスク管理自動化</h4>
+        <ul>
+          <li>3締め日パターンを自動管理</li>
+          <li>未収納者へ自動リマインド</li>
+          <li>オプション追加の決済自動化</li>
+          <li>初回面談後のプラン適用自動切替</li>
+          <li>スタッフの手作業を大幅削減</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 4: 詳細① 会員サイト ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">詳細① 会員サイト構築（最優先）</div>
+    <div class="an d2 capsule">WordPress → UTAGE 安全移行</div>
+
+    <div class="an d3 grid2" style="margin-bottom:24px">
+      <div class="card">
+        <h4>🔴 現状の課題</h4>
+        <ul>
+          <li>パスワード共有方式 → 退会者も閲覧可能</li>
+          <li>サービスごとにバラバラのページ管理</li>
+          <li>継ぎ接ぎで構成が混乱</li>
+          <li>YouTube限定公開で規約違反リスク</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🟢 UTAGE移行後</h4>
+        <ul>
+          <li>ユーザーごとにアクセス権限を設定</li>
+          <li>退会 = 即アクセス停止</li>
+          <li>動画はUTAGE内で安全に配信</li>
+          <li>バンドルコースで複数プランを統合管理</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="an d4 imp-box">
+      ⚠️ <strong>セキュリティ方針</strong>：FX事業とボクシング事業は完全分離。アカウント・チャットワーク・メンバーすべて別管理とします。
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 5: 詳細② LINE最適化 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">詳細② LINE配信コスト削減・自動化</div>
+    <div class="an d2 capsule">月10万円のLINE課金を大幅カット</div>
+
+    <div class="an d3 grid2" style="margin-bottom:24px">
+      <div class="card">
+        <h4>現状の問題</h4>
+        <ul>
+          <li>1回の配信で4通 × 人数分を消費</li>
+          <li>テキストのみ配信 → 読まない人が多い</li>
+          <li>リマインドは全て手作業（漏れ多発）</li>
+          <li>イベント管理もLINEで手作業</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>改善プラン</h4>
+        <ul>
+          <li>1通でLP/イベントページへ誘導 → 配信数激減</li>
+          <li>リッチメッセージで視覚的に訴求</li>
+          <li>リマインド配信を完全自動化</li>
+          <li>日時指定 + 条件分岐で無駄ゼロ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="an d4 capsule">代理店リストの活用（将来施策）</div>
+    <div class="an d5" style="font-size:0.92rem;color:var(--sub);line-height:1.8">
+      3年分の不成約リストが蓄積 → ステップ配信による後追いで、眠っているリストを活用。<br>
+      代理店専用チャンネルの構築・教育コンテンツ配信も対応可能です。
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 6: UTAGEで対応可能な範囲 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">UTAGEで対応可能な範囲</div>
+    <div class="an d2 capsule">すべて対応可能です</div>
+
+    <table class="an d3 stbl">
+      <thead><tr><th>課題</th><th>対応</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td>会員サイト構築</td><td>◯</td><td>バンドルコース機能でプラン別アクセス制御</td></tr>
+        <tr><td>ユーザーごとの権限管理</td><td>◯</td><td>退会者のアクセス停止も対応可</td></tr>
+        <tr><td>オプション追加の自動化</td><td>◯</td><td>決済ページを分けて送るだけ（入金確認のみ手動）</td></tr>
+        <tr><td>LINE配信数削減</td><td>◯</td><td>LP・イベントページに誘導する形で1通に集約</td></tr>
+        <tr><td>リマインド自動配信</td><td>◯</td><td>日時指定・条件分岐で自動化</td></tr>
+        <tr><td>サブスク請求リマインド</td><td>◯</td><td>締め日グループ別に箱を分けて管理</td></tr>
+        <tr><td>代理店向けサイト</td><td>◯</td><td>代理店専用チャンネル・教育コンテンツ配信</td></tr>
+      </tbody>
+    </table>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 7: ボクシング事業 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">ボクシング事業について</div>
+    <div class="an d2 capsule">まずは小さく始めて導線を構築</div>
+
+    <div class="an d3 frow" style="margin-bottom:24px"><div class="ci">🥊</div><div class="frow-content"><h4>現状</h4><p>動画編集（八木担当）で試合速報等を制作中。中川さんが1人で運営していく方針。</p></div></div>
+
+    <div class="an d4 capsule">ご提案</div>
+    <div class="an d5 step-flow">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="ci">💬</div>
+        <div class="step-label">LINE作成</div>
+        <div class="step-text">公式LINEアカウントを開設し、集客の受け皿を準備</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="ci">🎬</div>
+        <div class="step-label">動画1本制作</div>
+        <div class="step-text">無料相談のオファー動画を制作し、LINE登録の入口に</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="ci">🤝</div>
+        <div class="step-label">無料相談導線</div>
+        <div class="step-text">LINE → 無料相談 → 成約の導線を構築</div>
+      </div>
+    </div>
+
+    <div class="an d6 imp-box" style="margin-top:24px">
+      ⚠️ ボクシング事業はFX事業と<strong>完全分離</strong>で運用します。アカウント・チャットワーク・メンバーすべて別管理です。
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 8: サポート体制 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">サポート体制とポリシー</div>
+    <div class="an d2 capsule">3つの安心</div>
+
+    <div class="an d3 grid3" style="flex:1">
+      <div class="card" style="text-align:center">
+        <div class="ci" style="margin:0 auto">👥</div>
+        <h4>チーム体制</h4>
+        <p>専任チーム5〜6名を編成。<br>チャットワークで金融事業用グループを作成し、迅速な対応を実現します。</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="ci" style="margin:0 auto">🔒</div>
+        <h4>セキュリティ第一</h4>
+        <p>金融商品取引法・特定商取引法のリスクを認識した上で設計。<br>FX / ボクシングの完全分離を徹底します。</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="ci" style="margin:0 auto">📋</div>
+        <h4>事業設計から支援</h4>
+        <p>単純な「載せ替え」ではなく、事業全体の整理・設計からサポート。<br>長期的な成長を見据えた構築を行います。</p>
+      </div>
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 9: 優先順位 ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">実施の優先順位</div>
+    <div class="an d2 capsule">段階的に構築していきます</div>
+
+    <div class="an d3 step-flow">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="ci" style="background:#EDE9FE;font-size:1.3rem">🏠</div>
+        <div class="step-label">会員サイト構築</div>
+        <div class="step-text">最優先。WordPressからUTAGEへの移行。セキュリティ強化。</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="ci" style="background:#FCE7F3;font-size:1.3rem">💬</div>
+        <div class="step-label">LINE最適化</div>
+        <div class="step-text">既存顧客対応。配信コスト削減とリマインド自動化。</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="ci" style="background:#FEF3C7;font-size:1.3rem">📈</div>
+        <div class="step-label">新規顧客対応</div>
+        <div class="step-text">代理店の取りこぼしリスト活用。ステップ配信による後追い。</div>
+      </div>
+    </div>
+
+    <div class="slide-footer" style="margin-top:auto">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 10: 料金プラン ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">料金プラン（税込）</div>
+
+    <div class="an d2 grid2" style="max-width:700px;margin:20px auto;gap:32px">
+      <div class="price-card">
+        <div class="price-head" style="background:var(--grad)">金融事業（ボストレード）</div>
+        <div class="price-body">
+          <div class="price-amount">330,000<span>円</span></div>
+          <ul>
+            <li>会員サイト構築（UTAGE移行）</li>
+            <li>ユーザー権限管理</li>
+            <li>LINE配信最適化</li>
+            <li>リマインド自動化</li>
+            <li>サブスク管理自動化</li>
+            <li>代理店向けサイト</li>
+            <li>チャットサポート</li>
+          </ul>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-head" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)">ボクシング事業</div>
+        <div class="price-body">
+          <div class="price-amount">165,000<span>円</span></div>
+          <ul>
+            <li>公式LINE構築</li>
+            <li>オファー動画1本制作</li>
+            <li>無料相談への導線構築</li>
+            <li>基本ファネル設計</li>
+            <li>チャットサポート</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="an d3" style="text-align:center;margin-top:12px">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--purple-dark)">合計 495,000<span style="font-size:1rem;font-weight:400">円（税込）</span></div>
+      <p style="font-size:0.85rem;color:var(--sub);margin-top:8px">※ ご入金後の着手となります</p>
+    </div>
+
+    <div class="slide-footer">produced by いちじく</div>
+  </div>
+</div>
+
+<!-- ========== Slide 11: ご利用の流れ ========== -->
+<div class="slide">
+  <div class="slide-inner">
+    <div class="an d1 bar-heading">ご利用の流れ</div>
+
+    <div class="an d2 step-flow" style="margin-top:32px">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="ci" style="width:80px;height:80px;font-size:2rem">💬</div>
+        <div class="step-label">ヒアリング・ご相談</div>
+        <div class="step-text">現状の課題や実現したいゴールをZoom等でヒアリングします。</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="ci" style="width:80px;height:80px;font-size:2rem">⚙️</div>
+        <div class="step-label">ご入金・権限付与</div>
+        <div class="step-text">費用は前払いとなります。合わせてUTAGEのアクセス権限を付与いただきます。</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="ci" style="width:80px;height:80px;font-size:2rem">🚀</div>
+        <div class="step-label">プロジェクト開始</div>
+        <div class="step-text">入金と権限付与の確認をもって、契約スタートとなります。</div>
+      </div>
+    </div>
+
+    <div class="slide-footer" style="margin-top:auto">produced by いちじく</div>
+  </div>
+</div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="prevSlide()">◀</button>
+  <button onclick="nextSlide()">▶</button>
+</div>
+<div class="page-num" id="pageNum">1 / 11</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(n) {
+  slides[current].classList.remove('active');
+  current = (n + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('pageNum').textContent = `${current + 1} / ${total}`;
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+});
+</script>
+
+</body>
+</html>
