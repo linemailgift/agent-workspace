@@ -200,6 +200,17 @@
   .warning-card h4 { font-size: 14px; font-weight: 600; color: #E65100; margin-bottom: 6px; }
   .warning-card p { font-size: 13px; color: #333; }
 
+  /* Important card */
+  .important-card {
+    background: linear-gradient(135deg, #E3F2FF, #EDE7F6);
+    border: 1px solid #90CAF9;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .important-card h4 { font-size: 14px; font-weight: 600; color: #1565C0; margin-bottom: 6px; }
+  .important-card p { font-size: 13px; color: #333; }
+
   /* Checklist */
   .checklist { list-style: none; }
   .checklist li {
@@ -244,6 +255,34 @@
   details .detail-content li {
     margin-bottom: 6px;
   }
+
+  /* Pattern tabs */
+  .pattern-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .pattern-tab {
+    flex: 1;
+    padding: 12px 8px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    background: var(--card);
+    transition: all 0.2s;
+  }
+  .pattern-tab.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+  .pattern-tab .tab-label { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 2px; font-weight: 400; }
+  .pattern-tab.active .tab-label { color: var(--primary); }
+  .pattern-content { display: none; }
+  .pattern-content.active { display: block; }
 </style>
 </head>
 <body>
@@ -253,7 +292,7 @@
   <div class="hero">
     <div class="hero-icon">🎙️</div>
     <h1>ボイスメモ文字起こし<br>＆まとめショートカット</h1>
-    <p>Apple Watch → 文字起こし → 要約・タスク抽出<br>すべてiPhoneだけで完結</p>
+    <p>Apple Watch → ChatGPTで文字起こし＋要約・タスク抽出<br>すべてiPhoneだけで完結</p>
   </div>
 
   <!-- Flow -->
@@ -266,11 +305,17 @@
       <div class="flow-arrow">↓</div>
       <div class="flow-step">📤 共有 → ショートカット選択</div>
       <div class="flow-arrow">↓</div>
-      <div class="flow-step">🗣️ Apple音声認識で文字起こし（無料）</div>
-      <div class="flow-arrow">↓</div>
-      <div class="flow-step">🤖 ChatGPTで要約＋タスク抽出</div>
+      <div class="flow-step">🤖 ChatGPTが音声を文字起こし＋要約・タスク抽出</div>
       <div class="flow-arrow">↓</div>
       <div class="flow-step">📋 結果表示 ＋ メモに保存</div>
+    </div>
+  </div>
+
+  <!-- Key point -->
+  <div class="section">
+    <div class="important-card">
+      <h4>ポイント: ChatGPTが文字起こしも要約もまとめて処理</h4>
+      <p>ChatGPTアプリの「Ask ChatGPT」アクションは音声ファイルを直接受け取れます。内部のWhisperが文字起こしし、続けて要約・タスク抽出まで一括で行います。Apple純正の音声認識アクションは不要です。</p>
     </div>
   </div>
 
@@ -288,8 +333,52 @@
     </ul>
   </div>
 
-  <!-- Step 1: Create Shortcut -->
+  <!-- Pattern selector -->
   <div class="section">
+    <div class="section-header">
+      <div class="section-number" style="background:var(--purple);">🔀</div>
+      <div class="section-title">2つの方法</div>
+    </div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;">
+      やりたいことは同じですが、方法が2つあります。<strong>パターンA（推奨）</strong>がおすすめです。
+    </p>
+
+    <div class="pattern-tabs">
+      <div class="pattern-tab active" onclick="switchPattern('a')">
+        <div>パターンA</div>
+        <span class="tab-label">ショートカット（推奨）</span>
+      </div>
+      <div class="pattern-tab" onclick="switchPattern('b')">
+        <div>パターンB</div>
+        <span class="tab-label">直接共有（簡単）</span>
+      </div>
+    </div>
+
+    <div id="pattern-a" class="pattern-content active">
+      <div class="tip-card">
+        <h4>パターンA: ショートカット経由でChatGPTに送る（推奨）</h4>
+        <p>ボイスメモ → 共有 → ショートカット → ChatGPTが文字起こし＋要約を自動処理。プロンプトが自動付与されるので毎回手入力不要。</p>
+      </div>
+    </div>
+
+    <div id="pattern-b" class="pattern-content">
+      <div class="tip-card">
+        <h4>パターンB: ChatGPTアプリに直接共有</h4>
+        <p>ボイスメモ → 共有 → ChatGPTアプリ。最もシンプルですが、毎回プロンプトを手入力する必要があります。ショートカット作成不要。</p>
+      </div>
+      <div class="warning-card">
+        <h4>パターンBの手順</h4>
+        <p>① ボイスメモアプリで録音を選択<br>
+        ② 「…」または長押し →「共有」<br>
+        ③ 共有先から「ChatGPT」を選択<br>
+        ④ ChatGPTが開いたら、下記のプロンプトを入力して送信<br>
+        ⑤ 文字起こし＋要約が返ってくる</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Create Shortcut -->
+  <div class="section" id="shortcut-steps">
     <div class="section-header">
       <div class="section-number">1</div>
       <div class="section-title">ショートカットを新規作成</div>
@@ -306,14 +395,18 @@
         <div class="step-icon icon-blue">➕</div>
         <div class="step-content">
           <h4>右上の「＋」をタップ</h4>
-          <p>新しいショートカットが作成されます</p>
+          <p>空のショートカットエディタが開きます（デフォルト名「新規ショートカット」）</p>
         </div>
       </li>
       <li class="step-item">
         <div class="step-icon icon-purple">✏️</div>
         <div class="step-content">
-          <h4>名前を設定</h4>
-          <p>上部の名前欄をタップし「📝 メモ文字起こし」に変更</p>
+          <h4>名前を変更する</h4>
+          <p>上部の<strong>「新規ショートカット」</strong>の文字をタップ → ドロップダウンメニューが表示 → <strong>「名前を変更」</strong>をタップ → 「📝 メモ文字起こし」と入力</p>
+          <div class="screenshot-hint">
+            <span class="hint-icon">💡</span>
+            <span>名前欄は直接編集できません。必ずタップ→ドロップダウン→「名前を変更」の順で操作してください</span>
+          </div>
         </div>
       </li>
     </ul>
@@ -325,10 +418,18 @@
       <div class="section-number">2</div>
       <div class="section-title">アクションを順番に追加</div>
     </div>
-    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
-      「アクションを追加」をタップし、検索バーで各アクションを検索して追加します。<br>
-      <strong>上から順番に</strong>追加してください。
+    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
+      <strong>「アクションを追加」</strong>ボタンをタップし、検索バーで各アクションを検索して追加します。
     </p>
+    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+      2つ目以降のアクションは、画面下部の検索バーを上にスワイプするか、最後のアクションの下にある「＋」をタップして追加します。
+    </p>
+
+    <!-- Magic variable explanation -->
+    <div class="important-card" style="margin-bottom:16px;">
+      <h4>「マジック変数」とは？</h4>
+      <p>各アクションの出力は<strong>青いトークン（マジック変数）</strong>として後続のアクションで使えます。入力欄をタップすると変数ピッカーが表示され、前のアクションの出力を選択できます。</p>
+    </div>
 
     <ul class="step-list">
       <!-- Action 1 -->
@@ -341,47 +442,20 @@
             <summary>詳しい手順を見る ▼</summary>
             <div class="detail-content">
               <ol>
-                <li>ショートカット編集画面の上部にある <strong>「ショートカット入力」</strong>（または「受け入れる種類」）をタップ</li>
-                <li><strong>「共有シートに表示」</strong> をONにする</li>
-                <li>受け入れる種類で <strong>「メディア」</strong> を選択（音声・動画を含む）</li>
+                <li>エディタ上部のショートカット名（「📝 メモ文字起こし」）をタップ</li>
+                <li>ドロップダウンメニューから<strong>「詳細」</strong>をタップ</li>
+                <li><strong>「共有シートに表示」</strong>をONにする</li>
+                <li>その下の「受け入れる種類」で<strong>「メディア」</strong>を選択（他はOFF）</li>
               </ol>
+              <p style="margin-top:8px; color:#666;">これで、ボイスメモアプリの共有メニューにこのショートカットが表示されるようになります</p>
             </div>
           </details>
-          <div class="screenshot-hint">
-            <span class="hint-icon">💡</span>
-            <span>iOS 17以降では画面上部の「ⓘ」ボタンから「共有シートに表示」を設定できます</span>
-          </div>
         </div>
       </li>
 
       <!-- Action 2 -->
       <li class="step-item">
-        <div class="step-icon icon-green">2️⃣</div>
-        <div class="step-content">
-          <h4>「テキストを音声入力」を追加</h4>
-          <p>Apple純正の音声認識で文字起こしを行います（無料）</p>
-          <details>
-            <summary>詳しい手順を見る ▼</summary>
-            <div class="detail-content">
-              <ol>
-                <li>「アクションを追加」→ 検索で <strong>「テキストを音声入力」</strong> と入力</li>
-                <li>表示されたアクションをタップして追加</li>
-                <li>「聞き取り停止」を <strong>「停止後」</strong> に設定</li>
-                <li>言語を <strong>「日本語」</strong> に設定</li>
-              </ol>
-              <p style="margin-top:8px; color:#666;">⚠️ 「テキストを音声入力」が見つからない場合は <strong>「音声ファイルからテキスト」</strong> または <strong>「ディクテーション」</strong> で検索してください</p>
-            </div>
-          </details>
-          <div class="screenshot-hint">
-            <span class="hint-icon">⚠️</span>
-            <span><strong>代替方法:</strong> iOS版によっては「音声を書き起こし」「Transcribe Audio」等の名前の場合があります。見つからない場合はStep 2B（後述）を参照</span>
-          </div>
-        </div>
-      </li>
-
-      <!-- Action 3 -->
-      <li class="step-item">
-        <div class="step-icon icon-orange">3️⃣</div>
+        <div class="step-icon icon-orange">2️⃣</div>
         <div class="step-content">
           <h4>「テキスト」アクションを追加</h4>
           <p>ChatGPTに送るプロンプトを組み立てます</p>
@@ -389,50 +463,67 @@
             <summary>詳しい手順を見る ▼</summary>
             <div class="detail-content">
               <ol>
-                <li>「アクションを追加」→ 検索で <strong>「テキスト」</strong> と入力</li>
+                <li>「アクションを追加」→ 検索バーに <strong>「テキスト」</strong> と入力</li>
                 <li>一番上の <strong>「テキスト」</strong>（書類カテゴリ）を選択</li>
                 <li>テキスト欄に下のプロンプト（コピーボタンで取得可）をペースト</li>
-                <li>「書き起こされたテキスト」の変数が自動挿入されていることを確認</li>
               </ol>
             </div>
           </details>
 
           <div class="prompt-box">
             <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
-以下の音声メモの文字起こしを整理してください。
+添付の音声メモを文字起こしして、以下の形式で整理してください。
 
 【やること】
-- 文字起こし内容からタスク・やるべきことを箇条書きで抽出
+- 音声内容からタスク・やるべきことを箇条書きで抽出
 - 期限や優先度がわかるものは補足を付けて
 
 【要約】
 - 何について話していたかを3行以内で要約
 
 【文字起こし全文】
-（書き起こされたテキスト）</div>
+- 音声の内容をそのまま文字起こし</div>
+        </div>
+      </li>
 
+      <!-- Action 3 -->
+      <li class="step-item">
+        <div class="step-icon icon-purple">3️⃣</div>
+        <div class="step-content">
+          <h4>「ChatGPTに質問」アクションを追加</h4>
+          <p>音声ファイル＋プロンプトをChatGPTに送信します</p>
+          <details>
+            <summary>詳しい手順を見る ▼</summary>
+            <div class="detail-content">
+              <ol>
+                <li>画面下部の検索バーを上スワイプ → <strong>「ChatGPT」</strong> と入力</li>
+                <li><strong>「Ask ChatGPT」</strong>（ChatGPTに質問）をタップして追加</li>
+                <li>「メッセージ」欄をタップ → 変数ピッカーから前の<strong>「テキスト」アクションの出力</strong>を選択</li>
+                <li>「添付ファイル」欄をタップ → 変数ピッカーから<strong>「ショートカット入力」</strong>（音声ファイル）を選択</li>
+              </ol>
+              <p style="margin-top:8px; color:#666;">ChatGPTが音声ファイル（Whisper）で文字起こし＋プロンプトに従って要約・タスク抽出を一括処理します</p>
+            </div>
+          </details>
           <div class="screenshot-hint">
-            <span class="hint-icon">📌</span>
-            <span>「（書き起こされたテキスト）」の部分は、実際には前のアクションの出力変数（マジック変数）に置き換えてください。テキスト入力欄をタップすると変数を挿入できます</span>
+            <span class="hint-icon">⚠️</span>
+            <span>ChatGPTアプリがインストールされていないと「Ask ChatGPT」は表示されません。App StoreからChatGPTをインストール＆ログインしてください</span>
           </div>
         </div>
       </li>
 
       <!-- Action 4 -->
       <li class="step-item">
-        <div class="step-icon icon-purple">4️⃣</div>
+        <div class="step-icon icon-blue">4️⃣</div>
         <div class="step-content">
-          <h4>「ChatGPTに質問」アクションを追加</h4>
-          <p>ChatGPTアプリのショートカット連携で送信</p>
+          <h4>「結果を表示」を追加</h4>
+          <p>ChatGPTの回答を画面に表示します</p>
           <details>
             <summary>詳しい手順を見る ▼</summary>
             <div class="detail-content">
               <ol>
-                <li>「アクションを追加」→ 検索で <strong>「ChatGPT」</strong> と入力</li>
-                <li><strong>「ChatGPTに質問」</strong>（Ask ChatGPT）をタップ</li>
-                <li>入力に前の「テキスト」アクションの出力（マジック変数）を設定</li>
+                <li>画面下部の検索バーを上スワイプ → <strong>「結果を表示」</strong> で検索</li>
+                <li>追加後、入力欄をタップ → 変数ピッカーから<strong>「ChatGPTに質問」の出力</strong>を選択</li>
               </ol>
-              <p style="margin-top:8px; color:#666;">※ ChatGPTアプリがインストールされていないと表示されません</p>
             </div>
           </details>
         </div>
@@ -440,34 +531,16 @@
 
       <!-- Action 5 -->
       <li class="step-item">
-        <div class="step-icon icon-blue">5️⃣</div>
+        <div class="step-icon icon-green">5️⃣</div>
         <div class="step-content">
-          <h4>「結果を表示」を追加</h4>
-          <p>ChatGPTの回答を画面に表示</p>
-          <details>
-            <summary>詳しい手順を見る ▼</summary>
-            <div class="detail-content">
-              <ol>
-                <li>「アクションを追加」→ <strong>「結果を表示」</strong> で検索</li>
-                <li>入力に「ChatGPTに質問」の出力を設定</li>
-              </ol>
-            </div>
-          </details>
-        </div>
-      </li>
-
-      <!-- Action 6 -->
-      <li class="step-item">
-        <div class="step-icon icon-green">6️⃣</div>
-        <div class="step-content">
-          <h4>「メモに保存」を追加（任意）</h4>
+          <h4>「メモを作成」を追加（任意）</h4>
           <p>結果をAppleメモアプリに自動保存</p>
           <details>
             <summary>詳しい手順を見る ▼</summary>
             <div class="detail-content">
               <ol>
-                <li>「アクションを追加」→ <strong>「メモを作成」</strong> で検索</li>
-                <li>本文に「ChatGPTに質問」の出力を設定</li>
+                <li>画面下部の検索バーを上スワイプ → <strong>「メモを作成」</strong> で検索</li>
+                <li>本文に<strong>「ChatGPTに質問」の出力</strong>（マジック変数）を設定</li>
                 <li>フォルダを「ボイスメモまとめ」等に指定すると整理しやすい</li>
               </ol>
             </div>
@@ -475,57 +548,18 @@
         </div>
       </li>
     </ul>
-  </div>
 
-  <!-- Step 2B: Alternative -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number" style="background:var(--orange);">2B</div>
-      <div class="section-title">音声認識が見つからない場合</div>
-    </div>
-    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">
-      「テキストを音声入力」アクションが見つからない場合の代替方法です。
-    </p>
-
-    <div class="warning-card">
-      <h4>方法A: ChatGPTに直接音声を送る</h4>
-      <p>アクション2（音声認識）と3（テキスト）を省略し、ショートカット入力（音声ファイル）を直接ChatGPTに渡す方法です。ChatGPT Plus/Teamの場合、音声ファイルを直接処理できます。</p>
-    </div>
-
-    <div class="tip-card">
-      <h4>方法B: Whisperを使う</h4>
-      <p>ChatGPTの「ChatGPTに質問」の代わりに、Whisper対応のショートカット（サードパーティ）を使って文字起こしする方法もあります。検索で「Whisper ショートカット」を調べてください。</p>
+    <!-- Save note -->
+    <div class="screenshot-hint" style="margin-top:16px;">
+      <span class="hint-icon">💡</span>
+      <span><strong>保存について:</strong> ショートカットは自動保存されます。明示的な保存ボタンはありません。すべてのアクションを追加したら、左上の<strong>「完了」</strong>をタップして閉じてください。</span>
     </div>
   </div>
 
-  <!-- Step 3: Settings -->
+  <!-- Step 3: Test -->
   <div class="section">
     <div class="section-header">
       <div class="section-number">3</div>
-      <div class="section-title">ショートカットの設定を確認</div>
-    </div>
-    <ul class="step-list">
-      <li class="step-item">
-        <div class="step-icon icon-blue">⚙️</div>
-        <div class="step-content">
-          <h4>共有シートに表示をON</h4>
-          <p>ショートカット編集画面の上部「ⓘ」→「共有シートに表示」をONにする</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-icon icon-orange">🎵</div>
-        <div class="step-content">
-          <h4>受け入れる種類を設定</h4>
-          <p>「すべて」のチェックを外し、<strong>「メディア」または「オーディオ」</strong>のみON</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Step 4: Test -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">4</div>
       <div class="section-title">動作テスト</div>
     </div>
     <ul class="step-list">
@@ -540,7 +574,7 @@
         <div class="step-icon icon-blue">📱</div>
         <div class="step-content">
           <h4>iPhoneのボイスメモアプリを開く</h4>
-          <p>録音が同期されていることを確認</p>
+          <p>録音が同期されていることを確認（数秒〜1分で同期）</p>
         </div>
       </li>
       <li class="step-item">
@@ -554,7 +588,7 @@
         <div class="step-icon icon-purple">✅</div>
         <div class="step-content">
           <h4>結果を確認</h4>
-          <p>文字起こし → 要約 → タスク抽出の結果が表示されればOK！</p>
+          <p>ChatGPTが文字起こし → 要約 → タスク抽出の結果を返せばOK！</p>
         </div>
       </li>
     </ul>
@@ -568,23 +602,23 @@
     </div>
 
     <div class="tip-card">
-      <h4>✅ おすすめ: Siriから起動</h4>
+      <h4>おすすめ: Siriから起動</h4>
       <p>「Hey Siri、メモ文字起こし」と言うだけで起動できます。ショートカット名がそのままSiriコマンドになります。</p>
     </div>
 
     <div class="tip-card">
-      <h4>✅ ホーム画面にアイコン追加</h4>
+      <h4>ホーム画面にアイコン追加</h4>
       <p>ショートカット一覧で長押し →「ホーム画面に追加」で、アプリのようにワンタップ起動できます。</p>
     </div>
 
     <div class="warning-card">
-      <h4>⚠️ 長い録音について</h4>
-      <p>10分を超える録音は音声認識の精度が落ちる場合があります。長い録音は分割して処理するか、ChatGPTに直接音声ファイルを送る方法（方法A）を試してください。</p>
+      <h4>ChatGPTの処理時間</h4>
+      <p>音声の長さによって処理に数秒〜数十秒かかります。10分以上の録音は分割して送ることをおすすめします。</p>
     </div>
 
     <div class="warning-card">
-      <h4>⚠️ オフライン不可</h4>
-      <p>音声認識・ChatGPT共にインターネット接続が必要です。Wi-Fiまたはモバイルデータ通信がある環境でご利用ください。</p>
+      <h4>オフライン不可</h4>
+      <p>ChatGPTの利用にはインターネット接続が必要です。Wi-Fiまたはモバイルデータ通信がある環境でご利用ください。</p>
     </div>
   </div>
 
@@ -599,31 +633,26 @@
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:8px 4px; font-weight:600;">①</td>
           <td style="padding:8px 4px;">ショートカット入力</td>
-          <td style="padding:8px 4px; color:var(--text-secondary);">音声受取</td>
+          <td style="padding:8px 4px; color:var(--text-secondary);">音声ファイル受取</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:8px 4px; font-weight:600;">②</td>
-          <td style="padding:8px 4px;">テキストを音声入力</td>
-          <td style="padding:8px 4px; color:var(--text-secondary);">文字起こし</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:8px 4px; font-weight:600;">③</td>
           <td style="padding:8px 4px;">テキスト</td>
           <td style="padding:8px 4px; color:var(--text-secondary);">プロンプト組立</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:8px 4px; font-weight:600;">④</td>
-          <td style="padding:8px 4px;">ChatGPTに質問</td>
-          <td style="padding:8px 4px; color:var(--text-secondary);">要約・抽出</td>
+          <td style="padding:8px 4px; font-weight:600;">③</td>
+          <td style="padding:8px 4px;">Ask ChatGPT</td>
+          <td style="padding:8px 4px; color:var(--text-secondary);">文字起こし＋要約</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:8px 4px; font-weight:600;">⑤</td>
+          <td style="padding:8px 4px; font-weight:600;">④</td>
           <td style="padding:8px 4px;">結果を表示</td>
           <td style="padding:8px 4px; color:var(--text-secondary);">画面表示</td>
         </tr>
         <tr>
-          <td style="padding:8px 4px; font-weight:600;">⑥</td>
-          <td style="padding:8px 4px;">メモに保存</td>
+          <td style="padding:8px 4px; font-weight:600;">⑤</td>
+          <td style="padding:8px 4px;">メモを作成</td>
           <td style="padding:8px 4px; color:var(--text-secondary);">任意</td>
         </tr>
       </table>
@@ -632,30 +661,29 @@
 
   <div class="footer">
     📝 ボイスメモ文字起こし＆まとめ セットアップガイド<br>
-    作成日: 2026-03-14
+    v2.0（修正版）— 2026-03-14
   </div>
 
 </div>
 
 <script>
 function copyPrompt(btn) {
-  const promptText = `以下の音声メモの文字起こしを整理してください。
+  const promptText = `添付の音声メモを文字起こしして、以下の形式で整理してください。
 
 【やること】
-- 文字起こし内容からタスク・やるべきことを箇条書きで抽出
+- 音声内容からタスク・やるべきことを箇条書きで抽出
 - 期限や優先度がわかるものは補足を付けて
 
 【要約】
 - 何について話していたかを3行以内で要約
 
 【文字起こし全文】
-（ここに書き起こされたテキストの変数を挿入）`;
+- 音声の内容をそのまま文字起こし`;
 
   navigator.clipboard.writeText(promptText).then(() => {
     btn.textContent = 'コピー済み ✓';
     setTimeout(() => { btn.textContent = 'コピー'; }, 2000);
   }).catch(() => {
-    // Fallback
     const ta = document.createElement('textarea');
     ta.value = promptText;
     document.body.appendChild(ta);
@@ -665,6 +693,21 @@ function copyPrompt(btn) {
     btn.textContent = 'コピー済み ✓';
     setTimeout(() => { btn.textContent = 'コピー'; }, 2000);
   });
+}
+
+function switchPattern(pattern) {
+  document.querySelectorAll('.pattern-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pattern-content').forEach(c => c.classList.remove('active'));
+
+  if (pattern === 'a') {
+    document.querySelectorAll('.pattern-tab')[0].classList.add('active');
+    document.getElementById('pattern-a').classList.add('active');
+    document.getElementById('shortcut-steps').style.display = '';
+  } else {
+    document.querySelectorAll('.pattern-tab')[1].classList.add('active');
+    document.getElementById('pattern-b').classList.add('active');
+    document.getElementById('shortcut-steps').style.display = 'none';
+  }
 }
 </script>
 </body>
