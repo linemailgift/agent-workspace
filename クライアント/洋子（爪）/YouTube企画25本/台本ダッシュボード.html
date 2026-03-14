@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YouTube台本25本 — 別所洋子</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"游ゴシック体","Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;background:#f7f5f2;color:#2f2f2f;height:100vh;overflow:hidden;font-size:15px;line-height:1.8}
+body{font-family:"游ゴシック体","Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;background:#f7f5f2;color:#2f2f2f;height:100vh;overflow:hidden;font-size:16px;line-height:1.8}
 
 .header{background:linear-gradient(135deg,#0083a6,#2abfbf);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-height:52px}
 .header-title{font-size:clamp(14px,3vw,20px);font-weight:700;letter-spacing:.03em}
@@ -16,22 +17,96 @@ body{font-family:"游ゴシック体","Yu Gothic","YuGothic","Hiragino Sans","Hi
 .app{display:flex;height:calc(100vh - 52px)}
 
 /* Left Panel */
-.left-panel{width:380px;min-width:380px;height:100%;overflow-y:auto;background:#fff;border-right:1px solid #e0dcd7}
+.left-panel{width:460px;min-width:460px;height:100%;overflow-y:auto;background:#fff;border-right:1px solid #e0dcd7}
 .left-panel::-webkit-scrollbar{width:5px}
 .left-panel::-webkit-scrollbar-track{background:#f5f3f0}
 .left-panel::-webkit-scrollbar-thumb{background:#c5c0b8;border-radius:3px}
 .left-panel::-webkit-scrollbar-thumb:hover{background:#a09a90}
 
-.group-header{padding:10px 16px;font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between}
-.group-range{font-size:11px;opacity:.8;font-weight:400}
+.group-header{padding:12px 16px;font-size:15px;font-weight:700;color:#fff;letter-spacing:.06em;position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between}
+.group-range{font-size:12px;opacity:.8;font-weight:400}
+.group-num{margin-right:6px;font-size:16px}
 
-.card{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s;border-bottom:1px solid #f0ece7}
+.card{display:flex;flex-direction:column;gap:0;padding:0;cursor:pointer;transition:background .15s;border-bottom:1px solid #f0ece7}
 .card:hover{background:#f5f2ee}
 .card.selected{background:#eef8fa;box-shadow:inset 3px 0 0 currentColor}
+.card-info{display:flex;align-items:center;gap:12px;padding:10px 16px}
 .card-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
 .card-body{flex:1;min-width:0}
-.card-title{font-size:13px;font-weight:600;color:#2f2f2f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-meta{font-size:11px;color:#8a8580;margin-top:1px}
+.card-title{font-size:16px;font-weight:600;color:#2f2f2f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{font-size:13px;color:#8a8580;margin-top:1px}
+
+/* Mini Thumbnail in card */
+.card-thumb-wrap{width:100%;overflow:hidden;border-bottom:1px solid #f0ece7}
+
+/* Thumbnail styles (from サムネイル一覧) */
+.mini-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.mini-thumb .side-bar{position:absolute;top:0;left:0;bottom:0;width:4px}
+.mini-thumb .bg-num{position:absolute;right:15px;bottom:-5px;font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:700;line-height:1;pointer-events:none}
+.mini-thumb .thumb-content{position:relative;z-index:2;padding:14px 24px 14px 20px;text-align:left;width:100%}
+.mini-thumb .main-copy{font-size:1.05rem;font-weight:900;line-height:1.35;color:#2f2f2f;margin-bottom:6px;letter-spacing:-0.02em}
+.mini-thumb .sub-copy{font-size:0.55rem;font-weight:700;color:#888;letter-spacing:0.04em}
+.mini-thumb .brand{position:absolute;bottom:6px;right:10px;font-size:0.4rem;color:#ccc;letter-spacing:0.12em;font-weight:700}
+.mini-thumb .cat-badge{position:absolute;top:8px;right:8px;padding:2px 8px;border-radius:12px;font-size:0.45rem;font-weight:700;letter-spacing:0.1em}
+.mini-thumb .diamond{position:absolute;width:12px;height:12px;transform:rotate(45deg);opacity:0.06;pointer-events:none}
+
+/* Theme backgrounds */
+.theme-pro{background:linear-gradient(135deg,#f7f5f2 0%,#faf4f8 30%,#f0e8ef 100%)}
+.theme-talk{background:linear-gradient(135deg,#f0f7f9 0%,#e8f4f7 30%,#f5f9fa 100%)}
+.theme-trust{background:linear-gradient(135deg,#faf8f3 0%,#f7f2e8 30%,#faf6f0 100%)}
+.theme-career{background:linear-gradient(135deg,#f0f7f5 0%,#e8f5f1 30%,#f5faf8 100%)}
+.theme-value{background:linear-gradient(135deg,#faf4f8 0%,#f7e8f0 30%,#fdf5f9 100%)}
+
+/* Side bar colors */
+.theme-pro .side-bar{background:linear-gradient(180deg,#f1198e,#ddb849)}
+.theme-talk .side-bar{background:linear-gradient(180deg,#0083a6,#00b4d8)}
+.theme-trust .side-bar{background:linear-gradient(180deg,#ddb849,#f1198e)}
+.theme-career .side-bar{background:linear-gradient(180deg,#0083a6,#ddb849)}
+.theme-value .side-bar{background:linear-gradient(180deg,#f1198e,#0083a6)}
+
+/* bg-num colors */
+.theme-pro .bg-num{color:rgba(241,25,142,0.06)}
+.theme-talk .bg-num{color:rgba(0,131,166,0.06)}
+.theme-trust .bg-num{color:rgba(221,184,73,0.06)}
+.theme-career .bg-num{color:rgba(0,131,166,0.06)}
+.theme-value .bg-num{color:rgba(241,25,142,0.06)}
+
+/* Deco circle */
+.mini-thumb::before{content:'';position:absolute;top:-40%;right:-15%;width:180px;height:180px;border-radius:50%;pointer-events:none}
+.theme-pro::before{background:radial-gradient(circle,rgba(241,25,142,0.05) 0%,transparent 70%)}
+.theme-talk::before{background:radial-gradient(circle,rgba(0,131,166,0.05) 0%,transparent 70%)}
+.theme-trust::before{background:radial-gradient(circle,rgba(221,184,73,0.06) 0%,transparent 70%)}
+.theme-career::before{background:radial-gradient(circle,rgba(0,131,166,0.05) 0%,transparent 70%)}
+.theme-value::before{background:radial-gradient(circle,rgba(241,25,142,0.05) 0%,transparent 70%)}
+
+/* Bottom line */
+.mini-thumb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.theme-pro::after{background:linear-gradient(90deg,#f1198e,#ddb849)}
+.theme-talk::after{background:linear-gradient(90deg,#0083a6,#00b4d8)}
+.theme-trust::after{background:linear-gradient(90deg,#ddb849,#f1198e)}
+.theme-career::after{background:linear-gradient(90deg,#0083a6,#ddb849)}
+.theme-value::after{background:linear-gradient(90deg,#f1198e,#0083a6)}
+
+/* Cat badge theme colors */
+.theme-pro .cat-badge{background:rgba(241,25,142,0.08);border:1px solid rgba(241,25,142,0.2);color:#f1198e}
+.theme-talk .cat-badge{background:rgba(0,131,166,0.08);border:1px solid rgba(0,131,166,0.2);color:#0083a6}
+.theme-trust .cat-badge{background:rgba(221,184,73,0.1);border:1px solid rgba(221,184,73,0.3);color:#b8942e}
+.theme-career .cat-badge{background:rgba(0,131,166,0.08);border:1px solid rgba(0,131,166,0.2);color:#0083a6}
+.theme-value .cat-badge{background:rgba(241,25,142,0.08);border:1px solid rgba(241,25,142,0.2);color:#f1198e}
+
+/* Diamond */
+.theme-pro .diamond{background:#f1198e}
+.theme-talk .diamond{background:#0083a6}
+.theme-trust .diamond{background:#ddb849}
+.theme-career .diamond{background:#0083a6}
+.theme-value .diamond{background:#f1198e}
+
+/* Text highlight classes */
+.mini-thumb .main-copy .pink{color:#f1198e}
+.mini-thumb .main-copy .teal{color:#0083a6}
+.mini-thumb .main-copy .gold{color:#b8942e}
+.mini-thumb .main-copy .hl{background:linear-gradient(transparent 55%,rgba(241,25,142,0.15) 55%);padding:0 2px}
+.mini-thumb .main-copy .hl-gold{background:linear-gradient(transparent 55%,rgba(221,184,73,0.18) 55%);padding:0 2px}
 
 /* Right Panel */
 .right-panel{flex:1;height:100%;overflow-y:auto;background:#faf9f7}
@@ -41,19 +116,19 @@ body{font-family:"游ゴシック体","Yu Gothic","YuGothic","Hiragino Sans","Hi
 
 .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#b0aaa2;text-align:center;padding:40px}
 .welcome-icon{font-size:48px;margin-bottom:16px;opacity:.4}
-.welcome h2{font-size:18px;font-weight:600;margin-bottom:8px;color:#8a8580}
-.welcome p{font-size:13px;line-height:1.7}
+.welcome h2{font-size:20px;font-weight:600;margin-bottom:8px;color:#8a8580}
+.welcome p{font-size:14px;line-height:1.7}
 
 .script-view{display:none;padding:36px 48px 80px;max-width:820px}
 .script-header{margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid #e8e4df}
-.script-badge{display:inline-block;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:600;color:#fff;margin-right:8px;vertical-align:middle}
-.script-number{font-size:13px;color:#8a8580;font-weight:600;margin-bottom:4px}
-.script-title{font-size:clamp(18px,3.5vw,24px);font-weight:700;color:#2a2a2a;margin:6px 0 10px;line-height:1.4}
-.script-meta{font-size:12px;color:#8a8580}
+.script-badge{display:inline-block;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;color:#fff;margin-right:8px;vertical-align:middle}
+.script-number{font-size:14px;color:#8a8580;font-weight:600;margin-bottom:4px}
+.script-title{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#2a2a2a;margin:6px 0 10px;line-height:1.4}
+.script-meta{font-size:13px;color:#8a8580}
 
-.script-body{font-size:15px;line-height:2;color:#2f2f2f}
-.script-body h3{font-size:17px;font-weight:700;color:#0083a6;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid #e0dcd7}
-.script-body h2{font-size:15px;font-weight:700;color:#8a8580;margin:28px 0 8px}
+.script-body{font-size:16px;line-height:2;color:#2f2f2f}
+.script-body h3{font-size:19px;font-weight:700;color:#0083a6;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid #e0dcd7}
+.script-body h2{font-size:16px;font-weight:700;color:#8a8580;margin:28px 0 8px}
 .script-body strong{color:#1a1a1a}
 .script-body hr{border:none;border-top:1px solid #e0dcd7;margin:24px 0}
 .script-body ul,.script-body ol{margin:8px 0 8px 24px}
@@ -92,192 +167,317 @@ body{font-family:"游ゴシック体","Yu Gothic","YuGothic","Hiragino Sans","Hi
 <div class="app">
   <div class="left-panel" id="leftPanel">
 <div class="cat-group" data-cat="pro">
-<div class="group-header" style="background:#0083a6">プロ思考<span class="group-range">01〜05</span></div>
+<div class="group-header" style="background:#0083a6"><span class="group-num">①</span>プロ思考<span class="group-range">01〜05</span></div>
 <div class="card" data-id="1" onclick="showScript(1)">
-  <div class="card-num" style="background:#0083a6">01</div>
-  <div class="card-body">
-    <div class="card-title">&quot;ネイリスト&quot;と&quot;専門家&quot;の決定的な違い</div>
-    <div class="card-meta">10分 / 3,354字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-pro"><div class="side-bar"></div><div class="cat-badge">PRO MINDSET</div><div class="bg-num">01</div><div class="diamond" style="top:30px;right:90px;"></div><div class="thumb-content"><div class="main-copy">「ネイリスト」と<br>「<span class="hl">専門家</span>」の<br><span class="pink">決定的な違い</span></div><div class="sub-copy">99%が気づいていない"定義"の差</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#0083a6">01</div>
+    <div class="card-body">
+      <div class="card-title">"ネイリスト"と"専門家"の決定的な違い</div>
+      <div class="card-meta">10分 / 3,354字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="2" onclick="showScript(2)">
-  <div class="card-num" style="background:#0083a6">02</div>
-  <div class="card-body">
-    <div class="card-title">私たちが売っているのは&quot;安心&quot;です</div>
-    <div class="card-meta">10分 / 3,638字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-pro"><div class="side-bar"></div><div class="cat-badge">PRO MINDSET</div><div class="bg-num">02</div><div class="thumb-content"><div class="main-copy">あなたのサロンが<br>売るべきは<br><span class="pink">"技術"じゃない</span></div><div class="sub-copy">高単価サロンが本当に売っているもの</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#0083a6">02</div>
+    <div class="card-body">
+      <div class="card-title">私たちが売っているのは"安心"です</div>
+      <div class="card-meta">10分 / 3,638字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="3" onclick="showScript(3)">
-  <div class="card-num" style="background:#0083a6">03</div>
-  <div class="card-body">
-    <div class="card-title">説明できない技術は存在しないのと同じ</div>
-    <div class="card-meta">10分 / 4,549字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-pro"><div class="side-bar"></div><div class="cat-badge">PRO MINDSET</div><div class="bg-num">03</div><div class="thumb-content"><div class="main-copy">説明できない技術は<br><span class="pink">"存在しない"</span><br>のと同じ</div><div class="sub-copy">一流ネイリストが必ず持っている「言語化力」</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#0083a6">03</div>
+    <div class="card-body">
+      <div class="card-title">説明できない技術は存在しないのと同じ</div>
+      <div class="card-meta">10分 / 4,549字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="4" onclick="showScript(4)">
-  <div class="card-num" style="background:#0083a6">04</div>
-  <div class="card-body">
-    <div class="card-title">お客様が離れない人の共通点</div>
-    <div class="card-meta">11分 / 3,523字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-pro"><div class="side-bar"></div><div class="cat-badge">PRO MINDSET</div><div class="bg-num">04</div><div class="thumb-content"><div class="main-copy"><span class="hl">指名が止まらない</span>人が<br>やっている<br><span class="gold">たった一つの習慣</span></div><div class="sub-copy">技術以外で圧倒的な差がつくポイント</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#0083a6">04</div>
+    <div class="card-body">
+      <div class="card-title">お客様が離れない人の共通点</div>
+      <div class="card-meta">11分 / 3,523字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="5" onclick="showScript(5)">
-  <div class="card-num" style="background:#0083a6">05</div>
-  <div class="card-body">
-    <div class="card-title">上手いだけでは選ばれない理由</div>
-    <div class="card-meta">10分 / 3,460字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-pro"><div class="side-bar"></div><div class="cat-badge">PRO MINDSET</div><div class="bg-num">05</div><div class="thumb-content"><div class="main-copy">「<span class="hl">上手い</span>」のに<br><span class="pink">選ばれない</span><br>ネイリストの共通点</div><div class="sub-copy">技術力だけで勝負する時代は終わりました</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#0083a6">05</div>
+    <div class="card-body">
+      <div class="card-title">上手いだけでは選ばれない理由</div>
+      <div class="card-meta">10分 / 3,460字</div>
+    </div>
   </div>
 </div>
 </div>
 <div class="cat-group" data-cat="dialog">
-<div class="group-header" style="background:#f1198e">対話力<span class="group-range">06〜10</span></div>
+<div class="group-header" style="background:#f1198e"><span class="group-num">②</span>対話力<span class="group-range">06〜10</span></div>
 <div class="card" data-id="6" onclick="showScript(6)">
-  <div class="card-num" style="background:#f1198e">06</div>
-  <div class="card-body">
-    <div class="card-title">信頼が決まるカウンセリング設計</div>
-    <div class="card-meta">10分 / 3,932字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-talk"><div class="side-bar"></div><div class="cat-badge">COMMUNICATION</div><div class="bg-num">06</div><div class="thumb-content"><div class="main-copy"><span class="teal">最初の10分</span>で<br><span class="pink">決まる</span></div><div class="sub-copy">リピート率が変わるカウンセリング設計</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#f1198e">06</div>
+    <div class="card-body">
+      <div class="card-title">信頼が決まるカウンセリング設計</div>
+      <div class="card-meta">10分 / 3,932字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="7" onclick="showScript(7)">
-  <div class="card-num" style="background:#f1198e">07</div>
-  <div class="card-body">
-    <div class="card-title">お客様がホッとする説明とは</div>
-    <div class="card-meta">10分 / 3,559字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-talk"><div class="side-bar"></div><div class="cat-badge">COMMUNICATION</div><div class="bg-num">07</div><div class="thumb-content"><div class="main-copy">その説明、<br><span class="pink">不安にさせてます</span></div><div class="sub-copy">お客様がホッとする魔法の言い換え5選</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#f1198e">07</div>
+    <div class="card-body">
+      <div class="card-title">お客様がホッとする説明とは</div>
+      <div class="card-meta">10分 / 3,559字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="8" onclick="showScript(8)">
-  <div class="card-num" style="background:#f1198e">08</div>
-  <div class="card-body">
-    <div class="card-title">なぜ？を引き出せる人だけが伸びる</div>
-    <div class="card-meta">10分 / 4,453字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-talk"><div class="side-bar"></div><div class="cat-badge">COMMUNICATION</div><div class="bg-num">08</div><div class="thumb-content"><div class="main-copy">「<span class="hl">お任せで</span>」は<br><span class="pink">危険信号</span></div><div class="sub-copy">本音を引き出すプロの質問術3選</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#f1198e">08</div>
+    <div class="card-body">
+      <div class="card-title">なぜ？を引き出せる人だけが伸びる</div>
+      <div class="card-meta">10分 / 4,453字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="9" onclick="showScript(9)">
-  <div class="card-num" style="background:#f1198e">09</div>
-  <div class="card-body">
-    <div class="card-title">難しい言葉が信頼を下げる</div>
-    <div class="card-meta">9分 / 3,823字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-talk"><div class="side-bar"></div><div class="cat-badge">COMMUNICATION</div><div class="bg-num">09</div><div class="thumb-content"><div class="main-copy">その専門用語、<br>お客様は<br><span class="pink">理解してません</span></div><div class="sub-copy">信頼を下げる「伝わらない説明」の正体</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#f1198e">09</div>
+    <div class="card-body">
+      <div class="card-title">難しい言葉が信頼を下げる</div>
+      <div class="card-meta">9分 / 3,823字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="10" onclick="showScript(10)">
-  <div class="card-num" style="background:#f1198e">10</div>
-  <div class="card-body">
-    <div class="card-title">トラブルを起こさない説明術</div>
-    <div class="card-meta">10分 / 3,997字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-talk"><div class="side-bar"></div><div class="cat-badge">COMMUNICATION</div><div class="bg-num">10</div><div class="thumb-content"><div class="main-copy">クレームの<span class="teal">8割</span>は<br><span class="pink">説明不足</span></div><div class="sub-copy">トラブルを未然に防ぐ事前説明5つの鉄則</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#f1198e">10</div>
+    <div class="card-body">
+      <div class="card-title">トラブルを起こさない説明術</div>
+      <div class="card-meta">10分 / 3,997字</div>
+    </div>
   </div>
 </div>
 </div>
 <div class="cat-group" data-cat="trust">
-<div class="group-header" style="background:#2abfbf">信頼構築<span class="group-range">11〜15</span></div>
+<div class="group-header" style="background:#2abfbf"><span class="group-num">③</span>信頼構築<span class="group-range">11〜15</span></div>
 <div class="card" data-id="11" onclick="showScript(11)">
-  <div class="card-num" style="background:#2abfbf">11</div>
-  <div class="card-body">
-    <div class="card-title">比較されない人のポジション戦略</div>
-    <div class="card-meta">10分 / 3,200字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-trust"><div class="side-bar"></div><div class="cat-badge">BRANDING</div><div class="bg-num">11</div><div class="thumb-content"><div class="main-copy">比較されたら<span class="pink">負け</span></div><div class="sub-copy">"この人しかいない"と思わせるポジションの作り方</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#2abfbf">11</div>
+    <div class="card-body">
+      <div class="card-title">比較されない人のポジション戦略</div>
+      <div class="card-meta">10分 / 3,200字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="12" onclick="showScript(12)">
-  <div class="card-num" style="background:#2abfbf">12</div>
-  <div class="card-body">
-    <div class="card-title">プロに見える発信の設計</div>
-    <div class="card-meta">10分 / 3,253字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-trust"><div class="side-bar"></div><div class="cat-badge">BRANDING</div><div class="bg-num">12</div><div class="thumb-content"><div class="main-copy">同じ技術なのに<br><span class="pink">なぜ差がつく？</span></div><div class="sub-copy">プロに見える発信 vs 素人っぽい発信</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#2abfbf">12</div>
+    <div class="card-body">
+      <div class="card-title">プロに見える発信の設計</div>
+      <div class="card-meta">10分 / 3,253字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="13" onclick="showScript(13)">
-  <div class="card-num" style="background:#2abfbf">13</div>
-  <div class="card-body">
-    <div class="card-title">信用が積み上がる瞬間</div>
-    <div class="card-meta">10分 / 4,242字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-trust"><div class="side-bar"></div><div class="cat-badge">BRANDING</div><div class="bg-num">13</div><div class="thumb-content"><div class="main-copy"><span class="hl-gold">実績○万人</span>は<br><span class="pink">信用されない</span></div><div class="sub-copy">お客様が本当に見ているのはココだった</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#2abfbf">13</div>
+    <div class="card-body">
+      <div class="card-title">信用が積み上がる瞬間</div>
+      <div class="card-meta">10分 / 4,242字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="14" onclick="showScript(14)">
-  <div class="card-num" style="background:#2abfbf">14</div>
-  <div class="card-body">
-    <div class="card-title">紹介が止まらないサロンの裏側</div>
-    <div class="card-meta">11分 / 4,448字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-trust"><div class="side-bar"></div><div class="cat-badge">BRANDING</div><div class="bg-num">14</div><div class="thumb-content"><div class="main-copy"><span class="gold">広告費ゼロ</span>で<br>予約が埋まる</div><div class="sub-copy">紹介が止まらないサロンだけがやっている5つのこと</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#2abfbf">14</div>
+    <div class="card-body">
+      <div class="card-title">紹介が止まらないサロンの裏側</div>
+      <div class="card-meta">11分 / 4,448字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="15" onclick="showScript(15)">
-  <div class="card-num" style="background:#2abfbf">15</div>
-  <div class="card-body">
-    <div class="card-title">お客様が&quot;今すぐ予約したくなる&quot;理由</div>
-    <div class="card-meta">11分 / 4,144字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-trust"><div class="side-bar"></div><div class="cat-badge">BRANDING</div><div class="bg-num">15</div><div class="thumb-content"><div class="main-copy">予約ボタンを<br><span class="pink">押させる</span><br><span class="hl-gold">心理学</span></div><div class="sub-copy">値引きなしで"今すぐ行きたい"と思わせる6つの仕掛け</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#2abfbf">15</div>
+    <div class="card-body">
+      <div class="card-title">お客様が"今すぐ予約したくなる"理由</div>
+      <div class="card-meta">11分 / 4,144字</div>
+    </div>
   </div>
 </div>
 </div>
 <div class="cat-group" data-cat="career">
-<div class="group-header" style="background:#ddb849">キャリア<span class="group-range">16〜20</span></div>
+<div class="group-header" style="background:#ddb849"><span class="group-num">④</span>キャリア<span class="group-range">16〜20</span></div>
 <div class="card" data-id="16" onclick="showScript(16)">
-  <div class="card-num" style="background:#ddb849">16</div>
-  <div class="card-body">
-    <div class="card-title">10年以上続くネイリストの共通点</div>
-    <div class="card-meta">10分 / 3,071字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-career"><div class="side-bar"></div><div class="cat-badge">CAREER</div><div class="bg-num">16</div><div class="thumb-content"><div class="main-copy"><span class="teal">10年続く人</span>だけが<br>知っていること</div><div class="sub-copy">離職率7割の業界で生き残る5つの共通点</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#ddb849">16</div>
+    <div class="card-body">
+      <div class="card-title">10年以上続くネイリストの共通点</div>
+      <div class="card-meta">10分 / 3,071字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="17" onclick="showScript(17)">
-  <div class="card-num" style="background:#ddb849">17</div>
-  <div class="card-body">
-    <div class="card-title">心が折れない働き方設計</div>
-    <div class="card-meta">10分 / 3,015字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-career"><div class="side-bar"></div><div class="cat-badge">CAREER</div><div class="bg-num">17</div><div class="thumb-content"><div class="main-copy"><span class="hl">好きなのに</span><br><span class="pink">辞めたい</span>あなたへ</div><div class="sub-copy">消耗しないネイリストの「働き方設計」4つのルール</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#ddb849">17</div>
+    <div class="card-body">
+      <div class="card-title">心が折れない働き方設計</div>
+      <div class="card-meta">10分 / 3,015字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="18" onclick="showScript(18)">
-  <div class="card-num" style="background:#ddb849">18</div>
-  <div class="card-body">
-    <div class="card-title">伸びなくなる人の特徴</div>
-    <div class="card-meta">10分 / 3,517字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-career"><div class="side-bar"></div><div class="cat-badge">CAREER</div><div class="bg-num">18</div><div class="thumb-content"><div class="main-copy">当てはまったら<br><span class="pink">要注意</span></div><div class="sub-copy">伸びなくなるネイリスト5つの停滞サイン</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#ddb849">18</div>
+    <div class="card-body">
+      <div class="card-title">伸びなくなる人の特徴</div>
+      <div class="card-meta">10分 / 3,517字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="19" onclick="showScript(19)">
-  <div class="card-num" style="background:#ddb849">19</div>
-  <div class="card-body">
-    <div class="card-title">伸びる人はここで学び直す</div>
-    <div class="card-meta">10分 / 2,927字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-career"><div class="side-bar"></div><div class="cat-badge">CAREER</div><div class="bg-num">19</div><div class="thumb-content"><div class="main-copy">伸びる人は<br><span class="teal">ここで学び直す</span></div><div class="sub-copy">ネイリスト人生の5つの分岐点</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#ddb849">19</div>
+    <div class="card-body">
+      <div class="card-title">伸びる人はここで学び直す</div>
+      <div class="card-meta">10分 / 2,927字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="20" onclick="showScript(20)">
-  <div class="card-num" style="background:#ddb849">20</div>
-  <div class="card-body">
-    <div class="card-title">ネイリストのキャリア戦略</div>
-    <div class="card-meta">12分 / 3,853字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-career"><div class="side-bar"></div><div class="cat-badge">CAREER</div><div class="bg-num">20</div><div class="thumb-content"><div class="main-copy"><span class="teal">50歳</span>でも<br>現役でいるために</div><div class="sub-copy">ネイリスト「将来不安ゼロ」のキャリア戦略</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#ddb849">20</div>
+    <div class="card-body">
+      <div class="card-title">ネイリストのキャリア戦略</div>
+      <div class="card-meta">12分 / 3,853字</div>
+    </div>
   </div>
 </div>
 </div>
 <div class="cat-group" data-cat="value">
-<div class="group-header" style="background:#e85d75">価値設計<span class="group-range">21〜25</span></div>
+<div class="group-header" style="background:#e85d75"><span class="group-num">⑤</span>価値設計<span class="group-range">21〜25</span></div>
 <div class="card" data-id="21" onclick="showScript(21)">
-  <div class="card-num" style="background:#e85d75">21</div>
-  <div class="card-body">
-    <div class="card-title">&quot;高い&quot;が信頼になる瞬間</div>
-    <div class="card-meta">10分 / 3,427字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-value"><div class="side-bar"></div><div class="cat-badge">VALUE</div><div class="bg-num">21</div><div class="thumb-content"><div class="main-copy">「<span class="hl">高い</span>」が<br><span class="gold">信頼に変わる</span>瞬間</div><div class="sub-copy">安売りサロンが選ばれなくなる本当の理由</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#e85d75">21</div>
+    <div class="card-body">
+      <div class="card-title">"高い"が信頼になる瞬間</div>
+      <div class="card-meta">10分 / 3,427字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="22" onclick="showScript(22)">
-  <div class="card-num" style="background:#e85d75">22</div>
-  <div class="card-body">
-    <div class="card-title">値上げしても離れない理由</div>
-    <div class="card-meta">10分 / 4,095字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-value"><div class="side-bar"></div><div class="cat-badge">VALUE</div><div class="bg-num">22</div><div class="thumb-content"><div class="main-copy">値上げしても<br>お客様は<br><span class="teal">離れません</span></div><div class="sub-copy">怖いのは値上げじゃなくて○○だった</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#e85d75">22</div>
+    <div class="card-body">
+      <div class="card-title">値上げしても離れない理由</div>
+      <div class="card-meta">10分 / 4,095字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="23" onclick="showScript(23)">
-  <div class="card-num" style="background:#e85d75">23</div>
-  <div class="card-body">
-    <div class="card-title">安いと逆に不安になる心理</div>
-    <div class="card-meta">10分 / 3,845字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-value"><div class="side-bar"></div><div class="cat-badge">VALUE</div><div class="bg-num">23</div><div class="thumb-content"><div class="main-copy"><span class="hl">安いサロン</span>ほど<br><span class="pink">信用されない</span></div><div class="sub-copy">お客様が「不安になる」価格の正体</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#e85d75">23</div>
+    <div class="card-body">
+      <div class="card-title">安いと逆に不安になる心理</div>
+      <div class="card-meta">10分 / 3,845字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="24" onclick="showScript(24)">
-  <div class="card-num" style="background:#e85d75">24</div>
-  <div class="card-body">
-    <div class="card-title">専門技術が&quot;資産&quot;になる理由</div>
-    <div class="card-meta">10分 / 4,221字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-value"><div class="side-bar"></div><div class="cat-badge">VALUE</div><div class="bg-num">24</div><div class="thumb-content"><div class="main-copy">あなたの技術は<br><span class="gold">"一生モノの資産"</span>です</div><div class="sub-copy">時給計算をやめた瞬間、サロンが変わる</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#e85d75">24</div>
+    <div class="card-body">
+      <div class="card-title">専門技術が"資産"になる理由</div>
+      <div class="card-meta">10分 / 4,221字</div>
+    </div>
   </div>
 </div>
 <div class="card" data-id="25" onclick="showScript(25)">
-  <div class="card-num" style="background:#e85d75">25</div>
-  <div class="card-body">
-    <div class="card-title">自信はどこから生まれるのか</div>
-    <div class="card-meta">11分 / 4,732字</div>
+  <div class="card-thumb-wrap">
+    <div class="mini-thumb theme-value"><div class="side-bar"></div><div class="cat-badge">VALUE</div><div class="bg-num">25</div><div class="thumb-content"><div class="main-copy">価格に迷う人が知らない<br>「<span class="gold">自信の正体</span>」</div><div class="sub-copy">根拠があれば、もう迷わない</div></div><div class="brand">@07nailschool</div></div>
+  </div>
+  <div class="card-info">
+    <div class="card-num" style="background:#e85d75">25</div>
+    <div class="card-body">
+      <div class="card-title">自信はどこから生まれるのか</div>
+      <div class="card-meta">11分 / 4,732字</div>
+    </div>
   </div>
 </div>
 </div>
