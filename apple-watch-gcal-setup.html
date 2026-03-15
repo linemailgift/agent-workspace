@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apple Watch × Googleカレンダー 5分前通知 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.8; }
+
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff; text-align: center; padding: 60px 20px 50px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(52,199,89,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(0,122,255,0.15) 0%, transparent 50%);
+}
+.hero > * { position: relative; z-index: 1; }
+.hero-icons { font-size: 3.5rem; margin-bottom: 16px; display: flex; justify-content: center; gap: 16px; align-items: center; }
+.hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+.hero p { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 500px; margin: 0 auto; }
+
+.container { max-width: 700px; margin: 0 auto; padding: 32px 20px 60px; }
+
+.method-badge {
+  display: inline-block; background: linear-gradient(135deg, #34c759, #30d158);
+  color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 14px;
+  border-radius: 20px; margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 1.4rem; font-weight: 800; margin-bottom: 24px; color: #1d1d1f;
+  padding-bottom: 12px; border-bottom: 3px solid #e5e5ea;
+}
+
+/* iPhone-style mockup */
+.phone-mockup {
+  background: #000; border-radius: 40px; padding: 12px; margin: 20px auto;
+  max-width: 320px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.phone-screen {
+  background: #f2f2f7; border-radius: 30px; overflow: hidden;
+}
+.phone-status-bar {
+  background: #f2f2f7; padding: 10px 24px 6px; display: flex; justify-content: space-between;
+  font-size: 0.7rem; font-weight: 600; color: #1d1d1f;
+}
+.phone-nav {
+  background: #f2f2f7; padding: 8px 16px; display: flex; align-items: center; gap: 8px;
+}
+.phone-nav .back { color: #007aff; font-size: 0.85rem; }
+.phone-nav .title { font-size: 1.05rem; font-weight: 700; flex: 1; text-align: center; margin-right: 40px; }
+
+.settings-list {
+  background: #fff; margin: 0 16px 12px; border-radius: 12px; overflow: hidden;
+}
+.settings-item {
+  display: flex; align-items: center; padding: 12px 16px; border-bottom: 0.5px solid #e5e5ea;
+  font-size: 0.85rem;
+}
+.settings-item:last-child { border-bottom: none; }
+.settings-icon {
+  width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center;
+  justify-content: center; margin-right: 12px; font-size: 1rem; flex-shrink: 0; color: #fff;
+}
+.settings-label { flex: 1; }
+.settings-value { color: #8e8e93; font-size: 0.8rem; margin-right: 4px; }
+.settings-arrow { color: #c7c7cc; font-size: 0.75rem; }
+.settings-section-header {
+  padding: 8px 16px 6px 32px; font-size: 0.72rem; color: #8e8e93;
+  text-transform: uppercase; font-weight: 500;
+}
+
+/* Toggle */
+.toggle {
+  width: 44px; height: 26px; border-radius: 13px; position: relative; flex-shrink: 0;
+}
+.toggle.on { background: #34c759; }
+.toggle.off { background: #e5e5ea; }
+.toggle::after {
+  content: ''; position: absolute; width: 22px; height: 22px; border-radius: 11px;
+  background: #fff; top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { right: 2px; }
+.toggle.off::after { left: 2px; }
+
+/* Highlight */
+.highlight-item { background: #e8f5e9 !important; }
+.highlight-item .settings-value { color: #34c759 !important; font-weight: 700; }
+
+/* Step */
+.step {
+  margin-bottom: 36px;
+}
+.step-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 1rem; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.step-num.blue { background: linear-gradient(135deg, #007aff, #5856d6); }
+.step-num.green { background: linear-gradient(135deg, #34c759, #30d158); }
+.step-num.orange { background: linear-gradient(135deg, #ff9500, #ff6b00); }
+.step-num.red { background: linear-gradient(135deg, #ff3b30, #ff2d55); }
+.step-text { font-size: 1rem; font-weight: 700; }
+.step-desc { font-size: 0.9rem; color: #636366; margin-bottom: 16px; padding-left: 48px; }
+
+/* Tap indicator */
+.tap-indicator {
+  position: absolute; width: 40px; height: 40px; border-radius: 50%;
+  border: 3px solid #ff3b30; background: rgba(255,59,48,0.1);
+  animation: pulse 1.5s infinite; pointer-events: none;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tap-here {
+  display: inline-flex; align-items: center; gap: 4px; background: #ff3b30; color: #fff;
+  font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  margin-left: 8px; animation: pulse 1.5s infinite;
+}
+
+/* Provider cards */
+.provider-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0 16px 12px; }
+.provider-card {
+  background: #fff; border-radius: 12px; padding: 16px; text-align: center;
+  border: 2px solid transparent; transition: all 0.2s;
+}
+.provider-card.selected { border-color: #007aff; background: #f0f7ff; }
+.provider-icon { font-size: 2rem; margin-bottom: 6px; }
+.provider-name { font-size: 0.8rem; font-weight: 600; }
+
+/* Watch mockup */
+.watch-mockup {
+  width: 180px; height: 220px; background: #2c2c2e; border-radius: 44px; padding: 16px;
+  margin: 20px auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative;
+}
+.watch-mockup::before {
+  content: ''; position: absolute; right: -8px; top: 60px; width: 6px; height: 30px;
+  background: #3a3a3c; border-radius: 0 3px 3px 0;
+}
+.watch-screen {
+  width: 100%; height: 100%; background: #000; border-radius: 32px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center; padding: 12px;
+}
+.watch-time { color: #fff; font-size: 0.6rem; text-align: center; margin-bottom: 8px; }
+.watch-notif {
+  background: linear-gradient(135deg, #4285f4, #34a853); border-radius: 12px;
+  padding: 10px; text-align: center;
+}
+.watch-notif-icon { font-size: 1.2rem; margin-bottom: 4px; }
+.watch-notif-title { color: #fff; font-size: 0.6rem; font-weight: 700; }
+.watch-notif-body { color: rgba(255,255,255,0.8); font-size: 0.5rem; margin-top: 2px; }
+
+.watch-vibrate {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  margin-top: 8px;
+}
+.vibrate-line {
+  width: 3px; border-radius: 2px; background: #34c759;
+  animation: vibrate 0.5s infinite alternate;
+}
+.vibrate-line:nth-child(1) { height: 8px; animation-delay: 0s; }
+.vibrate-line:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.vibrate-line:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+.vibrate-line:nth-child(4) { height: 14px; animation-delay: 0.1s; }
+.vibrate-line:nth-child(5) { height: 8px; animation-delay: 0s; }
+@keyframes vibrate {
+  0% { transform: scaleY(0.5); }
+  100% { transform: scaleY(1); }
+}
+
+/* Tip box */
+.tip-box {
+  background: linear-gradient(135deg, #fff9e6, #fff3cd); border: 1px solid #ffd60a;
+  border-radius: 16px; padding: 20px; margin: 24px 0;
+}
+.tip-box h3 { font-size: 0.95rem; margin-bottom: 8px; }
+.tip-box p { font-size: 0.85rem; color: #636366; }
+
+.warning-box {
+  background: linear-gradient(135deg, #fff0f0, #ffe8e8); border: 1px solid #ff3b30;
+  border-radius: 16px; padding: 20px; margin: 24px 0;
+}
+.warning-box h3 { font-size: 0.95rem; color: #ff3b30; margin-bottom: 8px; }
+.warning-box p { font-size: 0.85rem; color: #636366; }
+
+/* Final check */
+.check-list { list-style: none; margin: 16px 0; }
+.check-list li {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid #e5e5ea; font-size: 0.9rem;
+}
+.check-list li:last-child { border-bottom: none; }
+.check-mark { color: #34c759; font-size: 1.2rem; flex-shrink: 0; }
+
+.flow-arrow { text-align: center; font-size: 1.5rem; color: #c7c7cc; margin: 16px 0; }
+
+@media (max-width: 400px) {
+  .hero h1 { font-size: 1.4rem; }
+  .container { padding: 20px 12px 40px; }
+  .phone-mockup { max-width: 280px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-icons">⌚ × 📅</div>
+  <h1>Apple Watch × Googleカレンダー<br>5分前通知 設定ガイド</h1>
+  <p>予定の5分前にApple Watchが振動して教えてくれる設定方法を画像付きで解説</p>
+</div>
+
+<div class="container">
+
+  <!-- ===== STEP 1 ===== -->
+  <div class="method-badge">おすすめ方法</div>
+  <h2 class="section-title">iPhoneの標準カレンダーにGoogle連携</h2>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num blue">1</div>
+      <div class="step-text">設定 → カレンダー → アカウント</div>
+    </div>
+    <div class="step-desc">iPhoneの「設定」アプリを開き、下にスクロールして「カレンダー」をタップ</div>
+
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ 設定</span>
+          <span class="title">カレンダー</span>
+        </div>
+        <div class="settings-section-header">アカウント</div>
+        <div class="settings-list">
+          <div class="settings-item highlight-item" style="position:relative;">
+            <div class="settings-icon" style="background:#007aff;">👤</div>
+            <div class="settings-label">アカウント</div>
+            <div class="settings-value">iCloud</div>
+            <div class="settings-arrow">›</div>
+            <span class="tap-here">ここをタップ</span>
+          </div>
+        </div>
+        <div class="settings-section-header">デフォルトの通知</div>
+        <div class="settings-list">
+          <div class="settings-item">
+            <div class="settings-label">デフォルトの通知時間</div>
+            <div class="settings-value">なし</div>
+            <div class="settings-arrow">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▼</div>
+
+  <!-- ===== STEP 2 ===== -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">2</div>
+      <div class="step-text">アカウントを追加 → Google</div>
+    </div>
+    <div class="step-desc">「アカウントを追加」をタップし、Googleを選択</div>
+
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ 戻る</span>
+          <span class="title">アカウントを追加</span>
+        </div>
+        <div style="padding: 16px;">
+          <div class="provider-grid">
+            <div class="provider-card">
+              <div class="provider-icon">☁️</div>
+              <div class="provider-name">iCloud</div>
+            </div>
+            <div class="provider-card selected">
+              <div class="provider-icon" style="font-size:1.6rem;">
+                <span style="color:#4285f4;">G</span><span style="color:#ea4335;">o</span><span style="color:#fbbc05;">o</span><span style="color:#4285f4;">g</span><span style="color:#34a853;">l</span><span style="color:#ea4335;">e</span>
+              </div>
+              <div class="provider-name" style="color:#007aff;font-weight:700;">Google<br><span class="tap-here">選択!</span></div>
+            </div>
+            <div class="provider-card">
+              <div class="provider-icon">🟦</div>
+              <div class="provider-name">Outlook</div>
+            </div>
+            <div class="provider-card">
+              <div class="provider-icon">🔵</div>
+              <div class="provider-name">Yahoo!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▼</div>
+
+  <!-- ===== STEP 3 ===== -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num green">3</div>
+      <div class="step-text">Googleログイン → カレンダーをON</div>
+    </div>
+    <div class="step-desc">Googleアカウントでログイン後、「カレンダー」のスイッチをONにする</div>
+
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ 戻る</span>
+          <span class="title">Gmail</span>
+        </div>
+        <div style="padding: 12px 0;">
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-label">メール</div>
+              <div class="toggle off"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">連絡先</div>
+              <div class="toggle off"></div>
+            </div>
+            <div class="settings-item highlight-item">
+              <div class="settings-label" style="font-weight:700;">カレンダー</div>
+              <div class="toggle on"></div>
+              <span class="tap-here">ON!</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">メモ</div>
+              <div class="toggle off"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▼</div>
+
+  <!-- ===== STEP 4 ===== -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num orange">4</div>
+      <div class="step-text">デフォルトの通知を「5分前」に設定</div>
+    </div>
+    <div class="step-desc">設定 → カレンダー → 「デフォルトの通知時間」→ 5分前を選択<br>※ これが一番大事！</div>
+
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ カレンダー</span>
+          <span class="title">デフォルトの通知</span>
+        </div>
+        <div style="padding: 12px 0;">
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-label">なし</div>
+            </div>
+            <div class="settings-item highlight-item">
+              <div class="settings-label" style="font-weight:700;">5分前</div>
+              <div style="color:#007aff;font-size:1.1rem;">✓</div>
+              <span class="tap-here">これ!</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">10分前</div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">15分前</div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">30分前</div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-label">1時間前</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▼</div>
+
+  <!-- ===== STEP 5: Watch ===== -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num red">5</div>
+      <div class="step-text">Apple Watchの通知を確認</div>
+    </div>
+    <div class="step-desc">Watchアプリ → 通知 → カレンダー がONになっていればOK！<br>5分前にこんな感じで届きます👇</div>
+
+    <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; align-items: center;">
+      <div>
+        <div class="watch-mockup">
+          <div class="watch-screen">
+            <div class="watch-time">9:55 AM</div>
+            <div class="watch-notif">
+              <div class="watch-notif-icon">📅</div>
+              <div class="watch-notif-title">ミーティング</div>
+              <div class="watch-notif-body">5分後 10:00 - 11:00</div>
+            </div>
+            <div class="watch-vibrate">
+              <div class="vibrate-line"></div>
+              <div class="vibrate-line"></div>
+              <div class="vibrate-line"></div>
+              <div class="vibrate-line"></div>
+              <div class="vibrate-line"></div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; font-size: 0.8rem; color: #34c759; font-weight: 700; margin-top: 8px;">ブルブル振動！</div>
+      </div>
+
+      <div>
+        <div class="phone-mockup" style="max-width: 260px;">
+          <div class="phone-screen">
+            <div class="phone-status-bar">
+              <span>9:41</span>
+              <span>📶 🔋</span>
+            </div>
+            <div class="phone-nav">
+              <span class="back">‹ Watch</span>
+              <span class="title">通知</span>
+            </div>
+            <div class="settings-section-header">Watchに通知を表示するApp</div>
+            <div class="settings-list">
+              <div class="settings-item highlight-item">
+                <div class="settings-icon" style="background:#ff3b30;">📅</div>
+                <div class="settings-label" style="font-weight:700;">カレンダー</div>
+                <div class="toggle on"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-icon" style="background:#007aff;">💬</div>
+                <div class="settings-label">メッセージ</div>
+                <div class="toggle on"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-icon" style="background:#34c759;">📞</div>
+                <div class="settings-label">電話</div>
+                <div class="toggle on"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TIP ===== -->
+  <div class="tip-box">
+    <h3>💡 より確実に気づくには</h3>
+    <p>iPhone → <strong>Watch</strong>アプリ → <strong>サウンドと触覚</strong> → <strong>「はっきり」</strong>を選ぶと、振動が強くなって見逃しにくくなります。</p>
+  </div>
+
+  <div class="warning-box">
+    <h3>⚠️ 通知が来ない場合はここをチェック</h3>
+    <p>
+      ・iPhoneの「集中モード / おやすみモード」がOFFか確認<br>
+      ・Apple Watchのサイレントモード（消音モード）がOFFか確認<br>
+      ・Watchアプリ → 通知 → カレンダーがONか確認
+    </p>
+  </div>
+
+  <!-- ===== Summary ===== -->
+  <h2 class="section-title">設定チェックリスト</h2>
+  <ul class="check-list">
+    <li><span class="check-mark">✅</span>iPhoneの設定にGoogleアカウントを追加した</li>
+    <li><span class="check-mark">✅</span>カレンダー同期をONにした</li>
+    <li><span class="check-mark">✅</span>デフォルト通知を「5分前」にした</li>
+    <li><span class="check-mark">✅</span>Watchアプリでカレンダー通知がON</li>
+    <li><span class="check-mark">✅</span>サイレントモード・集中モードがOFF</li>
+  </ul>
+
+</div>
+
+</body>
+</html>
