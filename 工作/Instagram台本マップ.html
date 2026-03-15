@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram台本マップ - 工作チャンネル</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    background: #fafafa; color: #262626; line-height: 1.7; padding: 20px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  a { color: #0095f6; text-decoration: none; }
+
+  .header {
+    text-align: center; padding: 44px 20px 32px; margin-bottom: 28px;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    border-radius: 20px; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; inset: 2px; background: #fff;
+    border-radius: 18px; z-index: 0;
+  }
+  .header > * { position: relative; z-index: 1; }
+  .header .ig-icon {
+    width: 48px; height: 48px; border-radius: 14px; margin: 0 auto 12px;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .header h1 { font-size: 1.5rem; color: #262626; margin-bottom: 4px; }
+  .header p { color: #8e8e8e; font-size: 0.88rem; }
+
+  .map { margin-bottom: 40px; }
+  .map h2 {
+    font-size: 1.1rem; color: #262626; margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid #dbdbdb;
+  }
+  .map-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;
+  }
+  .pillar {
+    background: #fff; border: 1px solid #dbdbdb; border-radius: 16px; padding: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .pillar:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .pillar-title { font-size: 0.95rem; font-weight: 700; color: #262626; margin-bottom: 4px; }
+  .pillar-desc { font-size: 0.78rem; color: #8e8e8e; margin-bottom: 10px; }
+  .pillar-count {
+    display: inline-block;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: #fff; padding: 2px 12px;
+    border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .pillar-list { list-style: none; }
+  .pillar-list li {
+    font-size: 0.82rem; color: #555; padding: 5px 0; border-bottom: 1px solid #efefef;
+    cursor: pointer; transition: color 0.15s;
+  }
+  .pillar-list li:hover { color: #262626; }
+  .pillar-list li:last-child { border-bottom: none; }
+  .pillar-list li .num { color: #c7c7c7; margin-right: 6px; font-size: 0.72rem; font-weight: 700; }
+
+  .filters { margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-btn {
+    background: #fff; border: 1px solid #dbdbdb; color: #8e8e8e; padding: 7px 18px;
+    border-radius: 24px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 500;
+  }
+  .filter-btn:hover { border-color: #262626; color: #262626; }
+  .filter-btn.active { background: #262626; color: #fff; border-color: #262626; }
+
+  .scripts-section { margin-bottom: 40px; }
+  .scripts-section h2 {
+    font-size: 1.1rem; color: #262626; margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid #dbdbdb;
+  }
+  .scripts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+
+  .script-card {
+    background: #fff; border: 1px solid #dbdbdb; border-radius: 16px;
+    padding: 22px; transition: box-shadow 0.2s;
+  }
+  .script-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .script-card .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .script-card h3 { font-size: 0.95rem; color: #262626; flex: 1; font-weight: 700; }
+  .script-card .tags { display: flex; gap: 6px; flex-shrink: 0; margin-left: 10px; }
+  .tag {
+    font-size: 0.65rem; padding: 3px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .tag-hook { background: #fce4ec; color: #c62828; }
+  .tag-brain { background: #e8f5e9; color: #2e7d32; }
+  .tag-steam { background: #e3f2fd; color: #1565c0; }
+  .tag-skill { background: #fff8e1; color: #f57f17; }
+  .tag-mama { background: #f3e5f5; color: #7b1fa2; }
+  .tag-howto { background: #e0f7fa; color: #00838f; }
+
+  .script-body { margin-top: 12px; }
+  .script-block {
+    margin-bottom: 6px; padding: 10px 14px; border-radius: 12px;
+    background: #fafafa; border: 1px solid #efefef;
+  }
+  .script-block-label {
+    font-size: 0.68rem; color: #8e8e8e; font-weight: 600; letter-spacing: 0.3px; margin-bottom: 4px;
+  }
+  .script-block [contenteditable] {
+    font-size: 0.84rem; color: #262626; outline: none; min-height: 20px;
+    border-bottom: 1px solid transparent; transition: all 0.2s;
+  }
+  .script-block [contenteditable]:focus { border-bottom-color: #0095f6; color: #000; }
+  .script-block [contenteditable]:hover { background: #f0f0f0; border-radius: 4px; }
+
+  .script-meta { display: flex; gap: 14px; margin-top: 12px; font-size: 0.74rem; color: #8e8e8e; }
+
+  .template-section { margin-bottom: 40px; }
+  .template-section h2 {
+    font-size: 1.1rem; color: #262626; margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid #dbdbdb;
+  }
+  .template-box {
+    background: #fff; border: 1px solid #dbdbdb; border-radius: 16px; padding: 24px; margin-bottom: 16px;
+  }
+  .template-box h3 { font-size: 0.95rem; color: #262626; margin-bottom: 12px; font-weight: 700; }
+  .t-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #efefef; align-items: baseline; }
+  .t-row:last-child { border-bottom: none; }
+  .t-time { font-size: 0.75rem; color: #8e8e8e; font-weight: 700; min-width: 70px; font-family: -apple-system, monospace; }
+  .t-label { font-size: 0.85rem; color: #262626; }
+  .t-note { font-size: 0.78rem; color: #8e8e8e; margin-left: 4px; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,250,250,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid #dbdbdb;
+    padding: 12px 0; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .toolbar .left { display: flex; gap: 8px; align-items: center; }
+  .toolbar .right { display: flex; gap: 8px; }
+  .count-display { font-size: 0.8rem; color: #8e8e8e; font-weight: 500; }
+
+  .footer {
+    text-align: center; padding: 32px; color: #8e8e8e;
+    font-size: 0.78rem; border-top: 1px solid #dbdbdb; margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 12px; }
+    .scripts-grid, .map-grid { grid-template-columns: 1fr; }
+    .script-card .card-top { flex-direction: column; }
+    .script-card .tags { margin-left: 0; margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="ig-icon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg>
+  </div>
+  <h1>Instagram Reels 台本マップ</h1>
+  <p>工作チャンネル｜1分リール × 30本｜クリックで編集可能</p>
+</div>
+
+<div class="toolbar">
+  <div class="left">
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterScripts('all')">全て</button>
+      <button class="filter-btn" onclick="filterScripts('hook')">衝撃フック</button>
+      <button class="filter-btn" onclick="filterScripts('brain')">脳科学・能力</button>
+      <button class="filter-btn" onclick="filterScripts('steam')">STEAM教育</button>
+      <button class="filter-btn" onclick="filterScripts('skill')">思考力・発想</button>
+      <button class="filter-btn" onclick="filterScripts('mama')">ママ共感</button>
+      <button class="filter-btn" onclick="filterScripts('howto')">ハウツー・実践</button>
+    </div>
+  </div>
+  <div class="right">
+    <span class="count-display" id="countDisplay">30本 表示中</span>
+  </div>
+</div>
+
+<div class="map">
+  <h2>コンテンツ構造マップ</h2>
+  <div class="map-grid">
+    <div class="pillar">
+      <div class="pillar-title">A. 衝撃フック系</div>
+      <div class="pillar-desc">「え、そうなの!?」で止める → 工作の価値に気づかせる</div>
+      <div class="pillar-count">6本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s01')"><span class="num">01</span>仕事の47%がAIに奪われる時代の子育て</li>
+        <li onclick="scrollToCard('s02')"><span class="num">02</span>スマホ3時間の子を工作に変えた方法</li>
+        <li onclick="scrollToCard('s03')"><span class="num">03</span>その声かけ、創造性を潰してます</li>
+        <li onclick="scrollToCard('s04')"><span class="num">04</span>100均のハサミが子供をダメにする</li>
+        <li onclick="scrollToCard('s05')"><span class="num">05</span>作品は捨ててOKです</li>
+        <li onclick="scrollToCard('s06')"><span class="num">06</span>多動は才能だった</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">B. 脳科学・能力開発系</div>
+      <div class="pillar-desc">科学的根拠で「工作=知育」を証明 → 信頼獲得</div>
+      <div class="pillar-count">5本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s07')"><span class="num">07</span>手は第二の脳。指先で地頭が育つ</li>
+        <li onclick="scrollToCard('s08')"><span class="num">08</span>工作でIQが上がる4つの理由</li>
+        <li onclick="scrollToCard('s09')"><span class="num">09</span>テストで測れない7つの力</li>
+        <li onclick="scrollToCard('s10')"><span class="num">10</span>空間認識能力はダンボールで育つ</li>
+        <li onclick="scrollToCard('s11')"><span class="num">11</span>器用さは才能じゃなくて回数</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">C. STEAM教育系</div>
+      <div class="pillar-desc">「工作=遊び」ではなく「工作=最強の教育」へ意識変革</div>
+      <div class="pillar-count">5本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s12')"><span class="num">12</span>割り箸鉄砲に隠れた科学の種</li>
+        <li onclick="scrollToCard('s13')"><span class="num">13</span>ガチャガチャの中に工学がある</li>
+        <li onclick="scrollToCard('s14')"><span class="num">14</span>算数嫌いは展開図で治る</li>
+        <li onclick="scrollToCard('s15')"><span class="num">15</span>センスは生まれつきじゃない</li>
+        <li onclick="scrollToCard('s16')"><span class="num">16</span>プログラミングの前に工作をやれ</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">D. 思考力・発想力系</div>
+      <div class="pillar-desc">「考える力」を具体的に見せる → 教育意識高い層を獲得</div>
+      <div class="pillar-count">5本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s17')"><span class="num">17</span>天才のひらめきには「型」がある</li>
+        <li onclick="scrollToCard('s18')"><span class="num">18</span>失敗を「面白い」に変える魔法の言葉</li>
+        <li onclick="scrollToCard('s19')"><span class="num">19</span>問題解決力は工作で育つ</li>
+        <li onclick="scrollToCard('s20')"><span class="num">20</span>設計図を見てパッとわかる子の秘密</li>
+        <li onclick="scrollToCard('s21')"><span class="num">21</span>ギフテッドの才能を伸ばす3条件</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">E. ママ共感系</div>
+      <div class="pillar-desc">育児の不安・悩みに寄り添う → 深い信頼 → LINE誘導</div>
+      <div class="pillar-count">5本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s22')"><span class="num">22</span>片付けなさい!を1日10回言うママへ</li>
+        <li onclick="scrollToCard('s23')"><span class="num">23</span>不器用な子なんていない</li>
+        <li onclick="scrollToCard('s24')"><span class="num">24</span>「上手だね」の落とし穴</li>
+        <li onclick="scrollToCard('s25')"><span class="num">25</span>おうちモンテッソーリは今日から始められる</li>
+        <li onclick="scrollToCard('s26')"><span class="num">26</span>塾より5000円の道具セット</li>
+      </ul>
+    </div>
+    <div class="pillar">
+      <div class="pillar-title">F. ハウツー・実践系</div>
+      <div class="pillar-desc">「やってみよう」と行動させる → 保存率UP → アルゴリズム優遇</div>
+      <div class="pillar-count">4本</div>
+      <ul class="pillar-list">
+        <li onclick="scrollToCard('s27')"><span class="num">27</span>自由研究は1日で終わる</li>
+        <li onclick="scrollToCard('s28')"><span class="num">28</span>おうちゲーセンの作り方</li>
+        <li onclick="scrollToCard('s29')"><span class="num">29</span>100マス計算より100マス工作</li>
+        <li onclick="scrollToCard('s30')"><span class="num">30</span>エジソンもダ・ヴィンチも工作少年だった</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="template-section">
+  <h2>1分リール 台本テンプレート</h2>
+  <div class="map-grid">
+    <div class="template-box">
+      <h3>基本構造（全台本共通）</h3>
+      <div class="t-row"><span class="t-time">0:00-0:03</span><span class="t-label">フック</span><span class="t-note">— スクロールを止める1文</span></div>
+      <div class="t-row"><span class="t-time">0:03-0:10</span><span class="t-label">問題提起</span><span class="t-note">— ママの不安・悩みに共感</span></div>
+      <div class="t-row"><span class="t-time">0:10-0:45</span><span class="t-label">本題</span><span class="t-note">— 1つだけ。偉人・研究で裏付け。</span></div>
+      <div class="t-row"><span class="t-time">0:45-0:55</span><span class="t-label">まとめ</span><span class="t-note">— 結論を1文で繰り返す</span></div>
+      <div class="t-row"><span class="t-time">0:55-1:00</span><span class="t-label">CTA</span><span class="t-note">— 保存/フォロー/コメント誘導</span></div>
+    </div>
+    <div class="template-box">
+      <h3>工作チャンネル 編集のコツ</h3>
+      <div class="t-row"><span class="t-time">映像</span><span class="t-label">工作シーン（手元アップ）+ 顔出しトーク交互。子供の笑顔は最強素材。</span></div>
+      <div class="t-row"><span class="t-time">テロップ</span><span class="t-label">偉人名・研究結果はテロップで権威づけ。数字は大きく表示。</span></div>
+      <div class="t-row"><span class="t-time">BGM</span><span class="t-label">明るいポップ系。教育系は信頼感のあるピアノ系も相性良い。</span></div>
+      <div class="t-row"><span class="t-time">CTA</span><span class="t-label">「保存してお子さんと一緒にやってみて」が最強。</span></div>
+      <div class="t-row"><span class="t-time">キャプション</span><span class="t-label">概要欄にLINE特典リンク。本文は「あなたのお子さんはどう?」で締める。</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="scripts-section">
+  <h2>全30本 台本一覧（クリックで編集可能）</h2>
+  <div class="scripts-grid" id="scriptsGrid">
+
+    <!-- A. 衝撃フック系 -->
+
+    <div class="script-card" id="s01" data-cat="hook">
+      <div class="card-top">
+        <h3>01. 仕事の47%がAIに奪われる時代の子育て</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「今ある仕事の47%がAIに奪われる。オックスフォード大学の研究結果です」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">そんな時代にうちの子は大丈夫?って不安になりますよね。プログラミング?英語?実はもっと大事なことがある。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">AIに奪われない力って「正解のない問いに挑む力」なんです。これ、工作でめちゃくちゃ育つ。何を作ろう?どうやったらできる?壊れた、どう直す?全部正解がない。スティーブ・ジョブズは養父のガレージで電子部品をいじって育った。ラリー・ペイジは家中のものを分解してた。藤井聡太はモンテッソーリの手作りおもちゃ。未来を作った人たちは全員「手で考える子供」だった。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">AI時代を生き抜く力は、リビングの工作から始まります。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">この投稿保存して。工作の始め方はプロフィールのリンクから。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s02" data-cat="hook">
+      <div class="card-top">
+        <h3>02. スマホ3時間の子を工作に変えた方法</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「小学生のスマホ利用時間、平均3時間超。これ内閣府の調査です」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">取り上げると大泣き。でも放置すると3時間。この悩み、工作で解決できるんです。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">ゲーム好きな子ほど工作にハマる。なぜか。ゲームと工作は「夢中になる構造」が同じだから。攻略する楽しさ、クリアした達成感、もっと上手くやりたい向上心。ただし大きな違いが1つ。ゲームは「消費」、工作は「創造」。おうちゲーセンって知ってます?ガチャガチャ、クレーンゲーム、スロットマシン。全部ダンボールで作れる。見る側から作る側に変わった瞬間、工作の2時間は黄金の時間になる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">消費モードから創造モードへ。ゲーム好きな子こそ工作にハマります。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">おうちゲーセンの作り方、プロフィールのリンクから無料で見れます。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s03" data-cat="hook">
+      <div class="card-top">
+        <h3>03. その声かけ、創造性を潰してます</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「"危ない!" "貸して、やってあげる" この声かけ、子供の創造性を潰してます」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">良かれと思って言ってるその一言。スタンフォード大学の研究でも、子供のやる気と創造性に悪影響があるとわかってる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作中のNGワード5つ。「危ない」「違うでしょ」「貸して」「丁寧にやって」「何これ」。全部、子供の挑戦を止めてる言葉。じゃあ何て言えばいいか。最強の声かけはたった一言。「どうすればいいと思う?」これだけ。ハーバード大学の「プロジェクト・ゼロ」でも、答えを教えずに問いかけることが創造性を伸ばすと証明されてる。沈黙を恐れないこと。子供は考えてる時間が一番成長してる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">答えを教えない。「どうすればいいと思う?」この一言で創造性は守れます。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">心当たりあるママ、コメントで教えて。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s04" data-cat="hook">
+      <div class="card-top">
+        <h3>04. 100均のハサミが子供をダメにする</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「工作の道具、100均で十分でしょ?いいえ。切れないハサミが子供をダメにしてます」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">うちの子不器用で…って思ってるお母さん。それ、子供の問題じゃなくて道具の問題かもしれません。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">弘法筆を選ばずは達人の話。初心者の子供こそ良い道具が必要。切れないハサミで無理やり切って「自分は下手だ」って思い込む。これが一番もったいない。必要な道具は7つだけ。フィットカットカーブジュニア約700円、低温グルーガン約1500円、カッターマットA3約1000円。全部合わせても5000円前後。塾1ヶ月分以下。道具への投資は成功体験への投資です。素材は100均でOK。道具だけちゃんとしたものを。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">道具に5000円。塾より安くて効果は一生モノです。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">道具リストはプロフィールのリンクから。保存しておいてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s05" data-cat="hook">
+      <div class="card-top">
+        <h3>05. 作品は捨ててOKです</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「子供の工作作品、はっきり言います。捨ててOKです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">どんどん増える作品、捨てたら泣かれそう。でも置き場所もない。この悩み、考え方を変えれば一瞬で解決する。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作で本当に価値があるのは「作品」じゃなくて「作った経験」。頭の中にちゃんと残ってる。だから捨てていい。ただし手順がある。まず作品を持って写真を撮る。Googleフォトでアルバムにする。そして「卒業式」をする。「捨てる」じゃなくて「卒業」。ありがとう、楽しかったねって声をかけて送り出す。ただし絶対に親が勝手に捨てないこと。卒業を決めるのは子供自身です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">大切なのは作品じゃなくて経験。写真を撮って卒業させよう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">この方法いいなって思ったらフォローしてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s06" data-cat="hook">
+      <div class="card-top">
+        <h3>06. 多動は才能だった</h3>
+        <div class="tags"><span class="tag tag-hook">衝撃フック</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「うちの子、じっとしてられない。その"落ち着きのなさ"、実はものすごい才能です」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">授業中に落ち着きがない、先生に注意されてばかり。でもその裏にはハイパーフォーカスという驚きの能力が隠れてる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">エジソン、学校わずか3ヶ月で退学。でも生涯1000件以上の特許を取った。マイケル・フェルプスはADHDと診断されたけどオリンピック金メダル23個。2人の共通点は「好きなことへの異常な集中力」。これがハイパーフォーカス。工作はこの力を引き出す最高の舞台。正解がない。自由に作れる。手を動かし続けられる。多動の子が2時間黙って没頭する。それが工作の力。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">多動は欠点じゃなくて才能。工作がその才能を開花させます。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">同じ悩みを持つママ、コメントで教えて。一人じゃないよ。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ（ADHD傾向の子）</span></div>
+    </div>
+
+    <!-- B. 脳科学・能力開発系 -->
+
+    <div class="script-card" id="s07" data-cat="brain">
+      <div class="card-top">
+        <h3>07. 手は第二の脳。指先で地頭が育つ</h3>
+        <div class="tags"><span class="tag tag-brain">脳科学</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「脳の運動野のうち、手と指に割り当てられた面積は約3分の1。つまり手を使えば脳の3分の1が動く」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">「手は第二の脳」って聞いたことありますよね。でも具体的にどういうことかわかりにくい。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">ペンフィールドのホムンクルスって知ってます?脳の中で体の各部位がどれくらいの面積を占めてるかを示した図。手と指がめちゃくちゃデカい。つまり工作で「切る・貼る・組む」をやるだけで脳の広い範囲が活性化する。レオナルド・ダ・ヴィンチが画家で科学者で発明家だったのは、常に手を動かしていたから。藤井聡太もモンテッソーリの手作りおもちゃで育った。賢い頭脳は指先から作られます。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">手を使えば脳の3分の1が動く。工作は最強の脳トレです。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">保存してパパにもシェアしてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s08" data-cat="brain">
+      <div class="card-top">
+        <h3>08. 工作でIQが上がる4つの理由</h3>
+        <div class="tags"><span class="tag tag-brain">脳科学</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「子供が工作に夢中な時、"勉強もして"って思ったこと、ありません?それ、めちゃくちゃもったいない」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">実は工作中、子供の脳はIQの4つの構成要素を全部鍛えてるんです。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">IQは4つで構成されてる。1つ目、視覚的推理力。設計図を見て完成形をイメージする力。2つ目、ワーキングメモリ。「次にこうして、その後こうして」と手順を覚えておく脳の作業台。3つ目、処理速度。ハサミを正確に早く動かす力。4つ目、言語理解。「どうやって作ったの?」と説明する力。ドリルとの決定的な違いは「楽しいかどうか」。楽しい時にドーパミンが出て、学習効率が爆上がりする。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">楽しみながら地頭を鍛える。これが工作が最強のIQトレーニングである理由。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">この投稿保存して、工作中のお子さんを褒めてあげてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s09" data-cat="brain">
+      <div class="card-top">
+        <h3>09. テストで測れない7つの力</h3>
+        <div class="tags"><span class="tag tag-brain">脳科学</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「人生で本当に大切な力って、テストでは測れないんです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ノーベル経済学賞のヘックマン教授が証明した。幼少期の非認知能力が年収・健康・犯罪率すべてに影響すると。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作で育つ非認知能力は7つ。集中力、創造力、忍耐力、自己肯定感、論理的思考力、計画力、応用力。全部同時に。ハサミで集中し、何を作るか創造し、うまくいかなくても耐え、完成して自信がつき、手順を考えて論理力が育ち、段取りで計画力、材料の工夫で応用力。ただ遊んでるように見えて、7つの力が同時に成長してる。これを魔法の時間と呼ばずに何と呼ぶ?</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">工作の時間は7つの力を育てる魔法の時間です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">お子さんの工作時間、大事にしてあげて。フォローで応援してね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s10" data-cat="brain">
+      <div class="card-top">
+        <h3>10. 空間認識能力はダンボールで育つ</h3>
+        <div class="tags"><span class="tag tag-brain">脳科学</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「サイコロの展開図、頭の中で組み立てられる?工作好きな子はこれがスイスイできちゃう」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">空間認識能力って算数、スポーツ、読書、全部に直結する超重要スキル。NASAの宇宙飛行士選考にもテスト項目がある。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">この能力を鍛える最強の方法がダンボール工作。ビー玉コースターを作る時、「ここを通って、ここで曲がって、ここで落ちる」って頭の中で3D設計してる。これがメンタルローテーション。頭の中で図形をクルクル回す力。建築家の安藤忠雄も幼少期は模型作りに夢中だった。難しいドリルよりダンボールとハサミ。秘密基地を作るだけで空間認識能力はグングン育つ。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">ダンボール1枚で空間認識能力が育つ。ドリルより楽しくて効果的。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">保存して週末にお子さんとやってみてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s11" data-cat="brain">
+      <div class="card-top">
+        <h3>11. 器用さは才能じゃなくて回数</h3>
+        <div class="tags"><span class="tag tag-brain">脳科学</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「うちの子、不器用だから…って諦めてるお母さん。器用さは才能じゃなくて回数です」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">脳科学の「神経の可塑性」って知ってます?脳は使った分だけ発達する。ピアニストのMRI見ると手の運動野がめちゃくちゃ発達してる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">つまり手を動かせば動かすほど器用になる。才能じゃなくて経験値の問題。毎日5分でいい。折り紙を1つ折る。ビーズを通す。100均のリリアンをやる。藤井聡太がモンテッソーリのビーズ通しをやってたの知ってます?あの集中力と手先の器用さはそこから来てる。ガンプラも最高のトレーニング。大事なのは「毎日少しずつ」。1日5分を30日続けたら150分。それだけで見違えるほど器用になる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">毎日5分。それだけで一生モノの器用さが手に入ります。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">今日から5分始めてみて。やってみたらコメントで報告してね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <!-- C. STEAM教育系 -->
+
+    <div class="script-card" id="s12" data-cat="steam">
+      <div class="card-top">
+        <h3>12. 割り箸鉄砲に隠れた科学の種</h3>
+        <div class="tags"><span class="tag tag-steam">STEAM</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「割り箸鉄砲って遊んでるだけに見えるでしょ?実は"弾性エネルギー"の実験してるんです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">理科嫌いの多くは教科書の文字だけで理解しようとしてつまずいてる。でも工作で遊んでるその瞬間、科学の芽が育ち始めてる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作に隠れた科学の種5つ。割り箸鉄砲の「弾性」。カードガチャの「摩擦」。じゃんけんゲームの「磁力」。ビー玉コースターの「重力」。グルーガンの「化学変化」。全部、中学理科の単元に直結してる。ノーベル物理学賞の湯川秀樹博士は、幼少期に手を動かす遊びに夢中だった。教科書で暗記する前に手で触れて体感する。「なるほど!」の体験があるかないかで授業の理解度は全然違う。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">工作は遊びに見えて、科学の実験。理科の授業が楽しくなる近道です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">理科好きに育てたいママ、フォローしてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s13" data-cat="steam">
+      <div class="card-top">
+        <h3>13. ガチャガチャの中に工学がある</h3>
+        <div class="tags"><span class="tag tag-steam">STEAM</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「ガチャガチャの中に、てこ・滑車・歯車・リンク機構。工学の基礎が全部入ってる」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">「これ、どうやって動いてるの?」って子供に聞かれたこと、ありませんか?その好奇心が工学の入り口。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">ダンボールの両替機には「てこの原理」。エレベーター工作には「滑車」。ガチャガチャやエスカレーターには「歯車」。お小遣いマシーンには「リンク機構」。回転する力をまっすぐ動く力に変換する仕組み。理屈はわからなくても「こう動くはず」っていう直感が育つ。レオナルド・ダ・ヴィンチは500年前にヘリコプターの設計図を書いた。工学的な直感は、手で作って覚える。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">おもちゃ工作は工学の入門書。作って触って動かして理解する。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">工作図面はプロフィールのリンクから無料でもらえるよ。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s14" data-cat="steam">
+      <div class="card-top">
+        <h3>14. 算数嫌いは展開図で治る</h3>
+        <div class="tags"><span class="tag tag-steam">STEAM</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「算数嫌いのお子さん、センスがないんじゃなくて体感する経験が足りないだけです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">図形問題ができない、単位の計算がお手上げ。実は工作を1回やるだけで「あ、そういうことか!」ってなる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">箱を作る時、展開図を計算してる。3+4+3+4+のりしろ1で15cm。これ、算数そのもの。円カッターで丸を切る時、直径5cm掛ける3.14で15.7cm。円周率を体で覚えてる。スロットマシンのダイヤル、4掛ける4掛ける4で64通り。当たる確率は64分の1。確率の授業がスーッと入る。歯車の角度計算は360度割る12で30度。手で体感した数字は、教科書で暗記した数字より100倍強い。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">算数は体感するもの。工作が最高の算数教材です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">保存してお子さんと一緒にやってみてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s15" data-cat="steam">
+      <div class="card-top">
+        <h3>15. センスは生まれつきじゃない</h3>
+        <div class="tags"><span class="tag tag-steam">STEAM</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「うちの子、絵も下手だしセンスないから…。お母さん、センスは生まれつきじゃありません」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">「センスは知識の集積である」って言葉があるんです。知れば知るほどセンスは育つ。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作の仕上げは最高のアートトレーニング。化粧板を貼る時に「この色とこの色、合うかな?」って考える。ポスカで模様を描く時に「左右対称にしよう」って意識する。この「色と形の判断」の積み重ねがセンスになる。デザイナーの佐藤オオキさんも言ってる。センスは特別な才能じゃなくて判断の回数。正解のない芸術の世界で「自分の好き」を表現する経験がアート脳を育てる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">センスは回数で育つ。工作の仕上げは毎回がアートの授業です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">お子さんの作品、コメントで見せてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s16" data-cat="steam">
+      <div class="card-top">
+        <h3>16. プログラミングの前に工作をやれ</h3>
+        <div class="tags"><span class="tag tag-steam">STEAM</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「プログラミング教室に通わせようか迷ってるお母さん、ちょっと待って」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">2020年にプログラミング教育が必修化されて焦ってる親は多い。でもプログラミング的思考って、工作で全部身につく。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">プログラミング的思考の5つの要素。分解、パターン認識、抽象化、アルゴリズム、デバッグ。工作で全部やってる。大きな作品を部品に分ける=分解。「前もこうやったら上手くいった」=パターン認識。設計図を描く=抽象化。手順を考える=アルゴリズム。壊れたのを直す=デバッグ。MITのパパート教授も「手で触れる学びが最も深い理解を生む」って言ってる。プログラミング教室の前にまずリビングで工作を。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">プログラミング的思考は工作で全部育つ。画面の前より先にハサミを持とう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">この事実、知らないママ多いから保存して広めてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <!-- D. 思考力・発想力系 -->
+
+    <div class="script-card" id="s17" data-cat="skill">
+      <div class="card-top">
+        <h3>17. 天才のひらめきには「型」がある</h3>
+        <div class="tags"><span class="tag tag-skill">思考力</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「何作ったらいいかわかんない…って言われたこと、ありません?アイデアの出し方には"型"がある」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">天才的なひらめきって才能だと思うでしょ?違うんです。型を知ってるかどうかの差。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">アイデアの型は4つ。もしも法「もしも空を飛べたら何を作る?」。かけ合わせ法「寿司+ベルトコンベア=回転寿司」「電話+コンピュータ=スマホ」。お悩み解決法「暗い部屋、どうする?→懐中電灯を作ろう」。なりきり法「ドラえもんだったら何を出す?」。ダ・ヴィンチのヘリコプター設計図も「鳥みたいに飛べたら」のもしも法。東京大学の研究でも、創造的な問いかけで子供の発散的思考力が上がると証明されてる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">もしも・かけ合わせ・お悩み・なりきり。この4つの型でアイデアは無限に出る。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">お子さんと一緒に試してみて。保存しておいてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s18" data-cat="skill">
+      <div class="card-top">
+        <h3>18. 失敗を「面白い」に変える魔法の言葉</h3>
+        <div class="tags"><span class="tag tag-skill">思考力</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「子供が工作で失敗した時、"大丈夫だよ"って言ってません?もっと効果的な言葉がある」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">失敗して泣く子に「大丈夫、上手にできてるよ」は嘘になる。子供はわかってる。じゃあ何て言えばいいか。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">「面白いことになったね、どうする?」これが魔法の言葉。失敗を否定しない。面白いと言い換える。そして「どうする?」で考えさせる。エジソンは「うまくいかない方法を1万通り発見しただけ」って言った。キャロル・ドゥエック教授の研究でも、失敗を「学びの機会」と捉える声かけをされた子は、挑戦を恐れなくなるとわかってる。家族全員で失敗を笑える空気を作ろう。それが一番の教育。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">「面白いことになったね、どうする?」この一言で失敗が学びに変わる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">使ってみた人、コメントで感想教えてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s19" data-cat="skill">
+      <div class="card-top">
+        <h3>19. 問題解決力は工作で育つ</h3>
+        <div class="tags"><span class="tag tag-skill">思考力</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「"あー失敗した!"からの切り替え。この力が将来ものすごく大事になる」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">問題解決力って社会に出てから最も求められるスキル。でも教科書では教えてくれない。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作中に起きること。切りすぎた、くっつかない、イメージと違う。全部「問題」。でもそこで「じゃあこうしよう」って考える。これが問題解決力のトレーニング。しかも子供の面白いところは、失敗をユーモアに変える天才だってこと。切りすぎた穴を「窓にする!」って言い出す。ピカソは言った、「すべての子供はアーティストだ」。ふざけや大袈裟の中に隠れた高度な知性を、大人が見つけてあげること。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">工作の失敗は問題解決のトレーニング。子供の発想を認めてあげよう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">お子さんの面白い発想、コメントでシェアしてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s20" data-cat="skill">
+      <div class="card-top">
+        <h3>20. 設計図を見てパッとわかる子の秘密</h3>
+        <div class="tags"><span class="tag tag-skill">思考力</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「設計図を見てパッと完成形が浮かぶ子っていますよね。この力、視覚思考力っていうんです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ハワード・ガードナーの多重知能理論で、視覚空間的知能は8つの知能の1つ。工作で最も鍛えられる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作で図面を読む時、脳の中に「変換回路」が作られる。山折り線、谷折り線。平面の記号を見て立体の動きを想像する。この回路は一度できると一生使える。さらに面白いのが「体が定規になる」こと。指の幅が1cm、手のひらが10cm、腕を広げると身長と同じ。日本の「尺・寸」も体から生まれた単位。工作をやってる子は、見ただけでサイズ感がわかるようになる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">図面を読む力は一生の武器。工作で脳に変換回路を作ろう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">工作図面の無料ダウンロードはプロフィールのリンクから。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s21" data-cat="skill">
+      <div class="card-top">
+        <h3>21. ギフテッドの才能を伸ばす3条件</h3>
+        <div class="tags"><span class="tag tag-skill">思考力</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「うちの子、こだわりが強すぎて周りとなじめない。もしかしたらギフテッドかもしれません」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ギフテッドの才能を伸ばした親には共通点がある。エジソンのお母さんナンシー、ジョブズの養父ポール。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">3つの条件。1、環境を整える。好きなことに没頭できる場所と道具を用意する。2、認める。「変わってる」じゃなくて「面白い考え方だね」と個性を肯定する。3、完璧を求めすぎない。ギフテッドの子は自分に厳しい。完璧じゃなくていいよと言ってあげる。工作は正解がないからギフテッドにとって最大の解放感。自分の世界を自由に表現できる。アインシュタインもピカソもニコラ・テスラも、手を動かす子供だった。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">環境・認める・完璧を求めない。この3つでギフテッドの才能は開花する。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">もっと詳しく知りたい方、プロフィールのリンクから無料で相談できます。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ（ギフテッド傾向の子）</span></div>
+    </div>
+
+    <!-- E. ママ共感系 -->
+
+    <div class="script-card" id="s22" data-cat="mama">
+      <div class="card-top">
+        <h3>22. 片付けなさい!を1日10回言うママへ</h3>
+        <div class="tags"><span class="tag tag-mama">ママ共感</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「片付けなさい!って1日に何回言ってますか?散らかるのは子供のせいじゃなくて環境のせいです」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">工作は子供の成長にいい。わかってる。でも片付けのストレスがすごい。これ、環境を整えるだけで解決する。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">モンテッソーリ式5つのルール。1、道具の住所を決める。ハサミのおうちはここ、って写真ラベルを貼る。2、IKEAのロースコグみたいな3段ワゴンに全部まとめる。3、レジャーシートの上だけで作業する。4、砂時計タイマーで「この砂が落ちるまでにお片付け」。5、片付けをゲームにする。「3分で全部おうちに帰してあげよう!」。忙しいお母さんこそモンテッソーリは相性がいい。仕組みを作れば子供は自分でやる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">仕組みを作れば「片付けなさい」は言わなくてよくなる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">収納アイデアシートはプロフィールのリンクから。保存してね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s23" data-cat="mama">
+      <div class="card-top">
+        <h3>23. 不器用な子なんていない</h3>
+        <div class="tags"><span class="tag tag-mama">ママ共感</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「うちの子不器用だから工作は向いてない。お母さん、それ道具のせいかもしれません」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">不器用なのではなく、道具の正しい使い方を知らないだけ。知れば誰でもできるようになる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">例えばハサミ。持ち方、開き方、紙の送り方。この3つを教えるだけで全然違う。カッターは刃を1メモリだけ出す。それ以上出すと折れて危ない。グルーガンは100度以上になる。だから低温タイプを選ぶ。ダンボールには「目」がある。目に沿って切ると綺麗、逆らうとボロボロ。これ全部「知ってるかどうか」の差。力任せではなく知恵を使って作業する。一度覚えたら一生使えるスキルです。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">不器用なんじゃない、道具を知らなかっただけ。正しく教えれば誰でもできる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">道具の使い方動画、プロフィールのリンクから見れるよ。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s24" data-cat="mama">
+      <div class="card-top">
+        <h3>24. 「上手だね」の落とし穴</h3>
+        <div class="tags"><span class="tag tag-mama">ママ共感</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「子供の工作を見て"上手だね!"って褒めてるお母さん。実はそれ、逆効果かもしれません」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ドゥエック教授の有名な研究。結果を褒められた子は次に難しい課題を避ける。努力を褒められた子は挑戦し続ける。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">「上手だね」は結果への評価。これを言われると子供は「上手じゃないとダメなんだ」と感じて挑戦を恐れるようになる。代わりに過程を褒める。「すごく集中してたね」「この色の組み合わせ、自分で考えたの?」「前より細かく切れるようになったね」。共感→質問→一緒に考える。この3ステップ。失敗した時は「失敗じゃないよ、うまくいかない方法を1つ見つけたんだよ」。エジソンの言葉を借りるのもアリ。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">結果じゃなくて過程を褒める。それだけで子供は挑戦を恐れなくなる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">声かけフレーズ集はプロフィールのリンクから無料で受け取れるよ。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s25" data-cat="mama">
+      <div class="card-top">
+        <h3>25. おうちモンテッソーリは今日から始められる</h3>
+        <div class="tags"><span class="tag tag-mama">ママ共感</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「モンテッソーリ教育、特別な教室に通わなくてもおうちで今日からできるって知ってました?」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">藤井聡太、ジェフ・ベゾス、ラリー・ペイジ、ビル・ゲイツ。全員モンテッソーリ教育出身。でも教室は高い。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">おうちモンテッソーリの核心は「環境を整える」こと。5つだけ。1、子供の手が届く高さに道具を置く。2、「ハサミのおうち」「のりのおうち」と住所を決める。3、トレーにセットして「今日はこれを使っていいよ」と提示する。4、やり方を見せる。声で教えるんじゃなくてゆっくり手を動かして見せる。5、口を出さずに見守る。100年前にマリア・モンテッソーリが発見したこと。子供は環境さえ整えば自分で育つ。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">特別な教室は不要。環境を整えるだけでおうちがモンテッソーリ教室になる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">保存して今日からやってみてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s26" data-cat="mama">
+      <div class="card-top">
+        <h3>26. 塾より5000円の道具セット</h3>
+        <div class="tags"><span class="tag tag-mama">ママ共感</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「塾に月1万円払うより、5000円の工作道具セットの方がコスパ最強かもしれません」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">工作で育つ力は7つ。集中力、創造力、忍耐力、自己肯定感、論理的思考力、計画力、応用力。全部、塾では教えてくれない。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">必要な道具は7つで合計5000円前後。フィットカットカーブジュニア700円、低温グルーガン1500円、カッターマットA3で1000円、円カッター600円、速乾ボンド200円、ステンレス定規500円、工作アイデアブック。一度買ったら何年も使える。素材はダンボール、トイレットペーパーの芯、割り箸。全部タダか100均。未来への投資は今日のリビングから始まります。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">5000円で一生モノの力が育つ。塾に行く前に工作道具を揃えよう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">Amazonリンク付きの道具リスト、プロフィールのリンクから無料で配布中。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <!-- F. ハウツー・実践系 -->
+
+    <div class="script-card" id="s27" data-cat="howto">
+      <div class="card-top">
+        <h3>27. 自由研究は1日で終わる</h3>
+        <div class="tags"><span class="tag tag-howto">ハウツー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「夏休みの自由研究、1日で終わって先生に褒められる方法、教えます」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">毎年8月末に大パニック。何作ればいいかわからない。そんな悩み、科学の原理を使った工作で一発解決。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">おすすめはからくり貯金箱。てこの原理で動く仕組みがあるから「考えて作った感」が自動的に出る。前日に材料を揃える。これが9割。当日は午前中に制作、午後に仕上げ。ポイントは「説明カード」をつけること。5項目だけ。作ろうと思ったきっかけ。使った材料。作り方。工夫したところ。わかったこと。この5行書くだけで先生の評価が爆上がりする。でんじろう先生も科学工作を推してる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">前日準備が9割。科学工作+説明カード5項目で高評価確定。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">説明カードのテンプレートはプロフィールのリンクから無料で配布中。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s28" data-cat="howto">
+      <div class="card-top">
+        <h3>28. おうちゲーセンの作り方</h3>
+        <div class="tags"><span class="tag tag-howto">ハウツー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「ガチャガチャ、クレーンゲーム、スロットマシン。全部ダンボールで作れるって知ってた?」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ゲーム好きな子に「やめなさい」って言っても無駄。だったら「作る側」に変えちゃおう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">おうちゲーセン5種。ガチャガチャは歯車の仕組みを学べる。クレーンゲームは滑車とてこの原理。スロットマシンは確率を体感できる。ピンボールは弾性エネルギー。メダルゲームはリンク機構。全部ダンボールと100均の材料で作れる。しかも作った後は遊べる。友達を呼んでおうちゲームセンター開店。消費モードから創造モードへ。見る側から作る側へ。工作の2時間は黄金の時間です。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">作って遊べるおうちゲーセン。ゲーム好きな子ほどハマります。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">作り方の図面はプロフィールのリンクから。週末にお子さんとやってみてね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s29" data-cat="howto">
+      <div class="card-top">
+        <h3>29. 100マス計算より100マス工作</h3>
+        <div class="tags"><span class="tag tag-howto">ハウツー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「100マス計算で鍛えた処理速度、工作なら楽しみながら同じ効果が得られるって知ってました?」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">ドリルは嫌がるけど工作は夢中になる。同じ「脳トレ」なら楽しい方が続くに決まってる。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">工作中の脳を見てみよう。ハサミで線に沿って切る=処理速度。「次にこうして、その後こうして」=ワーキングメモリ。設計図から完成形をイメージ=視覚的推理力。「どうやって作ったか」を説明=言語理解。IQの4要素、全部使ってる。しかもドーパミンが出るから記憶にも残りやすい。毎日5分、折り紙1つでいい。それがドリル30分と同じ効果を生む。楽しいは最強の学習エンジン。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">楽しいは最強の学習エンジン。工作は遊びに見えて最高の脳トレ。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">このアカウントフォローして、毎日の工作ネタを受け取ってね。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+    <div class="script-card" id="s30" data-cat="howto">
+      <div class="card-top">
+        <h3>30. エジソンもダ・ヴィンチも工作少年だった</h3>
+        <div class="tags"><span class="tag tag-howto">ハウツー</span></div>
+      </div>
+      <div class="script-body">
+        <div class="script-block"><div class="script-block-label">0:00-0:03 フック</div><div contenteditable="true">「エジソン、ダ・ヴィンチ、ジョブズ、藤井聡太。世界を変えた人たちの共通点は"工作少年"だったこと」</div></div>
+        <div class="script-block"><div class="script-block-label">0:03-0:10 問題提起</div><div contenteditable="true">偶然じゃない。手を動かして考える経験が、彼らの天才性を育てた。</div></div>
+        <div class="script-block"><div class="script-block-label">0:10-0:45 本題</div><div contenteditable="true">エジソンは学校3ヶ月で退学。お母さんのナンシーが自宅に実験室を作った。そこで1000件以上の特許の原点が生まれた。ダ・ヴィンチは500年前にヘリコプターの設計図を書いた手作り少年。ジョブズは養父ポールのガレージで電子部品に触れて育った。藤井聡太はモンテッソーリのハートバッグを100個以上作った。全員「手で考える子供」だった。お子さんがダンボールに夢中になってる時間、邪魔しないでください。天才の種が育ってます。</div></div>
+        <div class="script-block"><div class="script-block-label">0:45-0:55 まとめ</div><div contenteditable="true">未来を作った人たちは全員、工作少年だった。お子さんの工作時間を守ろう。</div></div>
+        <div class="script-block"><div class="script-block-label">0:55-1:00 CTA</div><div contenteditable="true">この投稿保存して。お子さんの未来への投資は今日のリビングから。</div></div>
+      </div>
+      <div class="script-meta"><span>約60秒</span><span>ターゲット: ママ</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  <p>Instagram Reels 台本マップ｜工作チャンネル｜2026年3月14日作成</p>
+  <p style="margin-top: 4px;">全30本｜クリックで直接編集可能｜YouTube台本25本の分析に基づいて作成</p>
+</div>
+
+<script>
+function filterScripts(cat) {
+  const cards = document.querySelectorAll('.script-card');
+  let count = 0;
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = '';
+      count++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  document.getElementById('countDisplay').textContent = count + '本 表示中';
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.onclick.toString().includes("'" + cat + "'")) btn.classList.add('active');
+  });
+}
+
+function scrollToCard(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.borderColor = '#0095f6';
+    setTimeout(() => { el.style.borderColor = '#dbdbdb'; }, 2000);
+  }
+}
+</script>
+
+</body>
+</html>
