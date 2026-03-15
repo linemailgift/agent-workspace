@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTAGE × LINE連携 設定ガイド</title>
+<style>
+  :root {
+    --line-green: #06C755;
+    --line-dark: #04a648;
+    --utage-blue: #4A90D9;
+    --utage-dark: #2d6db5;
+    --bg: #f0f4f0;
+    --card-bg: #ffffff;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #e0e0e0;
+    --zone1: #06C755;
+    --zone2: #4A90D9;
+    --zone3: #FF6B35;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--line-green) 0%, #00b849 50%, var(--utage-blue) 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0; right: 0;
+    height: 30px;
+    background: var(--bg);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.02em;
+  }
+  .header .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  /* ===== OVERVIEW ===== */
+  .overview {
+    max-width: 700px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+  }
+  .overview-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .overview-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+  .overview-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+  .overview-box {
+    background: #f8f8f8;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+    min-width: 100px;
+  }
+  .overview-box .icon { font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+  .overview-box .label { font-size: 0.8rem; font-weight: 700; }
+  .overview-box.line-box { border-color: var(--line-green); background: #e8fbe8; }
+  .overview-box.utage-box { border-color: var(--utage-blue); background: #e8f0fb; }
+  .overview-arrow { font-size: 1.5rem; color: var(--text-light); }
+  .overview-note {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  /* ===== ZONES ===== */
+  .zones {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+  }
+  .zone {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .zone-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+  }
+  .zone-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .zone-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .zone-where {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    background: #f0f0f0;
+    padding: 0.15rem 0.5rem;
+    border-radius: 99px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .zone-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-left: 4px solid;
+  }
+
+  /* Zone colors */
+  .zone--1 .zone-number { background: var(--zone1); }
+  .zone--1 .zone-title { color: var(--zone1); }
+  .zone--1 .zone-card { border-left-color: var(--zone1); }
+
+  .zone--2 .zone-number { background: var(--zone2); }
+  .zone--2 .zone-title { color: var(--zone2); }
+  .zone--2 .zone-card { border-left-color: var(--zone2); }
+
+  .zone--3 .zone-number { background: var(--zone3); }
+  .zone--3 .zone-title { color: var(--zone3); }
+  .zone--3 .zone-card { border-left-color: var(--zone3); }
+
+  /* ===== STEPS ===== */
+  .steps { list-style: none; }
+  .step {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-light);
+  }
+  .step-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+  .step-content {
+    flex: 1;
+  }
+  .step-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .step-detail {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+  }
+
+  /* ===== TOOLTIP ===== */
+  .tooltip {
+    background: #FFFDE7;
+    border: 1px solid #FDD835;
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.6rem 0;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .tooltip-icon { font-size: 1rem; flex-shrink: 0; }
+  .tooltip-text { line-height: 1.5; }
+  .tooltip-term { font-weight: 700; color: #F57F17; }
+
+  /* ===== COPY VALUES ===== */
+  .copy-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 0.8rem 0;
+    flex-wrap: wrap;
+  }
+  .copy-badge {
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .copy-badge.from { background: #e8fbe8; color: #04a648; border: 1px solid #b8e6b8; }
+  .copy-badge.to { background: #e8f0fb; color: #2d6db5; border: 1px solid #b8d4f0; }
+  .copy-arrow { font-size: 1.2rem; color: var(--text-light); }
+
+  /* ===== ZONE CONNECTOR ===== */
+  .zone-connector {
+    text-align: center;
+    padding: 0.3rem 0;
+    font-size: 1.5rem;
+    color: #ccc;
+  }
+
+  /* ===== WARNING ===== */
+  .warning-card {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+  }
+  .warning-inner {
+    background: #FFF3E0;
+    border: 1px solid #FFB74D;
+    border-radius: 16px;
+    padding: 1.2rem;
+  }
+  .warning-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: #E65100;
+  }
+  .warning-list {
+    list-style: none;
+    font-size: 0.82rem;
+    color: #5D4037;
+  }
+  .warning-list li {
+    padding: 0.25rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .warning-list li::before {
+    content: '⚠';
+    position: absolute;
+    left: 0;
+    font-size: 0.8rem;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.75rem;
+    color: #aaa;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .header h1 { font-size: 1.3rem; }
+    .overview-diagram { flex-direction: column; }
+    .overview-arrow { transform: rotate(90deg); }
+    .copy-flow { flex-direction: column; }
+    .copy-arrow { transform: rotate(90deg); }
+  }
+
+  /* ===== SUB-SECTION ===== */
+  .sub-section {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 2px dashed #eee;
+  }
+  .sub-section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* ===== 4 VALUES GRID ===== */
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+  }
+  .value-item {
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  .value-item.api { background: #e8fbe8; color: #04a648; border: 1px solid #b8e6b8; }
+  .value-item.login { background: #e8f0fb; color: #2d6db5; border: 1px solid #b8d4f0; }
+
+  /* result check */
+  .result-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #E8F5E9;
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0;
+  }
+  .result-check .check-icon { font-size: 1.3rem; }
+  .result-check .check-text { font-size: 0.85rem; font-weight: 600; color: #2E7D32; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>📲 UTAGE × LINE連携 設定ガイド</h1>
+  <p class="subtitle">初めてでも迷わない！3ステップで完了</p>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="overview">
+  <div class="overview-card">
+    <h2>💡 そもそも何をやるの？</h2>
+    <div class="overview-diagram">
+      <div class="overview-box line-box">
+        <span class="icon">💬</span>
+        <span class="label">LINE公式<br>アカウント</span>
+      </div>
+      <span class="overview-arrow">🔗</span>
+      <div class="overview-box utage-box">
+        <span class="icon">⚙️</span>
+        <span class="label">UTAGE</span>
+      </div>
+    </div>
+    <p class="overview-note">
+      LINE公式アカウントの「鍵」を UTAGE に渡して、<br>
+      UTAGEからLINEメッセージを<strong>自動配信</strong>できるようにします。
+    </p>
+  </div>
+</div>
+
+<!-- ===== ZONE 1: 準備 ===== -->
+<div class="zones">
+
+  <div class="zone zone--1">
+    <div class="zone-header">
+      <div class="zone-number">1</div>
+      <div class="zone-title">準備する</div>
+      <span class="zone-where">📍 LINE側で作業</span>
+    </div>
+    <div class="zone-card">
+
+      <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.8rem;">
+        LINE公式アカウントで「Messaging API」をオンにして、接続用の鍵を取得します。
+      </p>
+
+      <div class="tooltip">
+        <span class="tooltip-icon">💬</span>
+        <span class="tooltip-text">
+          <span class="tooltip-term">Messaging APIって？</span><br>
+          LINE公式アカウントを外部ツール（UTAGE）から操作できるようにする機能。これをオンにしないとUTAGEと繋がりません。
+        </span>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">1</span>
+          <span class="step-icon">🔐</span>
+          <div class="step-content">
+            <div class="step-text">LINE公式アカウント管理画面にログイン</div>
+            <div class="step-detail">連携したいアカウントを選択 → 右上の⚙設定</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">2</span>
+          <span class="step-icon">🔌</span>
+          <div class="step-content">
+            <div class="step-text">Messaging API を有効化</div>
+            <div class="step-detail">左メニュー「Messaging API」→「利用する」をクリック</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">3</span>
+          <span class="step-icon">📁</span>
+          <div class="step-content">
+            <div class="step-text">プロバイダーを作成（または選択）</div>
+            <div class="step-detail">初めての場合は新規作成。名前とメールを入力</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">4</span>
+          <span class="step-icon">🔑</span>
+          <div class="step-content">
+            <div class="step-text">Channel ID と Channel Secret をコピー</div>
+            <div class="step-detail">表示された2つの値を必ずコピー保存！</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="tooltip">
+        <span class="tooltip-icon">💬</span>
+        <span class="tooltip-text">
+          <span class="tooltip-term">Channel ID / Channel Secret って？</span><br>
+          UTAGEが「このLINEアカウントを操作していいよ」と認証するための鍵（パスワードのようなもの）です。
+        </span>
+      </div>
+
+      <!-- LINEログインチャネル -->
+      <div class="sub-section">
+        <div class="sub-section-title">🔐 LINEログインチャネルも作成</div>
+        <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:0.6rem;">
+          友だち追加の経路を正確に判定するために、もう1つチャネルを作ります。
+        </p>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">5</span>
+            <span class="step-icon">🌐</span>
+            <div class="step-content">
+              <div class="step-text">LINE Developers で「LINEログイン」を新規作成</div>
+              <div class="step-detail">アプリタイプは「ウェブアプリ」を選択</div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num">6</span>
+            <span class="step-icon">🟢</span>
+            <div class="step-content">
+              <div class="step-text">「開発中」→「公開」に変更</div>
+              <div class="step-detail">忘れがち！ ボタンをクリックして公開状態にする</div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num">7</span>
+            <span class="step-icon">🔑</span>
+            <div class="step-content">
+              <div class="step-text">チャネルID と チャネルシークレットをコピー</div>
+              <div class="step-detail">Messaging APIの鍵とは別の値です！</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="zone-connector">⬇️</div>
+
+  <!-- ===== ZONE 2: 接続 ===== -->
+  <div class="zone zone--2">
+    <div class="zone-header">
+      <div class="zone-number">2</div>
+      <div class="zone-title">接続する</div>
+      <span class="zone-where">📍 UTAGE側で作業</span>
+    </div>
+    <div class="zone-card">
+
+      <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.8rem;">
+        さっきコピーした4つの鍵を UTAGE に貼り付けます。
+      </p>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">1</span>
+          <span class="step-icon">📋</span>
+          <div class="step-content">
+            <div class="step-text">UTAGEでLINEアカウント設定を開く</div>
+            <div class="step-detail">メール・LINE配信 → LINEアカウント → LINEアカウント設定</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">2</span>
+          <span class="step-icon">📝</span>
+          <div class="step-content">
+            <div class="step-text">4つの値を貼り付ける</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="values-grid">
+        <div class="value-item api">🔑 Channel ID<br><small>（Messaging API）</small></div>
+        <div class="value-item api">🔑 Channel Secret<br><small>（Messaging API）</small></div>
+        <div class="value-item login">🔐 チャネルID<br><small>（LINEログイン）</small></div>
+        <div class="value-item login">🔐 チャネルシークレット<br><small>（LINEログイン）</small></div>
+      </div>
+
+      <div class="tooltip">
+        <span class="tooltip-icon">⚠️</span>
+        <span class="tooltip-text">
+          <span class="tooltip-term">4つとも全部違う値！</span><br>
+          Messaging API用とLINEログイン用で、それぞれ別のIDとシークレットがあります。混同しないよう注意。
+        </span>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">3</span>
+          <span class="step-icon">💾</span>
+          <div class="step-content">
+            <div class="step-text">「保存」をクリック</div>
+            <div class="step-detail">Webhook URLが自動で設定されます</div>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Webhook設定 -->
+      <div class="sub-section">
+        <div class="sub-section-title">📡 LINE側のWebhook設定</div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">4</span>
+            <span class="step-icon">📡</span>
+            <div class="step-content">
+              <div class="step-text">LINE管理画面で「応答設定」を開く</div>
+              <div class="step-detail">Webhookを「オン」（緑）にする</div>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-num">5</span>
+            <span class="step-icon">✅</span>
+            <div class="step-content">
+              <div class="step-text">Webhook URLが入っていることを確認</div>
+              <div class="step-detail">UTAGEのURLが自動入力されていればOK</div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="tooltip">
+          <span class="tooltip-icon">💬</span>
+          <span class="tooltip-text">
+            <span class="tooltip-term">Webhookって？</span><br>
+            LINEで友だち追加やメッセージ受信があった時、その情報をUTAGEに自動で通知する仕組みです。
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="zone-connector">⬇️</div>
+
+  <!-- ===== ZONE 3: 確認 ===== -->
+  <div class="zone zone--3">
+    <div class="zone-header">
+      <div class="zone-number">3</div>
+      <div class="zone-title">確認する</div>
+      <span class="zone-where">📍 UTAGE + スマホ</span>
+    </div>
+    <div class="zone-card">
+
+      <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.8rem;">
+        テスト送信して、ちゃんと繋がっているか確認します。
+      </p>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">1</span>
+          <span class="step-icon">📄</span>
+          <div class="step-content">
+            <div class="step-text">UTAGEでテスト用シナリオを作成</div>
+            <div class="step-detail">シナリオ追加 → LINEメッセージを1通追加</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">2</span>
+          <span class="step-icon">⏱️</span>
+          <div class="step-content">
+            <div class="step-text">送信タイミングを「登録直後」に設定</div>
+            <div class="step-detail">友だち追加したらすぐメッセージが届くようにする</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">3</span>
+          <span class="step-icon">📱</span>
+          <div class="step-content">
+            <div class="step-text">QRコードをスマホで読み取り</div>
+            <div class="step-detail">LINE登録ページのQRを読み取り → 許可 → 友だち追加</div>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step-num">4</span>
+          <span class="step-icon">💬</span>
+          <div class="step-content">
+            <div class="step-text">メッセージが届けば成功！</div>
+            <div class="step-detail">トーク画面でテストメッセージを確認</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="result-check">
+        <span class="check-icon">🎉</span>
+        <span class="check-text">メッセージが届いたら連携完了！</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== WARNING ===== -->
+<div class="warning-card">
+  <div class="warning-inner">
+    <div class="warning-title">⚠️ よくあるミス・注意点</div>
+    <ul class="warning-list">
+      <li>4つの値（ID×2、シークレット×2）は全部異なる値です。混同注意！</li>
+      <li>値は手入力せず、必ずコピーボタンで貼り付け（スペース混入防止）</li>
+      <li>LINEログインチャネルを「公開」にし忘れるとエラーになります</li>
+      <li>1つのLINE公式アカウントに紐づけられるUTAGEアカウントは1つだけ</li>
+      <li>保存時に500エラーが出たら、値の入力ミスを確認してください</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p>参照元: <a href="https://help.utage-system.com/archives/1820" target="_blank" style="color:#06C755;">UTAGE公式マニュアル</a></p>
+  <p style="margin-top:0.3rem;">© 2026 UTAGE LINE連携ガイド</p>
+</div>
+
+</body>
+</html>
