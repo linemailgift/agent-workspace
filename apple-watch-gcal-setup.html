@@ -228,8 +228,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sa
       <div class="step-num blue">1</div>
       <div class="step-text">設定 → アプリ → カレンダー → カレンダーアカウント</div>
     </div>
-    <div class="step-desc">iPhoneの「設定」→「アプリ」→「カレンダー」→「カレンダーアカウント」の順にタップ</div>
+    <div class="step-desc">⚠️ 「設定」の中に「カレンダー」は直接ありません！<br>まず「<strong>アプリ</strong>」をタップしてください</div>
 
+    <!-- 画面① 設定トップ → 「アプリ」をタップ -->
+    <div style="text-align:center;font-size:0.75rem;color:#8e8e93;font-weight:600;margin-top:16px;">① 設定を開いて「アプリ」をタップ</div>
     <div class="phone-mockup">
       <div class="phone-screen">
         <div class="phone-status-bar">
@@ -237,20 +239,91 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sa
           <span>📶 🔋</span>
         </div>
         <div class="phone-nav">
-          <span class="back">‹ アプリ > カレンダー</span>
-          <span class="title">カレンダーアカウント</span>
+          <span class="back"></span>
+          <span class="title">設定</span>
         </div>
         <div class="settings-list">
           <div class="settings-item">
-            <div class="settings-icon" style="background:#007aff;">☁️</div>
-            <div class="settings-label">iCloud</div>
+            <div class="settings-icon" style="background:#8e8e93;">⚙️</div>
+            <div class="settings-label">一般</div>
             <div class="settings-arrow">›</div>
           </div>
-          <div class="settings-item highlight-item" style="position:relative;">
-            <div class="settings-icon" style="background:#34c759;">＋</div>
-            <div class="settings-label">アカウントを追加</div>
+          <div class="settings-item">
+            <div class="settings-icon" style="background:#007aff;">🔒</div>
+            <div class="settings-label">プライバシーとセキュリティ</div>
             <div class="settings-arrow">›</div>
-            <span class="tap-here">ここをタップ</span>
+          </div>
+          <div class="settings-item highlight-item">
+            <div class="settings-icon" style="background:#5856d6;">📱</div>
+            <div class="settings-label" style="font-weight:700;">アプリ</div>
+            <div class="settings-arrow">›</div>
+            <span class="tap-here">ここ！</span>
+          </div>
+        </div>
+        <div style="padding:8px 16px;font-size:0.7rem;color:#8e8e93;">※ 下のほうにスクロールすると見つかります</div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼</div>
+
+    <!-- 画面② アプリ一覧 → 「カレンダー」をタップ -->
+    <div style="text-align:center;font-size:0.75rem;color:#8e8e93;font-weight:600;">② アプリ一覧から「カレンダー」をタップ</div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ 設定</span>
+          <span class="title">アプリ</span>
+        </div>
+        <div class="settings-list">
+          <div class="settings-item highlight-item">
+            <div class="settings-icon" style="background:#ff3b30;">📅</div>
+            <div class="settings-label" style="font-weight:700;">カレンダー</div>
+            <div class="settings-arrow">›</div>
+            <span class="tap-here">ここ！</span>
+          </div>
+          <div class="settings-item">
+            <div class="settings-icon" style="background:#007aff;">📷</div>
+            <div class="settings-label">カメラ</div>
+            <div class="settings-arrow">›</div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-icon" style="background:#34c759;">🗺️</div>
+            <div class="settings-label">マップ</div>
+            <div class="settings-arrow">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼</div>
+
+    <!-- 画面③ カレンダー設定 → 「カレンダーアカウント」をタップ -->
+    <div style="text-align:center;font-size:0.75rem;color:#8e8e93;font-weight:600;">③ 「カレンダーアカウント」をタップ</div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ アプリ</span>
+          <span class="title">カレンダー</span>
+        </div>
+        <div class="settings-list">
+          <div class="settings-item highlight-item">
+            <div class="settings-icon" style="background:#007aff;">👤</div>
+            <div class="settings-label" style="font-weight:700;">カレンダーアカウント</div>
+            <div class="settings-arrow">›</div>
+            <span class="tap-here">ここ！</span>
+          </div>
+          <div class="settings-item">
+            <div class="settings-label">デフォルトの通知時間</div>
+            <div class="settings-value">なし</div>
+            <div class="settings-arrow">›</div>
           </div>
         </div>
       </div>
@@ -267,6 +340,38 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sa
     </div>
     <div class="step-desc">「アカウントを追加」をタップし、Googleを選択</div>
 
+    <!-- 画面① カレンダーアカウント → アカウントを追加 -->
+    <div style="text-align:center;font-size:0.75rem;color:#8e8e93;font-weight:600;margin-top:16px;">① 「アカウントを追加」をタップ</div>
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-status-bar">
+          <span>9:41</span>
+          <span>📶 🔋</span>
+        </div>
+        <div class="phone-nav">
+          <span class="back">‹ カレンダー</span>
+          <span class="title">カレンダーアカウント</span>
+        </div>
+        <div class="settings-list">
+          <div class="settings-item">
+            <div class="settings-icon" style="background:#007aff;">☁️</div>
+            <div class="settings-label">iCloud</div>
+            <div class="settings-arrow">›</div>
+          </div>
+          <div class="settings-item highlight-item">
+            <div class="settings-icon" style="background:#34c759;">＋</div>
+            <div class="settings-label" style="font-weight:700;">アカウントを追加</div>
+            <div class="settings-arrow">›</div>
+            <span class="tap-here">ここ！</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼</div>
+
+    <!-- 画面② プロバイダ選択 → Google -->
+    <div style="text-align:center;font-size:0.75rem;color:#8e8e93;font-weight:600;">② 「Google」を選択</div>
     <div class="phone-mockup">
       <div class="phone-screen">
         <div class="phone-status-bar">
