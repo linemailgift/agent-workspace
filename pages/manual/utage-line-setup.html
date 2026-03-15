@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTAGE構築マニュアル：公式LINEアカウント設定ガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #4B0082;
+    --purple-mid: #6B3FA0;
+    --purple-light: #8B6DB5;
+    --purple-pale: #f3eef8;
+    --gold: #c9a96e;
+    --gold-dark: #b8942e;
+    --gold-light: #e8d5a3;
+    --gold-pale: #faf8f3;
+    --red: #c26a5a;
+    --red-dark: #a8524a;
+    --red-light: #e8a090;
+    --red-pale: #fdf3f1;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f4f7;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  /* === Hero Header === */
+  .hero {
+    background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 40%, var(--gold-pale) 100%);
+    padding: 60px 40px 48px;
+    text-align: center;
+    border-bottom: 3px solid;
+    border-image: linear-gradient(to right, var(--purple-deep), var(--purple-light), var(--gold)) 1;
+  }
+
+  .ichijiku-icon {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
+  }
+
+  .hero-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--purple-mid);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, var(--purple-deep), var(--purple-light));
+    margin: 12px auto 20px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 20px;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .tag.purple {
+    border: 1px solid var(--purple-light);
+    color: var(--purple-mid);
+    background: var(--purple-pale);
+  }
+  .tag.gold {
+    border: 1px solid var(--gold);
+    color: var(--gold-dark);
+    background: var(--gold-pale);
+  }
+
+  /* === Main Content === */
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* === Section === */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .section-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-num.gold-num {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  }
+
+  .section-num.red-num {
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+  }
+
+  .section-title.gold-title { color: var(--gold-dark); }
+  .section-title.red-title { color: var(--red-dark); }
+
+  .section-desc {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding-left: 64px;
+  }
+
+  /* === Cards === */
+  .card {
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-top: 3px solid var(--purple-mid);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(75, 0, 130, 0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(75, 0, 130, 0.08);
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple-mid);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .card-icon {
+    font-size: 1.1rem;
+  }
+
+  .card p, .card li {
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: #555;
+  }
+  .card ul { padding-left: 20px; }
+  .card ul li { margin-bottom: 6px; }
+
+  /* Gold card */
+  .card.c-gold {
+    background: #fdfcf8;
+    border: 1px solid #ede8dc;
+    border-top: 3px solid var(--gold);
+    box-shadow: 0 2px 12px rgba(201, 169, 110, 0.06);
+  }
+  .card.c-gold:hover { box-shadow: 0 6px 20px rgba(201, 169, 110, 0.12); }
+  .card.c-gold .card-title { color: var(--gold-dark); }
+
+  /* Red card */
+  .card.c-red {
+    background: var(--red-pale);
+    border: 1px solid #f0ddd9;
+    border-top: 3px solid var(--red);
+  }
+  .card.c-red .card-title { color: var(--red-dark); }
+
+  /* === Highlight box === */
+  .highlight {
+    background: var(--purple-pale);
+    border-left: 4px solid var(--purple-mid);
+    padding: 18px 24px;
+    margin-bottom: 16px;
+    border-radius: 0 8px 8px 0;
+  }
+  .highlight p {
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: #555;
+  }
+  .highlight strong { color: var(--purple-deep); }
+
+  .highlight.hl-gold {
+    background: var(--gold-pale);
+    border-left-color: var(--gold);
+  }
+  .highlight.hl-gold strong { color: var(--gold-dark); }
+
+  .highlight.hl-red {
+    background: var(--red-pale);
+    border-left-color: var(--red);
+  }
+  .highlight.hl-red strong { color: var(--red-dark); }
+
+  /* === Step list === */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: step-counter;
+  }
+
+  .step-list li {
+    counter-increment: step-counter;
+    position: relative;
+    padding: 20px 24px 20px 72px;
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #555;
+    box-shadow: 0 1px 6px rgba(75, 0, 130, 0.03);
+  }
+
+  .step-list li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-pale), #e8ddf0);
+    color: var(--purple-mid);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--purple-light);
+  }
+
+  .step-list li strong { color: var(--purple-deep); }
+
+  /* === Account box === */
+  .account-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .account-box { grid-template-columns: 1fr; }
+    .section-desc { padding-left: 0; }
+    .hero { padding: 40px 20px 36px; }
+    .hero-title { font-size: 1.3rem; }
+  }
+
+  .account-card {
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .account-card.line1::before {
+    background: linear-gradient(to right, var(--purple-deep), var(--purple-mid));
+  }
+  .account-card.line2::before {
+    background: linear-gradient(to right, var(--gold-dark), var(--gold));
+  }
+
+  .account-label {
+    font-size: 0.72rem;
+    padding: 3px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .account-card.line1 .account-label {
+    background: var(--purple-pale);
+    color: var(--purple-mid);
+    border: 1px solid var(--purple-light);
+  }
+  .account-card.line2 .account-label {
+    background: var(--gold-pale);
+    color: var(--gold-dark);
+    border: 1px solid var(--gold);
+  }
+
+  .account-name {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .account-card.line1 .account-name { color: var(--purple-deep); }
+  .account-card.line2 .account-name { color: var(--gold-dark); }
+
+  .account-desc {
+    font-size: 0.78rem;
+    color: #888;
+    line-height: 1.6;
+  }
+
+  .line-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  /* === CTA button === */
+  .cta-wrap {
+    text-align: center;
+    margin: 24px 0 16px;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #06C755, #04b34b);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(6, 199, 85, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(6, 199, 85, 0.4);
+  }
+
+  /* === Info table === */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  .info-table th {
+    background: var(--purple-pale);
+    color: var(--purple-mid);
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--purple-light);
+    text-align: left;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .info-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  /* === Alert box === */
+  .alert {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: #fff8e6;
+    border: 1px solid #f0e0a0;
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .alert-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+  .alert p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #666;
+  }
+  .alert strong { color: var(--gold-dark); }
+
+  .alert.alert-red {
+    background: var(--red-pale);
+    border-color: var(--red-light);
+    border-left-color: var(--red);
+  }
+  .alert.alert-red strong { color: var(--red-dark); }
+
+  /* === Method selector === */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .method-grid { grid-template-columns: 1fr; }
+  }
+
+  .method-card {
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .method-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, var(--purple-deep), var(--purple-mid));
+  }
+
+  .method-card.recommended {
+    border-color: var(--gold);
+    box-shadow: 0 2px 16px rgba(201, 169, 110, 0.12);
+  }
+  .method-card.recommended::before {
+    background: linear-gradient(to right, var(--gold-dark), var(--gold));
+  }
+
+  .recommend-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.65rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: var(--gold-pale);
+    color: var(--gold-dark);
+    border: 1px solid var(--gold);
+    font-weight: 600;
+  }
+
+  .method-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgba(75, 0, 130, 0.08);
+    margin-bottom: 4px;
+  }
+  .method-card.recommended .method-num { color: rgba(201, 169, 110, 0.12); }
+
+  .method-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-deep);
+    margin-bottom: 10px;
+  }
+  .method-card.recommended .method-title { color: var(--gold-dark); }
+
+  .method-desc {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.7;
+  }
+
+  .method-detail {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    font-size: 0.78rem;
+    color: #888;
+    line-height: 1.7;
+  }
+
+  /* === Invite steps === */
+  .invite-steps {
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .invite-steps .step-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--purple-mid);
+    margin-bottom: 16px;
+  }
+
+  .invite-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .flow-item {
+    background: var(--purple-pale);
+    color: var(--purple-mid);
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--purple-light);
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+
+  /* === Footer === */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    border-top: 1px solid #e8e4ed;
+    background: linear-gradient(135deg, #fff 0%, var(--purple-pale) 100%);
+  }
+
+  .footer-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 8px;
+  }
+
+  .footer-text {
+    font-size: 0.7rem;
+    color: var(--purple-light);
+  }
+
+  /* === Scroll to top === */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--purple-deep);
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scroll-top.visible { opacity: 1; }
+  .scroll-top:hover { transform: translateY(-2px); }
+
+  /* === TOC === */
+  .toc {
+    background: #fff;
+    border: 1px solid #ece8f0;
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 12px rgba(75, 0, 130, 0.04);
+  }
+
+  .toc-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--purple-mid);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .toc-list li {
+    margin-bottom: 8px;
+  }
+
+  .toc-list a {
+    font-size: 0.85rem;
+    color: #555;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .toc-list a:hover {
+    background: var(--purple-pale);
+    color: var(--purple-deep);
+  }
+
+  .toc-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--purple-pale);
+    color: var(--purple-mid);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--purple-light);
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== ヒーロー ========== -->
+<div class="hero">
+  <img src="ichijiku-icon.png" class="ichijiku-icon" alt="いちじく">
+  <div class="hero-label">Setup Manual</div>
+  <div class="hero-divider"></div>
+  <div class="hero-title">UTAGE構築マニュアル<br>公式LINEアカウント設定ガイド</div>
+  <div class="hero-subtitle">UTAGE連携に必要なLINEアカウントの作成・設定手順</div>
+  <div class="hero-tags">
+    <span class="tag purple">UTAGE構築</span>
+    <span class="tag purple">公式LINE</span>
+    <span class="tag purple">初期設定</span>
+    <span class="tag gold">垢BAN対策</span>
+  </div>
+</div>
+
+<!-- ========== メインコンテンツ ========== -->
+<div class="main">
+
+  <!-- 目次 -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#section1"><span class="toc-num">1</span>公式LINEアカウントの作成</a></li>
+      <li><a href="#section2"><span class="toc-num">2</span>LINEアカウント情報の共有</a></li>
+      <li><a href="#section3"><span class="toc-num">3</span>管理者として招待する場合の手順</a></li>
+    </ul>
+  </div>
+
+  <!-- ========== STEP 1 ========== -->
+  <div class="section" id="section1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">公式LINEアカウントの作成</div>
+    </div>
+    <div class="section-desc">
+      UTAGEと連携するため、<strong>公式LINEアカウント</strong>が必要になります。<br>
+      アカウント停止（垢BAN）対策として、以下の<strong>2つのアカウント</strong>を作成することをおすすめしております。
+    </div>
+
+    <!-- 2つのアカウント -->
+    <div class="account-box">
+      <div class="account-card line1">
+        <div class="account-label">LINE 1</div>
+        <div class="line-icon">💬</div>
+        <div class="account-name">登録用アカウント</div>
+        <div class="account-desc">お客様が最初に友だち追加するアカウント。ステップ配信やメッセージ配信に使用します。</div>
+      </div>
+      <div class="account-card line2">
+        <div class="account-label">LINE 2</div>
+        <div class="line-icon">🎁</div>
+        <div class="account-name">特典配布用アカウント</div>
+        <div class="account-desc">特典・コンテンツを配布するアカウント。万が一LINE1がBANされても特典配布を継続できます。</div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <div class="alert-icon">💡</div>
+      <div>
+        <p><strong>なぜ2つ必要？</strong><br>
+        LINEには利用規約違反によるアカウント停止（垢BAN）のリスクがあります。1つのアカウントに全機能を集中させると、万が一BANされた際にすべての機能が停止してしまいます。<strong>登録用</strong>と<strong>特典配布用</strong>を分けることで、リスクを分散できます。</p>
+      </div>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="https://www.lycbiz.com/jp/service/line-official-account/" target="_blank" rel="noopener" class="cta-button">
+        <span>📱</span>
+        公式LINEを作成する
+      </a>
+    </div>
+
+    <div class="highlight">
+      <p><strong>作成手順：</strong>上のボタンから公式LINE作成ページへアクセスし、<strong>2つ分のアカウント</strong>を作成してください。アカウント名は後から変更可能です。</p>
+    </div>
+  </div>
+
+  <!-- ========== STEP 2 ========== -->
+  <div class="section" id="section2">
+    <div class="section-header">
+      <div class="section-num gold-num">2</div>
+      <div class="section-title gold-title">LINEアカウント情報の共有</div>
+    </div>
+    <div class="section-desc">
+      作成後、以下<strong>いずれかの方法</strong>でアカウント情報をご共有ください。
+    </div>
+
+    <div class="method-grid">
+      <div class="method-card recommended">
+        <span class="recommend-badge">おすすめ</span>
+        <div class="method-num">01</div>
+        <div class="method-title">ビジネスアカウントの<br>ログイン情報を共有</div>
+        <div class="method-desc">
+          ビジネスアカウントのメールアドレスとパスワードを共有いただく方法です。
+        </div>
+        <div class="method-detail">
+          セキュリティの観点から、LINEアカウントは<strong>「ビジネスアカウント」</strong>で作成されることをおすすめします。
+        </div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">02</div>
+        <div class="method-title">管理者として招待</div>
+        <div class="method-desc">
+          LINE管理画面から管理者権限で招待いただく方法です。
+        </div>
+        <div class="method-detail">
+          詳しい手順は<a href="#section3" style="color: var(--purple-mid); text-decoration: underline;">次のセクション</a>をご覧ください。
+        </div>
+      </div>
+    </div>
+
+    <!-- 方法①の共有情報 -->
+    <div class="card c-gold">
+      <div class="card-title"><span class="card-icon">📋</span> 方法①の場合：共有いただく情報</div>
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>LINE①（登録用）</strong></td>
+            <td>メールアドレス / パスワード</td>
+          </tr>
+          <tr>
+            <td><strong>LINE②（特典配布用）</strong></td>
+            <td>メールアドレス / パスワード</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-red">
+      <div class="alert-icon">🔒</div>
+      <div>
+        <p><strong>セキュリティに関するご注意</strong><br>
+        ログイン情報はチャットやメールではなく、<strong>セキュリティの高い方法</strong>（対面、電話等）での共有をおすすめします。共有後はパスワードの変更も可能です。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== STEP 3 ========== -->
+  <div class="section" id="section3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">管理者として招待する場合の手順</div>
+    </div>
+    <div class="section-desc">
+      方法②「管理者として招待」を選択された場合は、以下の手順で招待をお願いいたします。
+    </div>
+
+    <div class="invite-steps">
+      <div class="step-title">招待の流れ</div>
+      <div class="invite-flow">
+        <span class="flow-item">LINE管理画面にログイン</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">設定</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">権限管理</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">メンバーを招待</span>
+      </div>
+    </div>
+
+    <ol class="step-list">
+      <li><strong>LINE Official Account Manager</strong>（LINE管理画面）にログインします</li>
+      <li>画面右上の<strong>「設定」</strong>をクリックします</li>
+      <li>左メニューから<strong>「権限管理」</strong>を選択します</li>
+      <li><strong>「メンバーを招待」</strong>ボタンをクリックします</li>
+      <li>招待先の<strong>メールアドレス</strong>を入力し、権限を<strong>「管理者」</strong>に設定します</li>
+      <li><strong>「招待」</strong>ボタンをクリックして完了です</li>
+    </ol>
+
+    <div class="highlight hl-gold">
+      <p><strong>招待先メールアドレスについて：</strong>招待先のメールアドレスは、担当者よりお伝えいたします。事前にお問い合わせください。</p>
+    </div>
+
+    <div class="alert">
+      <div class="alert-icon">📌</div>
+      <div>
+        <p><strong>ポイント：</strong>招待時の権限は必ず<strong>「管理者」</strong>を選択してください。「運用担当者」では一部機能に制限があり、UTAGE連携に必要な設定ができない場合があります。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- フッター -->
+<div class="footer">
+  <img src="ichijiku-icon.png" class="footer-icon" alt="いちじく">
+  <div class="footer-text">produced by いちじく</div>
+</div>
+
+<!-- Scroll to top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Scroll to top visibility
+  window.addEventListener('scroll', function() {
+    const btn = document.getElementById('scrollTop');
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  // Smooth scroll for TOC links
+  document.querySelectorAll('.toc-list a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
